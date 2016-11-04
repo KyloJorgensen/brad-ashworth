@@ -31,7 +31,7 @@
 			return include('./build/index.html');
 		} 
 		if ($endpoint == 'news') {
-			echo 'news';
+			include('news.php');
 			return;
 		}
 

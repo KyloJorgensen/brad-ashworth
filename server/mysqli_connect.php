@@ -7,24 +7,21 @@
 	/*
 	Command that gives the database user the least amount of power
 	as is needed.
-	GRANT INSERT, SELECT, DELETE, UPDATE ON test3.*
-	TO 'studentweb'@'localhost'
+	GRANT SELECT ON badb.*
+	TO 'baquest'@'localhost'
 	IDENTIFIED BY 'turtledove';
 	SELECT : Select rows in tables
-	INSERT : Insert new rows into tables
-	UPDATE : Change data in rows
-	DELETE : Delete existing rows (Remove privilege if not required)
 	*/
 
 	// Defined as constants so that they can't be changed
 
-	DEFINE ('DB_USER', 'studentweb');
+	DEFINE ('DB_USER', 'baquest');
 
 	DEFINE ('DB_PASSWORD', 'turtledove');
 
 	DEFINE ('DB_HOST', '127.0.0.1');
 
-	DEFINE ('DB_NAME', 'test');
+	DEFINE ('DB_NAME', 'badb');
 
 	// $dbc will contain a resource link to the database
 

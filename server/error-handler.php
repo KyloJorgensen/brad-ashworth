@@ -5,11 +5,24 @@
 	class ErrorHandler {
 		public function handleError($e) {
 			if ($e->type == 404) {
+				http_response_code(404);
 				echo METHOD . URI;
 				echo '<br/>Not Found: ', $e->getMessage(), "\n";
-			} else {
-				echo '<br/>Caught exception: ',  $e->getMessage(), "\n";
-        	}
+				return;
+			}
+			if ($e->type == 400) {
+				http_response_code(400);
+
+				if (!empty($e->data_missing)) {
+					header('Content-Type: application/json');
+					echo json_encode($e->data_missing);
+					return;
+				}
+				echo $e->getMessage();
+				return;
+			}
+			http_response_code(500);
+			echo '<br/>Caught exception: ',  $e->getMessage(), "\n";
         }
     }
 
