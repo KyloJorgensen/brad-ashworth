@@ -29,7 +29,7 @@
 					return;
 				}
 
-				$headers = apache_request_headers()
+				$headers = apache_request_headers();
 				if (METHOD == 'POST') {
 					if ($auth->authenticate($headers['Authorization'])) {
 						$controller->addNews();
