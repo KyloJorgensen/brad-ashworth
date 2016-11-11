@@ -7,7 +7,6 @@
 	$auth = include(__SERVER__ . '/auth.php');
 
 	try {
-		echo "helloe";
 		// pull params off
 		$endpoint = strchr(URI, "?", true);
 		if (!$endpoint) {
