@@ -6,12 +6,28 @@
 	$controller = require(__SERVER__ . '/controllers/news.controller.php');
 	$auth = include(__SERVER__ . '/auth.php');
 
+	if (!function_exists('getallheaders')) 
+	{ 
+	    function getallheaders() 
+	    { 
+	           $headers = ''; 
+	       foreach ($_SERVER as $name => $value) 
+	       { 
+	           if (substr($name, 0, 5) == 'HTTP_') 
+	           { 
+	               $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value; 
+	           } 
+	       } 
+	       return $headers; 
+	    } 
+	} 
 	try {
 		// pull params off
 		$endpoint = strchr(URI, "?", true);
 		if (!$endpoint) {
 			$endpoint = URI;
 		}
+		
 		// pull first endpoint only
 		$endpoint = strtok($endpoint, "/");
 		if ($endpoint == 'news.php') {
@@ -28,8 +44,7 @@
 					$controller->getNews($augs1, $augs2);
 					return;
 				}
-
-				$headers = apache_request_headers();
+				$headers = getallheaders();
 				if (METHOD == 'POST') {
 					if ($auth->authenticate($headers['Authorization'])) {
 						$controller->addNews();
