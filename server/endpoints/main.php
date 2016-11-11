@@ -30,7 +30,7 @@
 		if ($endpoint == '') {
 			// setcookie("color","red");
 			// echo $_COOKIE["color"];
-			return include('./build/index.html');
+			return include(__SERVER__ . '/endpoints/build/index.html');
 			return;
 		} 
 		if ($endpoint == 'news') {
