@@ -1,13 +1,18 @@
 'use strict';
 
 var React = require('react'),
-	connect = require('react-redux').connect;
+	connect = require('react-redux').connect,
+	Header = require('./header.component'),
+	HeaderImgs = require('./header-imgs.component'),
+	Footer = require('./footer.component');
 
 var mainPage = React.createClass({
 	render: function() {  		
 		return (
 		    <div className="main-page-wrapper">
-		    	<p>Hello Wolrd</p>
+				<HeaderImgs />
+				<Header />
+				<Footer />
 		    </div>
 		);
 	}

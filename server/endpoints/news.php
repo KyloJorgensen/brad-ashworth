@@ -4,6 +4,7 @@
 	DEFINE ('URI', $_SERVER['REQUEST_URI']);
 	DEFINE('__SERVER__', dirname(dirname(__FILE__)));
 	$controller = require(__SERVER__ . '/controllers/news.controller.php');
+	$auth = include(__SERVER__ . '/auth.php');
 
 	try {
 		// pull params off
@@ -11,6 +12,7 @@
 		if (!$endpoint) {
 			$endpoint = URI;
 		}
+		$headers = getallheaders();
 		// pull first endpoint only
 		$endpoint = strtok($endpoint, "/");
 		if ($endpoint == 'news') {
@@ -18,8 +20,7 @@
 			if ($augs1 == 'id') {
 				$augs2 = strtok('/');
 				if (METHOD == 'GET') {
-					echo METHOD;
-					echo 'news/id';
+					$controller->getNewsById($augs2);
 					return;
 				}
 			} else {
@@ -29,17 +30,21 @@
 					return;
 				}
 				if (METHOD == 'POST') {
-					$controller->addNews();
+					if ($auth->authenticate($headers['Authorization'])) {
+						$controller->addNews();
+					}
 					return;
 				}
 				if (METHOD == 'DELETE') {
-					echo METHOD;
-					echo 'news';
+					if ($auth->authenticate($headers['Authorization'])) {
+						$controller->deleteNews();
+					}
 					return;
 				}
 				if (METHOD == 'PUT') {
-					echo METHOD;
-					echo 'news';
+					if ($auth->authenticate($headers['Authorization'])) {
+						$controller->updateNews();
+					}
 					return;
 				}
 			}

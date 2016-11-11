@@ -6,6 +6,8 @@ var React = require('react'),
     store = require('./store'),
     App = require('./components/app.component'),
     MainPage = require('./components/main-page.component'),
+    NewsPage = require('./components/news-page.component'),
+    AdminPage = require('./components/admin-page.component'),
     router = require('react-router'),
     Router = router.Router,
     Route = router.Route,
@@ -17,6 +19,8 @@ var routes = (
         <Router history={hashHistory}>
             <Route path="/" component={App}>
                 <IndexRoute component={MainPage} />
+                <Route path="news" component={NewsPage} />
+                <Route path="admin" component={AdminPage} />
             </Route>
         </Router>
     </Provider>

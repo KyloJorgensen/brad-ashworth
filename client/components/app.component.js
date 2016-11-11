@@ -1,14 +1,17 @@
 'use strict';
 
 var React = require('react'),
-    connect = require('react-redux').connect;
-
+    connect = require('react-redux').connect,
+    userActions = require('../actions/user.actions');
 
 var App = React.createClass({
+    componentDidMount: function() {
+        this.props.dispatch(userActions.updateAdminKey());
+    },
     render: function() {
         return (
-            <div className="test-app">
-                <div className="test-app-body">
+            <div className="app">
+                <div className="app-body">
                     {this.props.children}
                 </div>
             </div>

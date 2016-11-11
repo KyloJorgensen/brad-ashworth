@@ -28,10 +28,25 @@
 		// pull first endpoint only
 		$endpoint = strtok($endpoint, "/");
 		if ($endpoint == '') {
+			// setcookie("color","red");
+			// echo $_COOKIE["color"];
 			return include('./build/index.html');
+			return;
 		} 
 		if ($endpoint == 'news') {
 			include('news.php');
+			return;
+		}
+		if ($endpoint == 'login') {
+			include('login.php');
+			return;
+		}
+		if ($endpoint == 'logout') {
+			include('logout.php');
+			return;
+		}
+		if ($endpoint == 'test') {
+			include('test.php');
 			return;
 		}
 

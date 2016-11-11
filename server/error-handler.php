@@ -21,8 +21,12 @@
 				echo $e->getMessage();
 				return;
 			}
+			if ($e->type == 401) {
+				http_response_code(401);
+				return;
+			}
 			http_response_code(500);
-			echo '<br/>Caught exception: ',  $e->getMessage(), "\n";
+			echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
     }
 
