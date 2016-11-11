@@ -15,13 +15,22 @@
 
 	// Defined as constants so that they can't be changed
 
-	DEFINE ('DB_USER', 'baquest');
 
-	DEFINE ('DB_PASSWORD', 'turtledove');
+	$url = getenv('JAWSDB_URL');
+	$dbparts = parse_url($url);
 
-	DEFINE ('DB_HOST', '127.0.0.1');
+	$hostname = $dbparts['host'];
+	$username = $dbparts['user'];
+	$password = $dbparts['pass'];
+	$database = ltrim($dbparts['path'],'/');
 
-	DEFINE ('DB_NAME', 'badb');
+	DEFINE ('DB_USER', 'rd3fygeuqv4r5zim');
+
+	DEFINE ('DB_PASSWORD', 'iynwi3pgygisuk6y');
+
+	DEFINE ('DB_HOST', 'vhw3t8e71xdz9k14.cbetxkdyhwsb.us-east-1.rds.amazonaws.com');
+
+	DEFINE ('DB_NAME', database);
 
 	// $dbc will contain a resource link to the database
 
