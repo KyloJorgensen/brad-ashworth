@@ -4,6 +4,7 @@
 
 	class LoginController {
 		public function login() {
+			echo 'here';
 			try {
 
 				$data = array();
