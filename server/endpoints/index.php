@@ -45,10 +45,6 @@
 			include('logout.php');
 			return;
 		}
-		if ($endpoint == 'test') {
-			include('test.php');
-			return;
-		}
 
 	    $error = new Exception('MISSING ENDPOINT');
 	    $error->type = 404;

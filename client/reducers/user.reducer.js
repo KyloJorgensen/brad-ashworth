@@ -24,12 +24,6 @@ var userReducer = function(state, action) {
     if (action.type === actions.UPDATE_ADMIN_KEY) {
     	state.key = action.key;
     }
-    if (action.type === actions.NEXT_PAGE) {
-        console.log('+1');
-    }
-    if (action.type === actions.PREVIOUS_PAGE) {
-        console.log('-1');
-    }
     return state;
 };
 

@@ -37,6 +37,7 @@
 					if($response){
 						$key = NULL;
 						$_username;
+						echo 'here';
 						while($row = mysqli_fetch_array($response)){
 							if ($row['username'] == $username) {
 								if ($row['password'] == $password) {
