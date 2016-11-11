@@ -23,6 +23,10 @@
 	$password = $url["pass"];
 	$db = substr($url["path"], 1);
 
+	echo $server;
+	echo $username;
+	echo $password;
+
 	// $dbc will contain a resource link to the database
 
 	// @ keeps the error from showing in the browser
