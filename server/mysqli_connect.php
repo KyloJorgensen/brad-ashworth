@@ -23,9 +23,9 @@
 	$password = $url["pass"];
 	$db = substr($url["path"], 1);
 
-	echo $server;
-	echo $username;
-	echo $password;
+	echo $server.'<br>';
+	echo $username.'<br>';
+	echo $password.'<br>';
 
 	// $dbc will contain a resource link to the database
 
