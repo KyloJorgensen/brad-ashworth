@@ -7,7 +7,6 @@ var React = require('react'),
 var newsEntry = React.createClass({
 	addNewsEntry: function(event) {
 		event.preventDefault();
-		console.log(this)
 		if (this.refs.title.value && this.refs.content.value) {
 			this.props.dispatch(newsActions.addNewsEntry(this.refs.title.value, this.refs.content.value, this.props.entriesAmount, this.props.currentPage));
 			this.refs.title.value = '';
