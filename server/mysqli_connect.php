@@ -21,7 +21,7 @@
 	$server = $url["host"];
 	$username = $url["user"];
 	$password = $url["pass"];
-	$db = substr($url["path"], 1);
+	$db = 'heroku_c0dd17b0109d28f';
 
 	// $dbc will contain a resource link to the database
 
