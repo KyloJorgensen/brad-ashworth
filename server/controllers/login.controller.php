@@ -70,7 +70,7 @@
 
 					} else {
 						$error = new Exception("Couldn't issue database query" . mysqli_error($dbc));
-						$error->type = 500;
+						$error->type = 401;
 						mysqli_close($dbc);
 						throw $error;
 					}
