@@ -26,11 +26,16 @@ var newsEntry = React.createClass({
 			return (
 				<li className="news-entry">
 					<div className="admin">
-						<input type="text" onChange={this.editField} name="title" value={this.state.title} />
-						<p>{this.state.date_enter} </p>
+						<div>
+							Title: <input type="text" onChange={this.editField} name="title" value={this.state.title} />
+							<p>{this.state.date_enter} </p>
+						</div>
+						Content:
 						<textarea onChange={this.editField} name="content" value={this.state.content} />
-						<button onClick={this.saveNewsEntry} >SAVE</button>
-						<button onClick={this.deleteNewsEntry} >DELETE</button>
+						<div>
+							<button onClick={this.saveNewsEntry} >SAVE</button>
+							<button className="right" onClick={this.deleteNewsEntry} >DELETE</button>
+						</div>
 					</div>
 				</li>
 			);

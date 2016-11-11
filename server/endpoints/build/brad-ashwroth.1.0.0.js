@@ -52,8 +52,8 @@
 	    store = __webpack_require__(212),
 	    App = __webpack_require__(220),
 	    MainPage = __webpack_require__(221),
-	    NewsPage = __webpack_require__(288),
-	    AdminPage = __webpack_require__(293),
+	    NewsPage = __webpack_require__(293),
+	    AdminPage = __webpack_require__(295),
 	    router = __webpack_require__(223),
 	    Router = router.Router,
 	    Route = router.Route,
@@ -24479,7 +24479,7 @@
 	    Header = __webpack_require__(222),
 	    HeaderImgs = __webpack_require__(286),
 	    Footer = __webpack_require__(287),
-	    NewSection = __webpack_require__(295);
+	    NewSection = __webpack_require__(288);
 	
 	var mainPage = React.createClass({
 		displayName: 'mainPage',
@@ -30233,7 +30233,7 @@
 			return React.createElement(
 				'div',
 				{ className: 'header-imgs-wrapper' },
-				React.createElement('img', { id: 'header-img', src: 'https://www.rockfordbuzz.com/wp-content/uploads/abstract-art-mother-earth-1030x458.jpg', alt: 'abstract art' })
+				React.createElement('img', { id: 'header-img', src: 'http://www.rockfordbuzz.com/wp-content/uploads/abstract-art-mother-earth-1030x458.jpg', alt: 'abstract art' })
 			);
 		}
 	});
@@ -30292,51 +30292,34 @@
 	
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
-	    Header = __webpack_require__(222),
-	    Footer = __webpack_require__(287),
-	    NewsEntryContainer = __webpack_require__(289),
-	    PageChanger = __webpack_require__(292),
+	    NewsEntryConatiner = __webpack_require__(289),
 	    newsActions = __webpack_require__(219);
 	
-	var newsPage = React.createClass({
-		displayName: 'newsPage',
+	var mainPage = React.createClass({
+		displayName: 'mainPage',
 	
 		componentDidMount: function componentDidMount() {
-			this.props.dispatch(newsActions.setEntriesAmount(10));
+			this.props.dispatch(newsActions.setEntriesAmount(3));
 		},
 		render: function render() {
 			return React.createElement(
 				'div',
-				{ className: 'news-page-wrapper' },
-				React.createElement(Header, null),
+				{ className: 'main-news-section' },
 				React.createElement(
-					'div',
-					{ className: 'container' },
-					React.createElement(
-						'h2',
-						null,
-						'NEWS'
-					)
+					'h2',
+					null,
+					'NEWS'
 				),
-				React.createElement(PageChanger, null),
-				React.createElement(
-					'div',
-					{ className: 'container' },
-					React.createElement(NewsEntryContainer, { currentPage: this.props.currentPage })
-				),
-				React.createElement(PageChanger, null),
-				React.createElement(Footer, null)
+				React.createElement(NewsEntryConatiner, { currentPage: 1 })
 			);
 		}
 	});
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
-		return {
-			currentPage: state.news.currentPage
-		};
+		return {};
 	};
 	
-	var Container = connect(mapStateToProps)(newsPage);
+	var Container = connect(mapStateToProps)(mainPage);
 	
 	module.exports = Container;
 
@@ -30349,7 +30332,7 @@
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
 	    NewsEntryList = __webpack_require__(290),
-	    NewNewsEnrty = __webpack_require__(294),
+	    NewNewsEnrty = __webpack_require__(292),
 	    newsActions = __webpack_require__(219);
 	
 	var newsEntryContainer = React.createClass({
@@ -30455,23 +30438,33 @@
 					React.createElement(
 						'div',
 						{ className: 'admin' },
-						React.createElement('input', { type: 'text', onChange: this.editField, name: 'title', value: this.state.title }),
 						React.createElement(
-							'p',
+							'div',
 							null,
-							this.state.date_enter,
-							' '
+							'Title: ',
+							React.createElement('input', { type: 'text', onChange: this.editField, name: 'title', value: this.state.title }),
+							React.createElement(
+								'p',
+								null,
+								this.state.date_enter,
+								' '
+							)
 						),
+						'Content:',
 						React.createElement('textarea', { onChange: this.editField, name: 'content', value: this.state.content }),
 						React.createElement(
-							'button',
-							{ onClick: this.saveNewsEntry },
-							'SAVE'
-						),
-						React.createElement(
-							'button',
-							{ onClick: this.deleteNewsEntry },
-							'DELETE'
+							'div',
+							null,
+							React.createElement(
+								'button',
+								{ onClick: this.saveNewsEntry },
+								'SAVE'
+							),
+							React.createElement(
+								'button',
+								{ className: 'right', onClick: this.deleteNewsEntry },
+								'DELETE'
+							)
 						)
 					)
 				);
@@ -30529,6 +30522,130 @@
 	    connect = __webpack_require__(172).connect,
 	    newsActions = __webpack_require__(219);
 	
+	var newsEntry = React.createClass({
+		displayName: 'newsEntry',
+	
+		addNewsEntry: function addNewsEntry(event) {
+			event.preventDefault();
+			if (this.refs.title.value && this.refs.content.value) {
+				this.props.dispatch(newsActions.addNewsEntry(this.refs.title.value, this.refs.content.value, this.props.entriesAmount, this.props.currentPage));
+				this.refs.title.value = '';
+				this.refs.content.value = '';
+			}
+		},
+		render: function render() {
+	
+			if (this.props.adminKey != false) {
+				return React.createElement(
+					'form',
+					{ onSubmit: this.addNewsEntry, className: 'add-news-entry' },
+					React.createElement(
+						'div',
+						{ className: 'admin' },
+						React.createElement(
+							'div',
+							null,
+							'Title:',
+							React.createElement('input', { type: 'text', ref: 'title' }),
+							React.createElement(
+								'p',
+								null,
+								'Date'
+							)
+						),
+						'Content:',
+						React.createElement('textarea', { ref: 'content' }),
+						React.createElement(
+							'div',
+							null,
+							React.createElement('input', { type: 'submit', value: 'ADD' })
+						)
+					)
+				);
+			} else {
+				return null;
+			}
+		}
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {
+			adminKey: state.user.key,
+			currentPage: state.news.currentPage,
+			entriesAmount: state.news.entriesAmount
+		};
+	};
+	
+	var Container = connect(mapStateToProps)(newsEntry);
+	
+	module.exports = Container;
+
+/***/ },
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    Header = __webpack_require__(222),
+	    Footer = __webpack_require__(287),
+	    NewsEntryContainer = __webpack_require__(289),
+	    PageChanger = __webpack_require__(294),
+	    newsActions = __webpack_require__(219);
+	
+	var newsPage = React.createClass({
+		displayName: 'newsPage',
+	
+		componentDidMount: function componentDidMount() {
+			this.props.dispatch(newsActions.setEntriesAmount(10));
+		},
+		render: function render() {
+			return React.createElement(
+				'div',
+				{ className: 'news-page-wrapper' },
+				React.createElement(Header, null),
+				React.createElement(
+					'div',
+					{ className: 'container' },
+					React.createElement(
+						'h2',
+						null,
+						'NEWS'
+					)
+				),
+				React.createElement(PageChanger, null),
+				React.createElement(
+					'div',
+					{ className: 'container' },
+					React.createElement(NewsEntryContainer, { currentPage: this.props.currentPage })
+				),
+				React.createElement(PageChanger, null),
+				React.createElement(Footer, null)
+			);
+		}
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {
+			currentPage: state.news.currentPage
+		};
+	};
+	
+	var Container = connect(mapStateToProps)(newsPage);
+	
+	module.exports = Container;
+
+/***/ },
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    newsActions = __webpack_require__(219);
+	
 	var newspage = React.createClass({
 		displayName: 'newspage',
 	
@@ -30576,7 +30693,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 293 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30666,103 +30783,6 @@
 	};
 	
 	var Container = connect(mapStateToProps)(adminPage);
-	
-	module.exports = Container;
-
-/***/ },
-/* 294 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect,
-	    newsActions = __webpack_require__(219);
-	
-	var newsEntry = React.createClass({
-		displayName: 'newsEntry',
-	
-		addNewsEntry: function addNewsEntry(event) {
-			event.preventDefault();
-			if (this.refs.title.value && this.refs.content.value) {
-				this.props.dispatch(newsActions.addNewsEntry(this.refs.title.value, this.refs.content.value, this.props.entriesAmount, this.props.currentPage));
-				this.refs.title.value = '';
-				this.refs.content.value = '';
-			}
-		},
-		render: function render() {
-	
-			if (this.props.adminKey != false) {
-				return React.createElement(
-					'form',
-					{ onSubmit: this.addNewsEntry, className: 'add-news-entry' },
-					React.createElement(
-						'div',
-						{ className: 'admin' },
-						React.createElement('input', { type: 'text', ref: 'title' }),
-						React.createElement(
-							'p',
-							null,
-							'Date'
-						),
-						React.createElement('textarea', { ref: 'content' }),
-						React.createElement('input', { type: 'submit', value: 'ADD' })
-					)
-				);
-			} else {
-				return null;
-			}
-		}
-	});
-	
-	var mapStateToProps = function mapStateToProps(state, props) {
-		return {
-			adminKey: state.user.key,
-			currentPage: state.news.currentPage,
-			entriesAmount: state.news.entriesAmount
-		};
-	};
-	
-	var Container = connect(mapStateToProps)(newsEntry);
-	
-	module.exports = Container;
-
-/***/ },
-/* 295 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect,
-	    NewsEntryConatiner = __webpack_require__(289),
-	    newsActions = __webpack_require__(219);
-	
-	var mainPage = React.createClass({
-		displayName: 'mainPage',
-	
-		componentDidMount: function componentDidMount() {
-			this.props.dispatch(newsActions.setEntriesAmount(3));
-		},
-		render: function render() {
-			return React.createElement(
-				'div',
-				{ className: 'main-news-section' },
-				React.createElement(
-					'h2',
-					null,
-					'NEWS'
-				),
-				React.createElement(NewsEntryConatiner, { currentPage: 1 })
-			);
-		}
-	});
-	
-	var mapStateToProps = function mapStateToProps(state, props) {
-		return {};
-	};
-	
-	var Container = connect(mapStateToProps)(mainPage);
 	
 	module.exports = Container;
 

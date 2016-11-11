@@ -19,10 +19,14 @@ var newsEntry = React.createClass({
 			return (
 				<form onSubmit={this.addNewsEntry} className="add-news-entry">
 					<div className="admin">
-						<input type="text" ref="title" />
-						<p>Date</p>
-						<textarea ref="content" />
-						<input type="submit" value="ADD" />
+						<div>
+							Title:<input type="text" ref="title" />
+							<p>Date</p>
+						</div>
+						Content:<textarea ref="content" />
+						<div>
+							<input type="submit" value="ADD" />
+						</div>
 					</div>
 				</form>
 			);

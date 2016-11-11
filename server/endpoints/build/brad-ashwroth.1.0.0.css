@@ -106,15 +106,33 @@ button.alt,
   width: 33.3%;
   display: inline-block;
 }
-.news-entry h4 {
+.news-entry,
+.add-news-entry {
+  padding: 15px;
+}
+.news-entry h4,
+.add-news-entry h4,
+.news-entry .admin input,
+.add-news-entry .admin input {
   display: inline-block;
 }
-.news-entry h5 {
+.news-entry h5,
+.add-news-entry h5,
+.news-entry .admin p,
+.add-news-entry .admin p,
+.news-entry .admin .right,
+.add-news-entry .admin .right {
   float: right;
   display: inline-block;
 }
-.news-entry p {
+.news-entry .public p,
+.add-news-entry .public p {
   padding: 15px;
+}
+.news-entry textarea,
+.add-news-entry textarea {
+  width: 100%;
+  height: 200px;
 }
 .admin-login-form {
   padding: 50px;
