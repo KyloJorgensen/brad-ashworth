@@ -1,4 +1,4 @@
 <?php
-	include('server/endpoints/index.php');
+	include('./server/endpoints/index.php');
 	echo "hello world";
 ?>	
