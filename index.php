@@ -1,3 +1,4 @@
 <?php
-	require('server/endpoints/index.php');
+	include('server/endpoints/index.php');
+
 ?>
