@@ -28,22 +28,21 @@
 					$controller->getNews($augs1, $augs2);
 					return;
 				}
+
+				$headers = apache_request_headers()
 				if (METHOD == 'POST') {
-					$headers = getallheaders();
 					if ($auth->authenticate($headers['Authorization'])) {
 						$controller->addNews();
 					}
 					return;
 				}
 				if (METHOD == 'DELETE') {
-					$headers = getallheaders();
 					if ($auth->authenticate($headers['Authorization'])) {
 						$controller->deleteNews();
 					}
 					return;
 				}
 				if (METHOD == 'PUT') {
-					$headers = getallheaders();
 					if ($auth->authenticate($headers['Authorization'])) {
 						$controller->updateNews();
 					}
