@@ -13,7 +13,6 @@
 		if (!$endpoint) {
 			$endpoint = URI;
 		}
-		$headers = getallheaders();
 		// pull first endpoint only
 		$endpoint = strtok($endpoint, "/");
 		if ($endpoint == 'news.php') {
@@ -31,18 +30,21 @@
 					return;
 				}
 				if (METHOD == 'POST') {
+					$headers = getallheaders();
 					if ($auth->authenticate($headers['Authorization'])) {
 						$controller->addNews();
 					}
 					return;
 				}
 				if (METHOD == 'DELETE') {
+					$headers = getallheaders();
 					if ($auth->authenticate($headers['Authorization'])) {
 						$controller->deleteNews();
 					}
 					return;
 				}
 				if (METHOD == 'PUT') {
+					$headers = getallheaders();
 					if ($auth->authenticate($headers['Authorization'])) {
 						$controller->updateNews();
 					}
