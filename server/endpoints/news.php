@@ -15,7 +15,7 @@
 		$headers = getallheaders();
 		// pull first endpoint only
 		$endpoint = strtok($endpoint, "/");
-		if ($endpoint == 'news') {
+		if ($endpoint == 'news.php') {
 			$augs1 = strtok('/');
 			if ($augs1 == 'id') {
 				$augs2 = strtok('/');

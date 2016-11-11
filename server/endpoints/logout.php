@@ -13,7 +13,7 @@
 		}
 		// pull first endpoint only
 		$endpoint = strtok($endpoint, "/");
-		if ($endpoint == 'logout') {
+		if ($endpoint == 'logout.php') {
 			if (METHOD == 'GET') {
 				$controller->logout();
 				return;

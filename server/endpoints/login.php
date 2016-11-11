@@ -13,7 +13,7 @@
 		}
 		// pull first endpoint only
 		$endpoint = strtok($endpoint, "/");
-		if ($endpoint == 'login') {
+		if ($endpoint == 'login.php') {
 			if (METHOD == 'POST') {
 				$controller->login();
 				return;

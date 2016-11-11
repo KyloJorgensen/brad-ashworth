@@ -23586,7 +23586,7 @@
 	    };
 	    return function (dispatch) {
 	        redirect = that;
-	        var url = '/login';
+	        var url = '/login.php';
 	        return fetch(url, {
 	            method: 'POST',
 	            credentials: 'same-origin',
@@ -23633,7 +23633,7 @@
 	var logout = function logout(that) {
 	    return function (dispatch) {
 	        redirect = that;
-	        var url = '/logout';
+	        var url = '/logout.php';
 	        return fetch(url, {
 	            method: 'GET',
 	            credentials: 'same-origin',
@@ -24212,7 +24212,7 @@
 	var getNewsEntries = function getNewsEntries(currentPage) {
 	    console.log(currentPage);
 	    return function (dispatch) {
-	        var url = '/news/10/' + (currentPage - 1) * 10;
+	        var url = '/news.php/10/' + (currentPage - 1) * 10;
 	        return fetch(url, {
 	            method: 'GET',
 	            credentials: 'same-origin',
@@ -24270,7 +24270,7 @@
 	
 	var updateNewsEntry = function updateNewsEntry(payload, currentPage) {
 	    return function (dispatch) {
-	        var url = '/news';
+	        var url = '/news.php';
 	        return fetch(url, {
 	            method: 'PUT',
 	            credentials: 'same-origin',
@@ -24311,7 +24311,7 @@
 	
 	var removeNewsEntry = function removeNewsEntry(payload, currentPage) {
 	    return function (dispatch) {
-	        var url = '/news';
+	        var url = '/news.php';
 	        return fetch(url, {
 	            method: 'DELETE',
 	            credentials: 'same-origin',
@@ -24356,7 +24356,7 @@
 	        content: content
 	    };
 	    return function (dispatch) {
-	        var url = '/news';
+	        var url = '/news.php';
 	        return fetch(url, {
 	            method: 'POST',
 	            credentials: 'same-origin',

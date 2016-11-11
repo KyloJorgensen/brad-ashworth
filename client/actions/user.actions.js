@@ -10,7 +10,7 @@ var login = function(username, password, that) {
     };
     return function(dispatch) {
         redirect = that;
-        var url = '/login';
+        var url = '/login.php';
         return fetch(url, {
             method: 'POST',
             credentials: 'same-origin',
@@ -59,7 +59,7 @@ var loginError = function(error) {
 var logout = function(that) {
     return function(dispatch) {
         redirect = that;
-        var url = '/logout';
+        var url = '/logout.php';
         return fetch(url, {
             method: 'GET',
             credentials: 'same-origin',

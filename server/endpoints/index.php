@@ -33,15 +33,15 @@
 			return include('./build/index.html');
 			return;
 		} 
-		if ($endpoint == 'news') {
+		if ($endpoint == 'news.php') {
 			include('news.php');
 			return;
 		}
-		if ($endpoint == 'login') {
+		if ($endpoint == 'login.php') {
 			include('login.php');
 			return;
 		}
-		if ($endpoint == 'logout') {
+		if ($endpoint == 'logout.php') {
 			include('logout.php');
 			return;
 		}

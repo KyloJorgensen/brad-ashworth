@@ -5,7 +5,7 @@ var fetch = require('isomorphic-fetch');
 var getNewsEntries = function(currentPage){
     console.log(currentPage);
     return function(dispatch) {
-        var url = '/news/10/' + (currentPage-1)*10;
+        var url = '/news.php/10/' + (currentPage-1)*10;
         return fetch(url, {
             method: 'GET',
             credentials: 'same-origin',
@@ -66,7 +66,7 @@ var previousPage = function() {
 
 var updateNewsEntry = function(payload, currentPage) {
     return function(dispatch) {
-        var url = '/news';
+        var url = '/news.php';
         return fetch(url, {
             method: 'PUT',
             credentials: 'same-origin',
@@ -109,7 +109,7 @@ var updateNewsEntryError = function() {
 
 var removeNewsEntry = function(payload, currentPage) {
     return function(dispatch) {
-        var url = '/news';
+        var url = '/news.php';
         return fetch(url, {
             method: 'DELETE',
             credentials: 'same-origin',
@@ -156,7 +156,7 @@ var addNewsEntry = function(title, content, currentPage) {
         content: content
     };
     return function(dispatch) {
-        var url = '/news';
+        var url = '/news.php';
         return fetch(url, {
             method: 'POST',
             credentials: 'same-origin',
