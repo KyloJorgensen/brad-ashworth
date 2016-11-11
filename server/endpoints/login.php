@@ -2,8 +2,8 @@
 
 	DEFINE ('METHOD', $_SERVER['REQUEST_METHOD']);
 	DEFINE ('URI', $_SERVER['REQUEST_URI']);
-	DEFINE('__SERVER__', dirname(dirname(__FILE__)));
-	$controller = require(__SERVER__ . '/controllers/login.controller.php');
+	DEFINE('__SERVER__', __FILE__);
+	$controller = require(__SERVER__ . '/bradashworth/server/controllers/login.controller.php');
 
 	try {
 		// pull params off
