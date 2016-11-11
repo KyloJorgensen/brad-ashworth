@@ -28,9 +28,9 @@ var adminPage = React.createClass({
 			return (
 				<div className="admin-page-wrapper">
 					<Header/>
-					<div className="conatiner">
+					<div className="container">
 						<form onSubmit={this.logout} >
-							<input type="submit" value="LOGOUT"/>
+							<input type="submit" value="LOGOUT OF ADMIN"/>
 						</form>
 					</div>
 					<Footer />
@@ -40,12 +40,16 @@ var adminPage = React.createClass({
 			return (
 				<div className="admin-page-wrapper">
 					<Header/>
-					<div className="conatiner">
-						<form onSubmit={this.login} >
+					<div className="container">
+						<form className="admin-login-form" onSubmit={this.login} >
 							<label>Admin Name</label>
+							<br/>
 							<input type="text" ref="username" name="username" />
+							<br/>
 							<label>Password</label>
+							<br/>
 							<input type="password" ref="password" name="password" />
+							<br/>
 							<input type="submit" value="LOGIN"/>
 						</form>
 					</div>

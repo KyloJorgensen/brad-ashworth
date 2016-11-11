@@ -12,11 +12,11 @@ var newsEntry = React.createClass({
 	},
 	saveNewsEntry: function() {
 		console.log('save');
-		this.props.dispatch(newsActions.updateNewsEntry(this.state, this.props.currentPage));
+		this.props.dispatch(newsActions.updateNewsEntry(this.state, this.props.entriesAmount, this.props.currentPage));
 	},
 	deleteNewsEntry: function() {
 		console.log('delete');
-		this.props.dispatch(newsActions.removeNewsEntry(this.props.newsEntry, this.props.currentPage));
+		this.props.dispatch(newsActions.removeNewsEntry(this.props.newsEntry, this.props.entriesAmount, this.props.currentPage));
 	},
 	componentWillMount: function() {
 		this.setState(this.props.newsEntry);
@@ -38,8 +38,10 @@ var newsEntry = React.createClass({
 			return (
 				<li className="news-entry">
 					<div className="public">
-						<h1>{this.state.title}</h1>
-						<h2>{this.state.date_enter}</h2>
+						<div>
+							<h4>{this.state.title}</h4>
+							<h5>{this.state.date_enter}</h5>
+						</div>
 						<p>{this.state.content}</p>
 					</div>
 				</li>
@@ -51,7 +53,8 @@ var newsEntry = React.createClass({
 var mapStateToProps = function(state, props) {
 	return {
 		adminKey: state.user.key,
-		currentPage: state.news.currentPage
+		currentPage: state.news.currentPage,
+		entriesAmount: state.news.entriesAmount
 	};
 };
 

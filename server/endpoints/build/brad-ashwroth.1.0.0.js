@@ -24173,7 +24173,8 @@
 	var newsInitialState = {
 	    newsEntries: [],
 	    currentPage: 1,
-	    totalEntries: 1
+	    totalEntries: 1,
+	    entriesAmount: 3
 	};
 	
 	var newsReducer = function newsReducer(state, action) {
@@ -24196,6 +24197,9 @@
 	            state.currentPage--;
 	        }
 	    }
+	    if (action.type === actions.SET_ENTRIES_AMOUNT) {
+	        state.entriesAmount = action.amount;
+	    }
 	    return state;
 	};
 	
@@ -24209,10 +24213,9 @@
 	
 	var fetch = __webpack_require__(216);
 	
-	var getNewsEntries = function getNewsEntries(currentPage) {
-	    console.log(currentPage);
+	var getNewsEntries = function getNewsEntries(amount, currentPage) {
 	    return function (dispatch) {
-	        var url = '/news.php/10/' + (currentPage - 1) * 10;
+	        var url = '/news.php/' + amount + '/' + (currentPage - 1) * 10;
 	        return fetch(url, {
 	            method: 'GET',
 	            credentials: 'same-origin',
@@ -24228,7 +24231,6 @@
 	            }
 	            return response;
 	        }).then(function (response) {
-	            console.log(response);
 	            return response.json();
 	        }).then(function (data) {
 	            return dispatch(getNewsEntriesSuccess(data));
@@ -24268,7 +24270,7 @@
 	    };
 	};
 	
-	var updateNewsEntry = function updateNewsEntry(payload, currentPage) {
+	var updateNewsEntry = function updateNewsEntry(payload, amount, currentPage) {
 	    return function (dispatch) {
 	        var url = '/news.php';
 	        return fetch(url, {
@@ -24287,7 +24289,7 @@
 	            }
 	            return response;
 	        }).then(function (response) {
-	            dispatch(getNewsEntries(currentPage));
+	            dispatch(getNewsEntries(amount, currentPage));
 	            return dispatch(updateNewsEntrySuccess());
 	        }).catch(function (error) {
 	            return dispatch(updateNewsEntryError(error));
@@ -24309,7 +24311,7 @@
 	    };
 	};
 	
-	var removeNewsEntry = function removeNewsEntry(payload, currentPage) {
+	var removeNewsEntry = function removeNewsEntry(payload, amount, currentPage) {
 	    return function (dispatch) {
 	        var url = '/news.php';
 	        return fetch(url, {
@@ -24328,7 +24330,7 @@
 	            }
 	            return response;
 	        }).then(function (response) {
-	            dispatch(getNewsEntries(currentPage));
+	            dispatch(getNewsEntries(amount, currentPage));
 	            return dispatch(removeNewsEntrySuccess());
 	        }).catch(function (error) {
 	            return dispatch(removeNewsEntryError(error));
@@ -24350,7 +24352,7 @@
 	    };
 	};
 	
-	var addNewsEntry = function addNewsEntry(title, content, currentPage) {
+	var addNewsEntry = function addNewsEntry(title, content, amount, currentPage) {
 	    var payload = {
 	        title: title,
 	        content: content
@@ -24373,7 +24375,7 @@
 	            }
 	            return response;
 	        }).then(function (response) {
-	            dispatch(getNewsEntries(currentPage));
+	            dispatch(getNewsEntries(amount, currentPage));
 	            return dispatch(addNewsEntrySuccess());
 	        }).catch(function (error) {
 	            return dispatch(addNewsEntryError(error));
@@ -24392,6 +24394,14 @@
 	var addNewsEntryError = function addNewsEntryError() {
 	    return {
 	        type: ADD_NEWS_ENTRY_ERROR
+	    };
+	};
+	
+	var SET_ENTRIES_AMOUNT = 'SET_ENTRIES_AMOUNT';
+	var setEntriesAmount = function setEntriesAmount(amount) {
+	    return {
+	        type: SET_ENTRIES_AMOUNT,
+	        amount: amount
 	    };
 	};
 	
@@ -24418,7 +24428,8 @@
 	exports.addNewsEntrySuccess = addNewsEntrySuccess;
 	exports.ADD_NEWS_ENTRY_ERROR = ADD_NEWS_ENTRY_ERROR;
 	exports.addNewsEntryError = addNewsEntryError;
-	exports.removeNewsEntryError = removeNewsEntryError;
+	exports.SET_ENTRIES_AMOUNT = SET_ENTRIES_AMOUNT;
+	exports.setEntriesAmount = setEntriesAmount;
 
 /***/ },
 /* 220 */
@@ -24467,7 +24478,8 @@
 	    connect = __webpack_require__(172).connect,
 	    Header = __webpack_require__(222),
 	    HeaderImgs = __webpack_require__(286),
-	    Footer = __webpack_require__(287);
+	    Footer = __webpack_require__(287),
+	    NewSection = __webpack_require__(295);
 	
 	var mainPage = React.createClass({
 		displayName: 'mainPage',
@@ -24478,6 +24490,11 @@
 				{ className: 'main-page-wrapper' },
 				React.createElement(HeaderImgs, null),
 				React.createElement(Header, null),
+				React.createElement(
+					'div',
+					{ className: 'container' },
+					React.createElement(NewSection, null)
+				),
 				React.createElement(Footer, null)
 			);
 		}
@@ -24510,7 +24527,7 @@
 				{ className: 'header-wrapper' },
 				React.createElement(
 					'div',
-					{ className: 'conatiner' },
+					{ className: 'container' },
 					React.createElement(
 						'div',
 						{ className: 'Logo' },
@@ -30245,13 +30262,13 @@
 		render: function render() {
 			return React.createElement(
 				'div',
-				{ className: 'footer-wrapper' },
+				{ className: 'footer-wrapper', id: 'footer' },
 				React.createElement(
 					'div',
-					{ className: 'conatiner' },
+					{ className: 'container' },
 					React.createElement(
 						Link,
-						{ to: '/admin' },
+						{ to: '/admin', className: 'button alt' },
 						'ADMIN'
 					)
 				)
@@ -30278,18 +30295,35 @@
 	    Header = __webpack_require__(222),
 	    Footer = __webpack_require__(287),
 	    NewsEntryContainer = __webpack_require__(289),
-	    PageChanger = __webpack_require__(292);
+	    PageChanger = __webpack_require__(292),
+	    newsActions = __webpack_require__(219);
 	
 	var newsPage = React.createClass({
 		displayName: 'newsPage',
 	
+		componentDidMount: function componentDidMount() {
+			this.props.dispatch(newsActions.setEntriesAmount(10));
+		},
 		render: function render() {
 			return React.createElement(
 				'div',
 				{ className: 'news-page-wrapper' },
 				React.createElement(Header, null),
+				React.createElement(
+					'div',
+					{ className: 'container' },
+					React.createElement(
+						'h2',
+						null,
+						'NEWS'
+					)
+				),
 				React.createElement(PageChanger, null),
-				React.createElement(NewsEntryContainer, { currentPage: this.props.currentPage }),
+				React.createElement(
+					'div',
+					{ className: 'container' },
+					React.createElement(NewsEntryContainer, { currentPage: this.props.currentPage })
+				),
 				React.createElement(PageChanger, null),
 				React.createElement(Footer, null)
 			);
@@ -30322,15 +30356,15 @@
 		displayName: 'newsEntryContainer',
 	
 		componentDidMount: function componentDidMount() {
-			this.props.dispatch(newsActions.getNewsEntries(this.props.currentPage));
+			this.props.dispatch(newsActions.getNewsEntries(this.props.entriesAmount, this.props.currentPage));
 		},
 		componentDidUpdate: function componentDidUpdate() {
-			this.props.dispatch(newsActions.getNewsEntries(this.props.currentPage));
+			this.props.dispatch(newsActions.getNewsEntries(this.props.entriesAmount, this.props.currentPage));
 		},
 		render: function render() {
 			return React.createElement(
 				'div',
-				{ className: 'news-entry-container container' },
+				{ className: 'news-entry-container' },
 				React.createElement(NewNewsEnrty, null),
 				React.createElement(NewsEntryList, { newsEntries: this.props.newsEntries })
 			);
@@ -30338,7 +30372,9 @@
 	});
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
-		return {};
+		return {
+			entriesAmount: state.news.entriesAmount
+		};
 	};
 	
 	var Container = connect(mapStateToProps)(newsEntryContainer);
@@ -30402,11 +30438,11 @@
 		},
 		saveNewsEntry: function saveNewsEntry() {
 			console.log('save');
-			this.props.dispatch(newsActions.updateNewsEntry(this.state, this.props.currentPage));
+			this.props.dispatch(newsActions.updateNewsEntry(this.state, this.props.entriesAmount, this.props.currentPage));
 		},
 		deleteNewsEntry: function deleteNewsEntry() {
 			console.log('delete');
-			this.props.dispatch(newsActions.removeNewsEntry(this.props.newsEntry, this.props.currentPage));
+			this.props.dispatch(newsActions.removeNewsEntry(this.props.newsEntry, this.props.entriesAmount, this.props.currentPage));
 		},
 		componentWillMount: function componentWillMount() {
 			this.setState(this.props.newsEntry);
@@ -30447,14 +30483,18 @@
 						'div',
 						{ className: 'public' },
 						React.createElement(
-							'h1',
+							'div',
 							null,
-							this.state.title
-						),
-						React.createElement(
-							'h2',
-							null,
-							this.state.date_enter
+							React.createElement(
+								'h4',
+								null,
+								this.state.title
+							),
+							React.createElement(
+								'h5',
+								null,
+								this.state.date_enter
+							)
 						),
 						React.createElement(
 							'p',
@@ -30470,7 +30510,8 @@
 	var mapStateToProps = function mapStateToProps(state, props) {
 		return {
 			adminKey: state.user.key,
-			currentPage: state.news.currentPage
+			currentPage: state.news.currentPage,
+			entriesAmount: state.news.entriesAmount
 		};
 	};
 	
@@ -30498,14 +30539,18 @@
 			this.props.dispatch(newsActions.previousPage());
 		},
 		render: function render() {
-			var totalPages = (this.props.totalEntries + (10 - this.props.totalEntries % 10)) / 10;
+	
+			var totalPages = (this.props.totalEntries - this.props.totalEntries % 10) / 10;
+			if (this.props.totalEntries % 10 != 0) {
+				totalPages++;
+			}
 			return React.createElement(
 				'div',
 				{ className: 'page-changer-wrapper container' },
 				React.createElement(
 					'div',
 					{ className: 'page-changer' },
-					React.createElement('input', { type: 'button', onClick: this.previousPage, value: 'PREVIOUS' }),
+					React.createElement('input', { type: 'button', className: 'alt previous', onClick: this.previousPage, value: 'PREVIOUS' }),
 					React.createElement(
 						'p',
 						null,
@@ -30513,7 +30558,7 @@
 						' / ',
 						totalPages
 					),
-					React.createElement('input', { type: 'button', onClick: this.nextPage, value: 'NEXT' })
+					React.createElement('input', { type: 'button', className: 'alt next', onClick: this.nextPage, value: 'NEXT' })
 				)
 			);
 		}
@@ -30569,11 +30614,11 @@
 					React.createElement(Header, null),
 					React.createElement(
 						'div',
-						{ className: 'conatiner' },
+						{ className: 'container' },
 						React.createElement(
 							'form',
 							{ onSubmit: this.logout },
-							React.createElement('input', { type: 'submit', value: 'LOGOUT' })
+							React.createElement('input', { type: 'submit', value: 'LOGOUT OF ADMIN' })
 						)
 					),
 					React.createElement(Footer, null)
@@ -30585,22 +30630,26 @@
 					React.createElement(Header, null),
 					React.createElement(
 						'div',
-						{ className: 'conatiner' },
+						{ className: 'container' },
 						React.createElement(
 							'form',
-							{ onSubmit: this.login },
+							{ className: 'admin-login-form', onSubmit: this.login },
 							React.createElement(
 								'label',
 								null,
 								'Admin Name'
 							),
+							React.createElement('br', null),
 							React.createElement('input', { type: 'text', ref: 'username', name: 'username' }),
+							React.createElement('br', null),
 							React.createElement(
 								'label',
 								null,
 								'Password'
 							),
+							React.createElement('br', null),
 							React.createElement('input', { type: 'password', ref: 'password', name: 'password' }),
+							React.createElement('br', null),
 							React.createElement('input', { type: 'submit', value: 'LOGIN' })
 						)
 					),
@@ -30637,7 +30686,7 @@
 			event.preventDefault();
 			console.log(this);
 			if (this.refs.title.value && this.refs.content.value) {
-				this.props.dispatch(newsActions.addNewsEntry(this.refs.title.value, this.refs.content.value, this.props.currentPage));
+				this.props.dispatch(newsActions.addNewsEntry(this.refs.title.value, this.refs.content.value, this.props.entriesAmount, this.props.currentPage));
 				this.refs.title.value = '';
 				this.refs.content.value = '';
 			}
@@ -30655,8 +30704,7 @@
 						React.createElement(
 							'p',
 							null,
-							Date.now(),
-							' '
+							'Date'
 						),
 						React.createElement('textarea', { ref: 'content' }),
 						React.createElement('input', { type: 'submit', value: 'ADD' })
@@ -30671,11 +30719,51 @@
 	var mapStateToProps = function mapStateToProps(state, props) {
 		return {
 			adminKey: state.user.key,
-			currentPage: state.news.currentPage
+			currentPage: state.news.currentPage,
+			entriesAmount: state.news.entriesAmount
 		};
 	};
 	
 	var Container = connect(mapStateToProps)(newsEntry);
+	
+	module.exports = Container;
+
+/***/ },
+/* 295 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
+	    NewsEntryConatiner = __webpack_require__(289),
+	    newsActions = __webpack_require__(219);
+	
+	var mainPage = React.createClass({
+		displayName: 'mainPage',
+	
+		componentDidMount: function componentDidMount() {
+			this.props.dispatch(newsActions.setEntriesAmount(3));
+		},
+		render: function render() {
+			return React.createElement(
+				'div',
+				{ className: 'main-news-section' },
+				React.createElement(
+					'h2',
+					null,
+					'NEWS'
+				),
+				React.createElement(NewsEntryConatiner, { currentPage: 1 })
+			);
+		}
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {};
+	};
+	
+	var Container = connect(mapStateToProps)(mainPage);
 	
 	module.exports = Container;
 

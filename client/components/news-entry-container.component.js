@@ -8,14 +8,14 @@ var React = require('react'),
 
 var newsEntryContainer = React.createClass({
 	componentDidMount: function() {
-		this.props.dispatch(newsActions.getNewsEntries(this.props.currentPage));
+		this.props.dispatch(newsActions.getNewsEntries(this.props.entriesAmount, this.props.currentPage));
 	},
 	componentDidUpdate: function() {
-		this.props.dispatch(newsActions.getNewsEntries(this.props.currentPage));
+		this.props.dispatch(newsActions.getNewsEntries(this.props.entriesAmount, this.props.currentPage));
 	},
 	render: function() {
 		return (
-			<div className="news-entry-container container">
+			<div className="news-entry-container">
 				<NewNewsEnrty />
 				<NewsEntryList newsEntries={this.props.newsEntries} />
 			</div>
@@ -24,7 +24,9 @@ var newsEntryContainer = React.createClass({
 });
 
 var mapStateToProps = function(state, props) {
-	return {};
+	return {
+		entriesAmount: state.news.entriesAmount
+	};
 };
 
 var Container = connect(mapStateToProps)(newsEntryContainer);

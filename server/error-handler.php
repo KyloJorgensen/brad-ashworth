@@ -23,6 +23,7 @@
 			}
 			if ($e->type == 401) {
 				http_response_code(401);
+				echo $e->getMessage(), "\n";
 				return;
 			}
 			http_response_code(500);

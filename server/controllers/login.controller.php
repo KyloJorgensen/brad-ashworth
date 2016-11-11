@@ -4,7 +4,6 @@
 
 	class LoginController {
 		public function login() {
-			echo 'here';
 			try {
 
 				$data = array();
@@ -38,11 +37,9 @@
 					if($response){
 						$key = NULL;
 						$_username;
-						echo 'here';
 						while($row = mysqli_fetch_array($response)){
 							if ($row['username'] == $username) {
 								if ($row['password'] == $password) {
-
 									$_username = $username;
 									$variables = include(__SERVER__ . '/variables.php');
 									$keyuncypted = rand(1000000000, 9999999999) . $variables->secret.$_username;

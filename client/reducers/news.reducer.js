@@ -6,6 +6,7 @@ var newsInitialState = {
 	newsEntries: [],
     currentPage: 1,
     totalEntries: 1,
+    entriesAmount: 3
 };
 
 var newsReducer = function(state, action) {
@@ -27,6 +28,9 @@ var newsReducer = function(state, action) {
         if (state.currentPage != 1) {
             state.currentPage--;
         }
+    }
+    if (action.type === actions.SET_ENTRIES_AMOUNT) {
+        state.entriesAmount = action.amount;
     }
     return state;
 };

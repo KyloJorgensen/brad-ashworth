@@ -7,9 +7,9 @@ var React = require('react'),
 var footer = React.createClass({
 	render: function() {  		
 		return (
-		    <div className="footer-wrapper">
-		    	<div className="conatiner">
-		    		<Link to={'/admin'}>ADMIN</Link>
+		    <div className="footer-wrapper" id="footer">
+		    	<div className="container">
+		    		<Link to={'/admin'} className="button alt" >ADMIN</Link>
 		    	</div>
 		    </div>
 		);

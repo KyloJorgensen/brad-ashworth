@@ -9,7 +9,7 @@ var newsEntry = React.createClass({
 		event.preventDefault();
 		console.log(this)
 		if (this.refs.title.value && this.refs.content.value) {
-			this.props.dispatch(newsActions.addNewsEntry(this.refs.title.value, this.refs.content.value, this.props.currentPage));
+			this.props.dispatch(newsActions.addNewsEntry(this.refs.title.value, this.refs.content.value, this.props.entriesAmount, this.props.currentPage));
 			this.refs.title.value = '';
 			this.refs.content.value = '';
 		}
@@ -21,7 +21,7 @@ var newsEntry = React.createClass({
 				<form onSubmit={this.addNewsEntry} className="add-news-entry">
 					<div className="admin">
 						<input type="text" ref="title" />
-						<p>{Date.now()} </p>
+						<p>Date</p>
 						<textarea ref="content" />
 						<input type="submit" value="ADD" />
 					</div>
@@ -36,7 +36,8 @@ var newsEntry = React.createClass({
 var mapStateToProps = function(state, props) {
 	return {
 		adminKey: state.user.key,
-		currentPage: state.news.currentPage
+		currentPage: state.news.currentPage,
+		entriesAmount: state.news.entriesAmount
 	};
 };
 

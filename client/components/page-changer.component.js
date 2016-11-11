@@ -12,13 +12,17 @@ var newspage = React.createClass({
 		this.props.dispatch(newsActions.previousPage());
 	},
 	render: function() {
-		var totalPages = (this.props.totalEntries + (10 - this.props.totalEntries % 10)) / 10;
+
+		var totalPages = ( ( this.props.totalEntries -  ( this.props.totalEntries % 10 ) ) / 10 );
+		if (this.props.totalEntries % 10 != 0) {
+			totalPages++;
+		}
 		return (
 			<div className="page-changer-wrapper container">
 				<div className="page-changer">
-					<input type="button" onClick={this.previousPage} value="PREVIOUS" />
+					<input type="button" className="alt previous" onClick={this.previousPage} value="PREVIOUS" />
 					<p>{this.props.currentPage} / {totalPages}</p>
-					<input type="button" onClick={this.nextPage} value="NEXT" />
+					<input type="button" className="alt next" onClick={this.nextPage} value="NEXT" />
 				</div>
 			</div>
 		);
