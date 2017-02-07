@@ -6,7 +6,11 @@ var React = require('react'),
     store = require('./store'),
     App = require('./components/app.component'),
     MainPage = require('./components/main-page.component'),
-    NewsPage = require('./components/news-page.component'),
+    NewsPage = require('./components/news/news-page.component'),
+    NewsListContainer = require('./components/news/news-list-container.component.js'),
+    NewsEntryView = require('./components/news/news-entry-view.component'),
+    NewsEntryEdit = require('./components/news/news-entry-edit.component'),
+    NewsEntryNew = require('./components/news/news-new.component'),
     AdminPage = require('./components/admin-page.component'),
     router = require('react-router'),
     Router = router.Router,
@@ -19,7 +23,13 @@ var routes = (
         <Router history={hashHistory}>
             <Route path="/" component={App}>
                 <IndexRoute component={MainPage} />
-                <Route path="news" component={NewsPage} />
+                <Route path="news" component={NewsPage} >
+                    <IndexRoute component={NewsListContainer} />
+                    <Route path="list/:pageNumber" components={NewsListContainer} />
+                    <Route path="view/:idnews" component={NewsEntryView} />
+                    <Route path="edit/:idnews" component={NewsEntryEdit} />
+                    <Route path="new" component={NewsEntryNew} />
+                </Route>
                 <Route path="admin" component={AdminPage} />
             </Route>
         </Router>

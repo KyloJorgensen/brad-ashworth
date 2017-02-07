@@ -5,7 +5,8 @@ var React = require('react'),
 	Header = require('./header.component'),
 	HeaderImgs = require('./header-imgs.component'),
 	Footer = require('./footer.component'),
-	NewSection = require('./main-news-section.component');
+	NewSection = require('./main-news-container.component'),
+	newsActions = require('../actions/news.actions');
 
 var mainPage = React.createClass({
 	render: function() {  		

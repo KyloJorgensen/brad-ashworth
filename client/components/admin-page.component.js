@@ -4,7 +4,6 @@ var React = require('react'),
 	connect = require('react-redux').connect,
 	Header = require('./header.component'),
 	Footer = require('./footer.component'),
-	NewsEntryContainer = require('./news-entry-container.component'),
 	userActions = require('../actions/user.actions');
 
 var adminPage = React.createClass({

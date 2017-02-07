@@ -2,9 +2,53 @@
 
 var fetch = require('isomorphic-fetch');
 
+var getNewsEntry = function(newsEntryId) {
+    return function(dispatch) {
+        var url = '/news.php/id/' + newsEntryId;
+        return fetch(url, {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            }
+        }).then(function(response) {
+            if (response.status < 200 || response.status >= 300) {
+                var error = new Error(response.statusText)
+                error.response = response
+                throw error;
+            }
+            return response;
+        }).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            return dispatch(getNewsEntrySuccess(data));
+        }).catch(function(error) {
+            return dispatch(getNewsEntryError(error));
+        });
+    };
+};
+
+var GET_NEWS_ENTRY_SUCCESS = 'GET_NEWS_ENTRY_SUCCESS';
+var getNewsEntrySuccess = function(data) {
+    return {
+        type: GET_NEWS_ENTRY_SUCCESS,
+        data: data
+    };
+}
+
+var GET_NEWS_ENTRY_ERROR ='GET_NEWS_ENTRY_ERROR';
+var getNewsEntryError = function(error) {
+    console.log(error);
+    return {
+        type: GET_NEWS_ENTRY_ERROR,
+        error: error
+    };
+};
+
 var getNewsEntries = function(amount, currentPage){
     return function(dispatch) {
-        var url = '/news.php/'+ amount +'/' + (currentPage-1)*10;
+        var url = '/news.php/'+ amount +'/' + (currentPage-1)*amount;
         return fetch(url, {
             method: 'GET',
             credentials: 'same-origin',
@@ -62,7 +106,7 @@ var previousPage = function() {
     }
 };
 
-var updateNewsEntry = function(payload, amount, currentPage) {
+var updateNewsEntry = function(payload) {
     return function(dispatch) {
         var url = '/news.php';
         return fetch(url, {
@@ -82,7 +126,6 @@ var updateNewsEntry = function(payload, amount, currentPage) {
             return response;
         })
         .then(function(response) {
-            dispatch(getNewsEntries(amount, currentPage));
             return dispatch(updateNewsEntrySuccess());
         })
         .catch(function(error) {
@@ -105,7 +148,7 @@ var updateNewsEntryError = function() {
     }
 };
 
-var removeNewsEntry = function(payload, amount, currentPage) {
+var removeNewsEntry = function(payload) {
     return function(dispatch) {
         var url = '/news.php';
         return fetch(url, {
@@ -125,7 +168,6 @@ var removeNewsEntry = function(payload, amount, currentPage) {
             return response;
         })
         .then(function(response) {
-            dispatch(getNewsEntries(amount, currentPage));
             return dispatch(removeNewsEntrySuccess());
         })
         .catch(function(error) {
@@ -203,6 +245,9 @@ var setEntriesAmount = function(amount) {
     };
 };
 
+exports.getNewsEntry = getNewsEntry;
+exports.GET_NEWS_ENTRY_SUCCESS = GET_NEWS_ENTRY_SUCCESS;
+exports.GET_NEWS_ENTRY_ERROR = GET_NEWS_ENTRY_ERROR;
 exports.getNewsEntries = getNewsEntries;
 exports.GET_NEWS_ENTRIES_SUCCESS = GET_NEWS_ENTRIES_SUCCESS;
 exports.getNewsEntriesSuccess = getNewsEntriesSuccess;

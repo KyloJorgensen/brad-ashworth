@@ -114,6 +114,7 @@
 					}
 
 					$data->totalEntries = $i-1;
+					error_log(print_r(json_encode($data), TRUE));
 
 					header('Content-Type: application/json');
 					echo json_encode($data);
@@ -203,7 +204,7 @@
 				$data_missing = array();
 
 				$query = json_decode(file_get_contents('php://input'), true);
-
+				error_log(print_r($query['idnews'], TRUE)); 
 				if(empty($query['idnews'])){
 					// Adds name to array
 					$data_missing[] = 'idnews';

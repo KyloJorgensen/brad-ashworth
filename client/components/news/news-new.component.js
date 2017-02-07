@@ -2,7 +2,9 @@
 
 var React = require('react'),
 	connect = require('react-redux').connect,
-	newsActions = require('../actions/news.actions');
+	newsActions = require('../../actions/news.actions');
+
+var d = new Date();
 
 var newsEntry = React.createClass({
 	addNewsEntry: function(event) {
@@ -13,10 +15,12 @@ var newsEntry = React.createClass({
 			this.refs.content.value = '';
 		}
 	},
+	createMarkup: function() {
+		return {__html: this.refs.content.value || 'none'};
+	},
 	render: function() {
-
-		if (this.props.adminKey != false) {
-			return (
+		return (
+			<div className="news-entry-new">
 				<form onSubmit={this.addNewsEntry} className="add-news-entry">
 					<div className="admin">
 						<div>
@@ -29,16 +33,13 @@ var newsEntry = React.createClass({
 						</div>
 					</div>
 				</form>
-			);
-		} else {
-			return null;			
-		}
+			</div>
+		);
 	}
 });
 
 var mapStateToProps = function(state, props) {
 	return {
-		adminKey: state.user.key,
 		currentPage: state.news.currentPage,
 		entriesAmount: state.news.entriesAmount
 	};

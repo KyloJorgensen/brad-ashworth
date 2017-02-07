@@ -125,6 +125,10 @@ button.alt,
   float: right;
   display: inline-block;
 }
+.news-entry .public .admin-edit,
+.add-news-entry .public .admin-edit {
+  display: none;
+}
 .news-entry .public p,
 .add-news-entry .public p {
   padding: 15px;
