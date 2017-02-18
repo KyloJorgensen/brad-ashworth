@@ -9,8 +9,8 @@ var newsEntryList = React.createClass({
 	render: function() {
 		var newsEntries = [];
 		if (this.props.newsEntries) {
-			for (var i = 0; i < this.props.newsEntries.length; i++) {
-				newsEntries.push(<NewsEntry key={i} newsEntry={this.props.newsEntries[i]} newsEntryNumber={i} />);
+			for (var i = (0 + ((this.props.pageNumber - 1) * this.props.perPage)); (i < this.props.totalEntries && i < ((this.props.pageNumber) * this.props.perPage) - 1 ); i++) {
+				newsEntries.push(<NewsEntry key={i} newsEntryNumber={i} />);
 			}
 		} else {
 			var content = {
@@ -31,7 +31,8 @@ var newsEntryList = React.createClass({
 
 var mapStateToProps = function(state, props) {
 	return {
-		newsEntries: state.news.newsEntries
+		newsEntries: state.news.newsEntries,
+		totalEntries: state.news.totalEntries
 	};
 };
 

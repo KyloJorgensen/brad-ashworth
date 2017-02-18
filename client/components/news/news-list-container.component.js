@@ -5,32 +5,28 @@ var React = require('react'),
 	Link = require('react-router').Link,
 	NewsEntriesList = require('./news-list-list.component'),
 	PageChanger = require('./news-list-pagechanger.component'),
+	cookie = require('../../utilities/cookie'),
 	newsActions = require('../../actions/news.actions'),
 	appConfig = require('../../app.cfg');
 
 var newsEntriesContainer = React.createClass({
 	componentDidMount: function() {
-		var currentPage = Number(this.currentPage());
+		var currentPage = Number(this.props.params.pageNumber || 1);
 		this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT, currentPage));
 	},
 	componentDidUpdate: function() {
-		var currentPage = Number(this.currentPage());
+		var currentPage = Number(this.props.params.pageNumber || 1);
 		this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT, currentPage));
 	},
-	currentPage: function() {
-		if ('params' in this.props && 'pageNumber' in this.props.params && Number(this.props.params.pageNumber) > 0) {
-			return Number(this.props.params.pageNumber);
-		}
-		return 1;
-	},
 	render: function() {
-		var currentPage = Number(this.currentPage());
+		var currentPage = Number(this.props.params.pageNumber || 1);
+
 		var admin = [];
 		
-		if (this.props.adminKey != false) {
-			admin.push(<Link to={'/news/new'} >NEW ENTRY</Link>);
+		if (cookie.get('adminkey')) {
+			admin.push(<Link to={'/news/new'} key="admin" >NEW ENTRY</Link>);
 		}
-		console.log(this.props, currentPage)
+
 		return (
 			<div className="news-entries-container">
 				<div className="container">
@@ -39,7 +35,7 @@ var newsEntriesContainer = React.createClass({
 		    	<PageChanger pageNumber={this.props.params.pageNumber} />
 		    	<div className="container">
 					{admin}
-					<NewsEntriesList />
+					<NewsEntriesList pageNumber={currentPage} perPage={appConfig.NEWS_LIST_COUNT} />
 				</div>
 				<PageChanger pageNumber={currentPage} />
 			</div>

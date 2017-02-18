@@ -3,6 +3,7 @@
 var React = require('react'),
 	connect = require('react-redux').connect,
 	Link = require('react-router').Link,
+	cookie = require('../../utilities/cookie'),
 	newsActions = require('../../actions/news.actions');
 
 var newsEntry = React.createClass({
@@ -16,7 +17,7 @@ var newsEntry = React.createClass({
 		var admin = [];
 		
 		if (this.props.adminKey != false) {
-			admin.push(<Link to={'/news/edit/' + this.props.params.idnews} >EDIT</Link>)
+			admin.push(<Link to={'/news/edit/' + this.props.params.idnews} key="admin" >EDIT</Link>)
 		}
 
 		return (

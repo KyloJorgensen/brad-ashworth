@@ -6,10 +6,9 @@ var actions = require('../actions/news.actions'),
 var d = new Date();
 
 var newsInitialState = {
-	newsEntries: [],
+    newsEntries: [],
     currentPage: 1,
     totalEntries: 0,
-    entriesAmount: 0,
     currentEntry: {
         idnews: 'false',
         title: 'News Loading',
@@ -21,28 +20,33 @@ var newsInitialState = {
 var newsReducer = function(state, action) {
     state = state || newsInitialState;
     if (action.type === actions.GET_NEWS_ENTRY_SUCCESS) {
-        console.log(action);
         state.currentEntry.idnews = action.data.idnews;
         state.currentEntry.title = action.data.title;
         state.currentEntry.date_enter = action.data.date_enter;
         state.currentEntry.content = action.data.content;
     }
     if (action.type === actions.GET_NEWS_ENTRY_ERROR) {
-        console.log(action.error);
         state.currentEntry.idnews = false;
         state.currentEntry.title = 'No News';
         state.currentEntry.date_enter = d.toLocaleDateString();
         state.currentEntry.content = 'No news, please try back later.';
     }
     if (action.type === actions.GET_NEWS_ENTRIES_SUCCESS) {
-        console.log(action.data);
-        state.newsEntries = [];
-    	state.newsEntries = action.data.news;
+        
+        for (var i = 0; i < action.data.news.length; i++) {
+            state.newsEntries[Number(action.data.offset) + i] = action.data.news[i];
+        }
+        
+        if (state.totalEntries > action.data.totalEntries) {
+            state.newsEntries.splice(state.totalEntries + 1, action.data.totalEntries - state.totalEntries);
+        }
+        
         state.totalEntries = action.data.totalEntries;
+
     }
     if (action.type === actions.GET_NEWS_ENTRIES_ERROR) {
-    	state.newsEntries = [];
-    	console.log(action.error);
+        state.newsEntries = [];
+        console.log(action.error);
     }
     if (action.type === actions.NEXT_PAGE) {
         if ((state.currentPage) * appConfig.NEWS_LIST_COUNT < state.totalEntries) {

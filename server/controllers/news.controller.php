@@ -114,6 +114,8 @@
 					}
 
 					$data->totalEntries = $i-1;
+					$data->amount = $_amount;
+					$data->offset = $_offset;
 					error_log(print_r(json_encode($data), TRUE));
 
 					header('Content-Type: application/json');
