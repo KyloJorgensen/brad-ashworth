@@ -4,6 +4,8 @@
 	DEFINE ('URI', $_SERVER['REQUEST_URI']);
 	DEFINE('__SERVER__', dirname(dirname(__FILE__)));
 	DEFINE('__ROOT__', dirname(dirname(dirname(__FILE__))));
+	// DEFINE('__SERVERCONFIG__', );
+	require_once(__DIR__ ."/../server.config.php");
     // include("../client/index.php");
 	try {
 		// parse_str
@@ -30,6 +32,7 @@
 		if ($endpoint == '') {
 			// setcookie("color","red");
 			// echo $_COOKIE["color"];
+			include('../facebook_sdk.php');
 			return include('./build/index.html');
 			return;
 		} 

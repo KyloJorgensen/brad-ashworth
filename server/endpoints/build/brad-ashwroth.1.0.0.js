@@ -50,14 +50,15 @@
 	    ReactDOM = __webpack_require__(34),
 	    Provider = __webpack_require__(172).Provider,
 	    store = __webpack_require__(212),
+	    FacebookSDK = __webpack_require__(300),
 	    App = __webpack_require__(222),
 	    MainPage = __webpack_require__(223),
-	    NewsPage = __webpack_require__(292),
-	    NewsListContainer = __webpack_require__(293),
-	    NewsEntryView = __webpack_require__(295),
-	    NewsEntryEdit = __webpack_require__(296),
-	    NewsEntryNew = __webpack_require__(297),
-	    AdminPage = __webpack_require__(298),
+	    NewsPage = __webpack_require__(293),
+	    NewsListContainer = __webpack_require__(294),
+	    NewsEntryView = __webpack_require__(296),
+	    NewsEntryEdit = __webpack_require__(297),
+	    NewsEntryNew = __webpack_require__(298),
+	    AdminPage = __webpack_require__(299),
 	    router = __webpack_require__(225),
 	    Router = router.Router,
 	    Route = router.Route,
@@ -23504,7 +23505,7 @@
 	    applyMiddleware = redux.applyMiddleware,
 	    thunk = __webpack_require__(213).default,
 	    cookie = __webpack_require__(214),
-	    userReducer = __webpack_require__(215),
+	    AdminReducer = __webpack_require__(215),
 	    newsReducer = __webpack_require__(219);
 	
 	var initialState = {};
@@ -23521,7 +23522,7 @@
 		state = state || initialState();
 		var _state = {};
 		// console.log(state);
-		_state.user = userReducer(state.user, action);
+		_state.admin = AdminReducer(state.admin, action);
 		_state.news = newsReducer(state.news, action);
 		cookie.set('savedState', JSON.stringify(_state), 7);
 		return _state;
@@ -23607,15 +23608,10 @@
 	
 	var actions = __webpack_require__(216);
 	
-	var userInitialState = {
-	    key: false
-	};
+	var userInitialState = {};
 	
 	var userReducer = function userReducer(state, action) {
 	    state = state || userInitialState;
-	    if (action.type === actions.GET_USER_NAME_SUCCESS) {
-	        state.name = action.name;
-	    }
 	    if (action.type === actions.LOGIN_ERROR) {
 	        console.log(action.error);
 	        state.key = false;
@@ -23625,9 +23621,6 @@
 	    }
 	    if (action.type === actions.LOGOUT_ERROR) {
 	        state.key = false;
-	    }
-	    if (action.type === actions.UPDATE_ADMIN_KEY) {
-	        state.key = action.key;
 	    }
 	    return state;
 	};
@@ -23667,7 +23660,6 @@
 	            }
 	            return response;
 	        }).then(function (data) {
-	            dispatch(updateAdminKey());
 	            return dispatch(loginSuccess());
 	        }).catch(function (error) {
 	            return dispatch(loginError(error));
@@ -23739,29 +23731,6 @@
 	    };
 	};
 	
-	var UPDATE_ADMIN_KEY = 'UPDATE_ADMIN_KEY';
-	var updateAdminKey = function updateAdminKey() {
-	    var name = "adminkey=";
-	    var ca = document.cookie.split(';');
-	    for (var i = 0; i < ca.length; i++) {
-	        var c = ca[i];
-	        while (c.charAt(0) == ' ') {
-	            c = c.substring(1);
-	        }
-	        if (c.indexOf(name) == 0) {
-	            return {
-	                type: UPDATE_ADMIN_KEY,
-	                key: c.substring(name.length, c.length)
-	            };
-	        }
-	    }
-	
-	    return {
-	        type: UPDATE_ADMIN_KEY,
-	        key: ''
-	    };
-	};
-	
 	exports.login = login;
 	exports.LOGIN_SUCCESS = LOGIN_SUCCESS;
 	exports.loginSuccess = loginSuccess;
@@ -23772,8 +23741,6 @@
 	exports.logoutSuccess = logoutSuccess;
 	exports.LOGOUT_ERROR = LOGOUT_ERROR;
 	exports.logoutError = logoutError;
-	exports.updateAdminKey = updateAdminKey;
-	exports.UPDATE_ADMIN_KEY = UPDATE_ADMIN_KEY;
 
 /***/ },
 /* 217 */
@@ -24587,15 +24554,11 @@
 	'use strict';
 	
 	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect,
-	    userActions = __webpack_require__(216);
+	    connect = __webpack_require__(172).connect;
 	
 	var App = React.createClass({
 	    displayName: 'App',
 	
-	    componentDidMount: function componentDidMount() {
-	        this.props.dispatch(userActions.updateAdminKey());
-	    },
 	    render: function render() {
 	        return React.createElement(
 	            'div',
@@ -30500,7 +30463,7 @@
 	
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
-	    NewsEntry = __webpack_require__(299),
+	    NewsEntry = __webpack_require__(292),
 	    newsActions = __webpack_require__(220);
 	
 	var newsEntryList = React.createClass({
@@ -30548,6 +30511,78 @@
 	
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(172).connect,
+	    newsActions = __webpack_require__(220),
+	    Link = __webpack_require__(225).Link;
+	
+	var newsEntry = React.createClass({
+		displayName: 'newsEntry',
+	
+		createMarkup: function createMarkup() {
+			return { __html: this.props.content };
+		},
+		render: function render() {
+			return React.createElement(
+				'li',
+				{ className: 'news-entry' },
+				React.createElement(
+					Link,
+					{ to: '/news/view/' + this.props.idnews },
+					React.createElement(
+						'div',
+						{ className: 'news-entry-content' },
+						React.createElement(
+							'div',
+							{ className: 'news-enrty-header' },
+							React.createElement(
+								'h4',
+								null,
+								this.props.title
+							),
+							React.createElement(
+								'h5',
+								null,
+								this.props.date_enter
+							)
+						),
+						React.createElement('div', { dangerouslySetInnerHTML: this.createMarkup() })
+					)
+				)
+			);
+		}
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		var _props = {};
+	
+		var d = new Date();
+	
+		if (state.news.newsEntries[props.newsEntryNumber] == undefined) {
+			_props.idnews = 'false';
+			_props.title = 'News Loading';
+			_props.date_enter = d.toLocaleDateString();
+			_props.content = 'News Loading please wait';
+		} else {
+			_props.idnews = state.news.newsEntries[props.newsEntryNumber].idnews || false;
+			_props.title = state.news.newsEntries[props.newsEntryNumber].title || false;
+			_props.date_enter = state.news.newsEntries[props.newsEntryNumber].date_enter || false;
+			_props.content = state.news.newsEntries[props.newsEntryNumber].content || false;
+		}
+	
+		return _props;
+	};
+	
+	var Container = connect(mapStateToProps)(newsEntry);
+	
+	module.exports = Container;
+
+/***/ },
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1),
+	    connect = __webpack_require__(172).connect,
 	    Header = __webpack_require__(224),
 	    Footer = __webpack_require__(289),
 	    newsActions = __webpack_require__(220),
@@ -30579,7 +30614,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 293 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30588,7 +30623,6 @@
 	    connect = __webpack_require__(172).connect,
 	    Link = __webpack_require__(225).Link,
 	    NewsEntriesList = __webpack_require__(291),
-	    PageChanger = __webpack_require__(294),
 	    cookie = __webpack_require__(214),
 	    newsActions = __webpack_require__(220),
 	    appConfig = __webpack_require__(221);
@@ -30599,6 +30633,12 @@
 		componentDidMount: function componentDidMount() {
 			var currentPage = Number(this.props.params.pageNumber || 1);
 			this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT, currentPage));
+			FB.api("/ArtistBardAshworth/feed", function (response) {
+				if (response && !response.error) {
+					/* handle the result */
+					console.log(response);
+				}
+			});
 		},
 		componentDidUpdate: function componentDidUpdate() {
 			var currentPage = Number(this.props.params.pageNumber || 1);
@@ -30610,11 +30650,7 @@
 			var admin = [];
 	
 			if (cookie.get('adminkey')) {
-				admin.push(React.createElement(
-					Link,
-					{ to: '/news/new', key: 'admin' },
-					'NEW ENTRY'
-				));
+				// admin.push(<Link to={'/news/new'} key="admin" >NEW ENTRY</Link>);
 			}
 	
 			return React.createElement(
@@ -30629,21 +30665,18 @@
 						'NEWS'
 					)
 				),
-				React.createElement(PageChanger, { pageNumber: this.props.params.pageNumber }),
+				admin,
 				React.createElement(
 					'div',
 					{ className: 'container' },
-					admin,
 					React.createElement(NewsEntriesList, { pageNumber: currentPage, perPage: appConfig.NEWS_LIST_COUNT })
-				),
-				React.createElement(PageChanger, { pageNumber: currentPage })
+				)
 			);
 		}
 	});
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 		return {
-			adminKey: state.user.key,
 			entriesAmount: state.news.entriesAmount
 		};
 	};
@@ -30653,82 +30686,8 @@
 	module.exports = Container;
 
 /***/ },
-/* 294 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect,
-	    Link = __webpack_require__(225).Link,
-	    newsActions = __webpack_require__(220),
-	    appConfig = __webpack_require__(221);
-	
-	var newspage = React.createClass({
-		displayName: 'newspage',
-	
-		render: function render() {
-			var totalPages = (this.props.totalEntries - this.props.totalEntries % appConfig.NEWS_LIST_COUNT) / appConfig.NEWS_LIST_COUNT;
-			if (this.props.totalEntries % appConfig.NEWS_LIST_COUNT != 0) {
-				totalPages++;
-			}
-	
-			var currentPage = this.props.pageNumber || 1;
-	
-			var previousPage = currentPage;
-			if (currentPage != 1) {
-				previousPage--;
-			}
-			var previousButton = [];
-			previousButton.push(React.createElement(
-				Link,
-				{ key: 1, to: '/news/list/' + previousPage, className: 'alt previous' },
-				'PREVIOUS'
-			));
-	
-			var nextpage = currentPage;
-			if (currentPage < totalPages) {
-				nextpage++;
-			}
-			var nextButton = [];
-			nextButton.push(React.createElement(
-				Link,
-				{ key: 1, to: '/news/list/' + nextpage, className: 'alt next' },
-				'NEXT'
-			));
-	
-			return React.createElement(
-				'div',
-				{ className: 'page-changer-wrapper container' },
-				React.createElement(
-					'div',
-					{ className: 'page-changer' },
-					previousButton,
-					React.createElement(
-						'p',
-						null,
-						currentPage,
-						' / ',
-						totalPages
-					),
-					nextButton
-				)
-			);
-		}
-	});
-	
-	var mapStateToProps = function mapStateToProps(state, props) {
-		return {
-			totalEntries: state.news.totalEntries
-		};
-	};
-	
-	var Container = connect(mapStateToProps)(newspage);
-	
-	module.exports = Container;
-
-/***/ },
-/* 295 */
+/* 295 */,
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30751,7 +30710,7 @@
 		render: function render() {
 			var admin = [];
 	
-			if (this.props.adminKey != false) {
+			if (cookie.get('adminkey')) {
 				admin.push(React.createElement(
 					Link,
 					{ to: '/news/edit/' + this.props.params.idnews, key: 'admin' },
@@ -30788,7 +30747,6 @@
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 		return {
-			adminKey: state.user.key,
 			newsEntry_idnews: state.news.currentEntry.idnews,
 			newsEntry_title: state.news.currentEntry.title,
 			newsEntry_date_enter: state.news.currentEntry.date_enter,
@@ -30801,7 +30759,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30924,7 +30882,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30995,7 +30953,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31004,7 +30962,8 @@
 	    connect = __webpack_require__(172).connect,
 	    Header = __webpack_require__(224),
 	    Footer = __webpack_require__(289),
-	    userActions = __webpack_require__(216);
+	    cookie = __webpack_require__(214),
+	    AdminActions = __webpack_require__(216);
 	
 	var adminPage = React.createClass({
 		displayName: 'adminPage',
@@ -31012,7 +30971,7 @@
 		login: function login(event) {
 			event.preventDefault();
 			if (this.refs.username.value && this.refs.password.value) {
-				this.props.dispatch(userActions.login(this.refs.username.value, this.refs.password.value, this.props.history));
+				this.props.dispatch(AdminActions.login(this.refs.username.value, this.refs.password.value, this.props.history));
 				this.refs.username.value = '';
 				this.refs.password.value = '';
 			} else {
@@ -31021,11 +30980,11 @@
 		},
 		logout: function logout(event) {
 			event.preventDefault();
-			this.props.dispatch(userActions.logout(this.props.history));
+			this.props.dispatch(AdminActions.logout(this.props.history));
 		},
 		render: function render() {
 	
-			if (this.props.adminKey != false) {
+			if (cookie.get('adminkey')) {
 				return React.createElement(
 					'div',
 					{ className: 'admin-page-wrapper' },
@@ -31078,9 +31037,7 @@
 	});
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
-		return {
-			adminKey: state.user.key
-		};
+		return {};
 	};
 	
 	var Container = connect(mapStateToProps)(adminPage);
@@ -31088,76 +31045,26 @@
 	module.exports = Container;
 
 /***/ },
-/* 299 */
-/***/ function(module, exports, __webpack_require__) {
+/* 300 */
+/***/ function(module, exports) {
 
 	'use strict';
+	// window.fbAsyncInit = function() {
+	// 	FB.init({
+	// 		appId: '1551677151527898',
+	// 		xfbml: true,
+	// 		version: 'v2.8'
+	// 	});
+	// 	FB.AppEvents.logPageView();
+	// };
 	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(172).connect,
-	    newsActions = __webpack_require__(220),
-	    Link = __webpack_require__(225).Link;
-	
-	var newsEntry = React.createClass({
-		displayName: 'newsEntry',
-	
-		createMarkup: function createMarkup() {
-			return { __html: this.props.content };
-		},
-		render: function render() {
-			return React.createElement(
-				'li',
-				{ className: 'news-entry' },
-				React.createElement(
-					Link,
-					{ to: '/news/view/' + this.props.idnews },
-					React.createElement(
-						'div',
-						{ className: 'news-entry-content' },
-						React.createElement(
-							'div',
-							{ className: 'news-enrty-header' },
-							React.createElement(
-								'h4',
-								null,
-								this.props.title
-							),
-							React.createElement(
-								'h5',
-								null,
-								this.props.date_enter
-							)
-						),
-						React.createElement('div', { dangerouslySetInnerHTML: this.createMarkup() })
-					)
-				)
-			);
-		}
-	});
-	
-	var mapStateToProps = function mapStateToProps(state, props) {
-		var _props = {};
-	
-		var d = new Date();
-	
-		if (state.news.newsEntries[props.newsEntryNumber] == undefined) {
-			_props.idnews = 'false';
-			_props.title = 'News Loading';
-			_props.date_enter = d.toLocaleDateString();
-			_props.content = 'News Loading please wait';
-		} else {
-			_props.idnews = state.news.newsEntries[props.newsEntryNumber].idnews || false;
-			_props.title = state.news.newsEntries[props.newsEntryNumber].title || false;
-			_props.date_enter = state.news.newsEntries[props.newsEntryNumber].date_enter || false;
-			_props.content = state.news.newsEntries[props.newsEntryNumber].content || false;
-		}
-	
-		return _props;
-	};
-	
-	var Container = connect(mapStateToProps)(newsEntry);
-	
-	module.exports = Container;
+	// (function(d, s, id) {
+	// 	var js, fjs = d.getElementsByTagName(s)[0];
+	// 	if (d.getElementById(id)) return;
+	// 	js = d.createElement(s); js.id = id;
+	// 	js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=314723272219763";
+	// 		fjs.parentNode.insertBefore(js, fjs);
+	// }(document, 'script', 'facebook-jssdk'));
 
 /***/ }
 /******/ ]);

@@ -12,6 +12,26 @@
     <!-- anchor linking to external file -->
     <a href="http://www.mozilla.com/">External Link</a>
   </noscript>
+  <div id="fb-root"></div> 
+<script type="text/javascript">
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId: '1551677151527898',
+      xfbml: true,
+      version: 'v2.8',
+    });
+    FB.AppEvents.logPageView();
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&version=v2.8&appId=314723272219763";
+      fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+<!--   <div class="fb-post" data-href="https://www.facebook.com/ArtistBradAshworth/posts/768944446593220" data-width="500" data-show-text="true"><blockquote cite="https://www.facebook.com/ArtistBradAshworth/posts/768944446593220" class="fb-xfbml-parse-ignore">Posted by <a href="https://www.facebook.com/ArtistBradAshworth/">Brad Ashworth</a> on&nbsp;<a href="https://www.facebook.com/ArtistBradAshworth/posts/768944446593220">Monday, February 13, 2017</a></blockquote></div> -->
   <div id="app"></div>
   <script type="text/javascript" src="/build/brad-ashwroth.1.0.0.js"></script>
 </body>

@@ -1,10 +1,10 @@
 <?php
 	class Auth {
-		public function authenticate($key) {
+		public function authenticate(string $key, string $table) {
 		// Get a connection for the database
 			require_once('mysqli_connect.php');
 		// Create a query for the database
-			$query = "SELECT * FROM users WHERE userkey = '" . $key . "'";
+			$query = "SELECT * FROM ".$table." WHERE userkey = '" . $key . "'";
 		// Get a response from the database by sending the connection
 		// and the query
 			$response = @mysqli_query($dbc, $query);
@@ -30,12 +30,12 @@
 			}
 		}
 
-		public function updatekey($key, $username) {
+		public function updatekey($key, $username, $table) {
 			require('mysqli_connect.php');
-			$query = "UPDATE users SET userkey = ? WHERE username = ?";
+			$query = "UPDATE ? SET userkey = ? WHERE username = ?";
 			echo $username;
 			$_stmt = mysqli_prepare($dbc, $query);
-			mysqli_stmt_bind_param($_stmt, "ss", $key, $username);
+			mysqli_stmt_bind_param($_stmt, "sss", $table, $key, $username);
 			mysqli_stmt_execute($_stmt);
 					
 			$affected_rows = mysqli_stmt_affected_rows($_stmt);

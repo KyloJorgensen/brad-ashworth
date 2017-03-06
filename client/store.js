@@ -5,7 +5,7 @@ var redux = require('redux'),
 	applyMiddleware = redux.applyMiddleware,
 	thunk = require('redux-thunk').default,
 	cookie = require('./utilities/cookie'),
-	userReducer = require('./reducers/user.reducer'),
+	AdminReducer = require('./reducers/admin.reducer'),
 	newsReducer = require('./reducers/news.reducer');
 
 var initialState = {};
@@ -22,7 +22,7 @@ var reducers = function(state, action) {
     state = state || initialState();
     var _state = {};
     // console.log(state);
-	_state.user = userReducer(state.user, action);
+	_state.admin = AdminReducer(state.admin, action);
 	_state.news = newsReducer(state.news, action);
 	cookie.set('savedState', JSON.stringify(_state), 7);
     return _state;

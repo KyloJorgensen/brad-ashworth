@@ -28,7 +28,6 @@ var login = function(username, password, that) {
             return response;
         })
         .then(function(data) {
-            dispatch(updateAdminKey());
             return dispatch(loginSuccess());
         })
         .catch(function(error) {
@@ -103,29 +102,6 @@ var logoutError = function(error) {
     };
 };
 
-var UPDATE_ADMIN_KEY = 'UPDATE_ADMIN_KEY';
-var updateAdminKey = function() {
-    var name = "adminkey=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return {
-                type: UPDATE_ADMIN_KEY,
-                key: c.substring(name.length,c.length)
-            };
-        }
-    }
-
-    return {
-        type: UPDATE_ADMIN_KEY,
-        key: ''
-    };
-};
-
 exports.login = login;
 exports.LOGIN_SUCCESS = LOGIN_SUCCESS;
 exports.loginSuccess = loginSuccess;
@@ -136,5 +112,3 @@ exports.LOGOUT_SUCCESS = LOGOUT_SUCCESS;
 exports.logoutSuccess = logoutSuccess;
 exports.LOGOUT_ERROR = LOGOUT_ERROR;
 exports.logoutError = logoutError;
-exports.updateAdminKey = updateAdminKey;
-exports.UPDATE_ADMIN_KEY = UPDATE_ADMIN_KEY;
