@@ -46,10 +46,10 @@ var getNewsEntryError = function(error) {
     };
 };
 
-var getNewsEntries = function(amount, currentPage){
+var getNewsEntries = function(url){
     return function(dispatch) {
-        var url = '/news.php/'+ amount +'/' + (currentPage-1)*amount;
-        return fetch(url, {
+        var _url = url | "https://graph.facebook.com/v2.8/ArtistBradAshworth/feed";
+        return fetch(_url, {
             method: 'GET',
             credentials: 'same-origin',
             headers: {

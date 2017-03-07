@@ -10,21 +10,10 @@ var React = require('react'),
 
 var newsEntriesContainer = React.createClass({
 	componentDidMount: function() {
-		var currentPage = Number(this.props.params.pageNumber || 1);
-		this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT, currentPage));
-		FB.api(
-		    "/ArtistBardAshworth/feed",
-		    function (response) {
-		      if (response && !response.error) {
-		        /* handle the result */
-		        console.log(response);
-		      }
-		    }
-		);
+		this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT));
 	},
 	componentDidUpdate: function() {
-		var currentPage = Number(this.props.params.pageNumber || 1);
-		this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT, currentPage));
+		this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT));
 	},
 	render: function() {
 		var currentPage = Number(this.props.params.pageNumber || 1);

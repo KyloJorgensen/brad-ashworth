@@ -24316,10 +24316,10 @@
 	    };
 	};
 	
-	var getNewsEntries = function getNewsEntries(amount, currentPage) {
+	var getNewsEntries = function getNewsEntries(url) {
 	    return function (dispatch) {
-	        var url = '/news.php/' + amount + '/' + (currentPage - 1) * amount;
-	        return fetch(url, {
+	        var _url = url | "https://graph.facebook.com/v2.8/ArtistBradAshworth/feed";
+	        return fetch(_url, {
 	            method: 'GET',
 	            credentials: 'same-origin',
 	            headers: {
@@ -30631,18 +30631,10 @@
 		displayName: 'newsEntriesContainer',
 	
 		componentDidMount: function componentDidMount() {
-			var currentPage = Number(this.props.params.pageNumber || 1);
-			this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT, currentPage));
-			FB.api("/ArtistBardAshworth/feed", function (response) {
-				if (response && !response.error) {
-					/* handle the result */
-					console.log(response);
-				}
-			});
+			this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT));
 		},
 		componentDidUpdate: function componentDidUpdate() {
-			var currentPage = Number(this.props.params.pageNumber || 1);
-			this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT, currentPage));
+			this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT));
 		},
 		render: function render() {
 			var currentPage = Number(this.props.params.pageNumber || 1);
@@ -31049,22 +31041,24 @@
 /***/ function(module, exports) {
 
 	'use strict';
-	// window.fbAsyncInit = function() {
-	// 	FB.init({
-	// 		appId: '1551677151527898',
-	// 		xfbml: true,
-	// 		version: 'v2.8'
-	// 	});
-	// 	FB.AppEvents.logPageView();
-	// };
 	
-	// (function(d, s, id) {
-	// 	var js, fjs = d.getElementsByTagName(s)[0];
-	// 	if (d.getElementById(id)) return;
-	// 	js = d.createElement(s); js.id = id;
-	// 	js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=314723272219763";
-	// 		fjs.parentNode.insertBefore(js, fjs);
-	// }(document, 'script', 'facebook-jssdk'));
+	window.fbAsyncInit = function () {
+		FB.init({
+			appId: '1551677151527898',
+			xfbml: true,
+			version: 'v2.8'
+		});
+		FB.AppEvents.logPageView();
+	};
+	
+	(function (d, s, id) {
+		var js,
+		    fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s);js.id = id;
+		js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=314723272219763";
+		fjs.parentNode.insertBefore(js, fjs);
+	})(document, 'script', 'facebook-jssdk');
 
 /***/ }
 /******/ ]);
