@@ -24,7 +24,8 @@
 		echo '<p/> bad app_id or app_secret';
 	}
 	else {
-		setcookie("facebook_app_sdk", $curl->response);
+		setcookie("facebook_app_token", $curl->response);
 	}
 	curl_close($curl->curl);
 ?>
+

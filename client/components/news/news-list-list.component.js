@@ -6,20 +6,21 @@ var React = require('react'),
 	newsActions = require('../../actions/news.actions');
 
 var newsEntryList = React.createClass({
+
 	render: function() {
 		var newsEntries = [];
-		if (this.props.newsEntries) {
-			for (var i = (0 + ((this.props.pageNumber - 1) * this.props.perPage)); (i < this.props.totalEntries && i < ((this.props.pageNumber) * this.props.perPage) - 1 ); i++) {
+		if (this.props.newsEntries.length > 0) {
+			for (var i = 0; i < this.props.newsEntries.length; i++) {
 				newsEntries.push(<NewsEntry key={i} newsEntryNumber={i} />);
 			}
 		} else {
 			var content = {
-				idnews: 'noidnews',
-				date_enter: 'nodate',
-				title: 'No News',
-				content: 'Please check back Later'
+				id: 'noidnews',
+				created_time: 'nodate',
+				story: 'No News',
+				message: 'Please check back Later'
 			};
-			newsEntries.push(<NewsEntry key={0} newsEntry={content} />);
+			newsEntries.push(<NewsEntry key={this.props.newsEntries.length} newsEntry={content} />);
 		}
 		return (
 			<ul className="news-entry-list">
@@ -30,10 +31,7 @@ var newsEntryList = React.createClass({
 });
 
 var mapStateToProps = function(state, props) {
-	return {
-		newsEntries: state.news.newsEntries,
-		totalEntries: state.news.totalEntries
-	};
+	return {};
 };
 
 var Container = connect(mapStateToProps)(newsEntryList);

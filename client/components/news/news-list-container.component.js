@@ -16,8 +16,6 @@ var newsEntriesContainer = React.createClass({
 		this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT));
 	},
 	render: function() {
-		var currentPage = Number(this.props.params.pageNumber || 1);
-
 		var admin = [];
 		
 		if (cookie.get('adminkey')) {
@@ -31,7 +29,7 @@ var newsEntriesContainer = React.createClass({
 		    	</div>
 		    	{admin}
 		    	<div className="container">
-					<NewsEntriesList pageNumber={currentPage} perPage={appConfig.NEWS_LIST_COUNT} />
+					<NewsEntriesList newsEntries={this.props.newsEntries} perPage={appConfig.NEWS_LIST_COUNT} />
 				</div>
 			</div>
 		);
@@ -40,7 +38,7 @@ var newsEntriesContainer = React.createClass({
 
 var mapStateToProps = function(state, props) {
 	return {
-		entriesAmount: state.news.entriesAmount
+		newsEntries: state.news.newsEntries
 	};
 };
 

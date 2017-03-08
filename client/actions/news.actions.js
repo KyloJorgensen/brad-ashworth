@@ -1,10 +1,17 @@
 'use strict';
 
-var fetch = require('isomorphic-fetch');
+var fetch = require('isomorphic-fetch'),
+    APP_CONFIG = require('../app.cfg'),
+    cookie = require('../utilities/cookie');
 
 var getNewsEntry = function(newsEntryId) {
     return function(dispatch) {
-        var url = '/news.php/id/' + newsEntryId;
+        var url = "https://graph.facebook.com/"
+        + APP_CONFIG.FACEBOOK_APP_VERSION 
+        + "/" + newsEntryId 
+        + '?fields=created_time,story,message'
+        + "&format=json&" 
+        + cookie.get('facebook_app_token');
         return fetch(url, {
             method: 'GET',
             credentials: 'same-origin',
@@ -21,8 +28,8 @@ var getNewsEntry = function(newsEntryId) {
             return response;
         }).then(function(response) {
             return response.json();
-        }).then(function(data) {
-            return dispatch(getNewsEntrySuccess(data));
+        }).then(function(response) {
+            return dispatch(getNewsEntrySuccess(response));
         }).catch(function(error) {
             return dispatch(getNewsEntryError(error));
         });
@@ -30,10 +37,11 @@ var getNewsEntry = function(newsEntryId) {
 };
 
 var GET_NEWS_ENTRY_SUCCESS = 'GET_NEWS_ENTRY_SUCCESS';
-var getNewsEntrySuccess = function(data) {
+var getNewsEntrySuccess = function(response) {
+    console.log(response);
     return {
         type: GET_NEWS_ENTRY_SUCCESS,
-        data: data
+        data: response
     };
 }
 
@@ -46,9 +54,15 @@ var getNewsEntryError = function(error) {
     };
 };
 
-var getNewsEntries = function(url){
+var getNewsEntries = function(limit){
     return function(dispatch) {
-        var _url = url | "https://graph.facebook.com/v2.8/ArtistBradAshworth/feed";
+        var _url = "https://graph.facebook.com/"
+        + APP_CONFIG.FACEBOOK_APP_VERSION 
+        + "/ArtistBradAshworth" 
+        + "/feed?fields=created_time&limit=" 
+        + limit 
+        + "&format=json&" 
+        + cookie.get('facebook_app_token');
         return fetch(_url, {
             method: 'GET',
             credentials: 'same-origin',
@@ -67,8 +81,8 @@ var getNewsEntries = function(url){
         .then(function(response) {
             return response.json();
         })
-        .then(function(data) {
-            return dispatch(getNewsEntriesSuccess(data));
+        .then(function(response) {
+            return dispatch(getNewsEntriesSuccess(response));
         })
         .catch(function(error) {
             return dispatch(getNewsEntriesError(error));
@@ -77,10 +91,11 @@ var getNewsEntries = function(url){
 };
 
 var GET_NEWS_ENTRIES_SUCCESS = 'GET_NEWS_ENTRIES_SUCCESS';
-var getNewsEntriesSuccess = function(data) {
+var getNewsEntriesSuccess = function(response) {
     return {
         type: GET_NEWS_ENTRIES_SUCCESS,
-        data: data
+        data: response.data,
+        paging: response.paging
     };
 };
 

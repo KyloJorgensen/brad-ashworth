@@ -6,21 +6,26 @@ var React = require('react'),
 	Link = require('react-router').Link;
 
 var newsEntry = React.createClass({
-	createMarkup: function() {
-		return {__html: this.props.content};
+	componentDidMount: function() {
+		if (this.props.entry['id']) {this.props.dispatch(newsActions.getNewsEntry(this.props.entry['id']));};
 	},
+	// componentDidUpdate: function() {
+	// 	if (this.props.entry['id']) {this.props.dispatch(newsActions.getNewsEntry(this.props.entry['id']));};
+	// },
 	render: function() {
+		var content = [];
+		console.log(this.props);
+		if (this.props.entry['id']) {content.push(<p key="id">{this.props.entry['id']}</p>);};
+		if (this.props.entry['created_time']) {content.push(<p key="created_time">{this.props.entry['created_time']}</p>);};
+		if (this.props.entry['message']) {content.push(<p key="message">{this.props.entry['message']}</p>);};
+		if (this.props.entry['story']) {content.push(<p key="story">{this.props.entry['story']}</p>);};
 		return (
 			<li className="news-entry" >
-				<Link to={'/news/view/' + this.props.idnews} >
-					<div className="news-entry-content" >
-						<div className="news-enrty-header">
-							<h4>{this.props.title}</h4>
-							<h5>{this.props.date_enter}</h5>
-						</div>
-						<div dangerouslySetInnerHTML={this.createMarkup()} />
+				<div className="news-entry-content" >
+					<div className="news-enrty-header">
+						{content}
 					</div>
-				</Link>
+				</div>
 			</li>
 		);	
 	}
@@ -32,15 +37,14 @@ var mapStateToProps = function(state, props) {
 	var d = new Date();
 
 	if (state.news.newsEntries[props.newsEntryNumber] == undefined) {
-		_props.idnews = 'false';
-		_props.title = 'News Loading';
-		_props.date_enter = d.toLocaleDateString();
-		_props.content = 'News Loading please wait';
+		_props.entry = {
+			id: false,
+			story: 'News Loading',
+			created_time: d.toLocaleDateString(),
+			message: 'News Loading please wait',
+		};
 	} else {
-		_props.idnews = state.news.newsEntries[props.newsEntryNumber].idnews || false;
-		_props.title = state.news.newsEntries[props.newsEntryNumber].title || false;
-		_props.date_enter = state.news.newsEntries[props.newsEntryNumber].date_enter || false;
-		_props.content = state.news.newsEntries[props.newsEntryNumber].content || false;
+		_props.entry = state.news.newsEntries[props.newsEntryNumber] || false;
 	}
 
 	return _props;
