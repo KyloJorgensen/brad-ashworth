@@ -21,7 +21,7 @@ var newsEntriesContainer = React.createClass({
 					<Link to={'/news'} ><h2>NEWS</h2></Link>
 		    	</div>
 		    	<div className="container">
-					<NewsEntriesList pageNumber={1} perPage={(appConfig.MAIN_NEWS_COUNT + 1)} />
+					<NewsEntriesList newsEntries={this.props.newsEntries} perPage={appConfig.MAIN_NEWS_COUNT} />
 				</div>
 			</div>
 		);
@@ -30,7 +30,7 @@ var newsEntriesContainer = React.createClass({
 
 var mapStateToProps = function(state, props) {
 	return {
-		entriesAmount: state.news.entriesAmount
+		newsEntries: state.news.newsEntries
 	};
 };
 

@@ -30495,7 +30495,7 @@
 				React.createElement(
 					'div',
 					{ className: 'container' },
-					React.createElement(NewsEntriesList, { pageNumber: 1, perPage: appConfig.MAIN_NEWS_COUNT + 1 })
+					React.createElement(NewsEntriesList, { newsEntries: this.props.newsEntries, perPage: appConfig.MAIN_NEWS_COUNT })
 				)
 			);
 		}
@@ -30503,7 +30503,7 @@
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 		return {
-			entriesAmount: state.news.entriesAmount
+			newsEntries: state.news.newsEntries
 		};
 	};
 	
