@@ -6,7 +6,7 @@ var React = require('react'),
     store = require('./store'),
     FacebookSDK = require('./utilities/facebook.sdk'),
     App = require('./components/app.component'),
-    MainPage = require('./components/main-page.component'),
+    HomePage = require('./components/home/home-page.component'),
     NewsPage = require('./components/news/news-page.component'),
     NewsListContainer = require('./components/news/news-list-container.component.js'),
     NewsEntryView = require('./components/news/news-entry-view.component'),
@@ -23,7 +23,7 @@ var routes = (
     <Provider store={store}>
         <Router history={hashHistory}>
             <Route path="/" component={App}>
-                <IndexRoute component={MainPage} />
+                <IndexRoute component={HomePage} />
                 <Route path="news" component={NewsPage} >
                     <IndexRoute component={NewsListContainer} />
                     <Route path="list/:pageNumber" components={NewsListContainer} />

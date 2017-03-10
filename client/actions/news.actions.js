@@ -9,7 +9,7 @@ var getNewsEntry = function(newsEntryId) {
         var url = "https://graph.facebook.com/"
         + APP_CONFIG.FACEBOOK_APP_VERSION 
         + "/" + newsEntryId 
-        + '?fields=created_time,story,message'
+        + '?fields=created_time,story,message,actions,full_picture,type,status_type,picture'
         + "&format=json&" 
         + cookie.get('facebook_app_token');
         return fetch(url, {
@@ -92,6 +92,7 @@ var getNewsEntries = function(limit){
 
 var GET_NEWS_ENTRIES_SUCCESS = 'GET_NEWS_ENTRIES_SUCCESS';
 var getNewsEntriesSuccess = function(response) {
+    console.log(response);
     return {
         type: GET_NEWS_ENTRIES_SUCCESS,
         data: response.data,
@@ -101,6 +102,7 @@ var getNewsEntriesSuccess = function(response) {
 
 var GET_NEWS_ENTRIES_ERROR = 'GET_NEWS_ENTRIES_ERROR';
 var getNewsEntriesError = function(error) {
+    console.log(error);
     return {
         type: GET_NEWS_ENTRIES_ERROR,
         error: error

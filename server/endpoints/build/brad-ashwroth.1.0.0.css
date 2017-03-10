@@ -138,6 +138,10 @@ button.alt,
   width: 100%;
   height: 200px;
 }
+.news-entry .news-entry-content img,
+.add-news-entry .news-entry-content img {
+  width: 100%;
+}
 .admin-login-form {
   padding: 50px;
 }

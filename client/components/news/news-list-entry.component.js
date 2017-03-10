@@ -15,16 +15,20 @@ var newsEntry = React.createClass({
 	render: function() {
 		var content = [];
 		console.log(this.props);
-		if (this.props.entry['id']) {content.push(<p key="id">{this.props.entry['id']}</p>);};
-		if (this.props.entry['created_time']) {content.push(<p key="created_time">{this.props.entry['created_time']}</p>);};
-		if (this.props.entry['message']) {content.push(<p key="message">{this.props.entry['message']}</p>);};
+		if (this.props.entry['id']) {content.push(<p key="id" style={{display: 'none'}}>{this.props.entry['id']}</p>);};
 		if (this.props.entry['story']) {content.push(<p key="story">{this.props.entry['story']}</p>);};
+		if (this.props.entry['created_time']) {
+			var date = new Date((this.props.entry['created_time'] || "").replace(/-/g,"/").replace(/[TZ]/g," "));
+			content.push(<p key="created_time">{date.toDateString()}</p>);
+		};
+		if (this.props.entry['message']) {content.push(<p key="message">{this.props.entry['message']}</p>);};
+		if (this.props.entry['full_picture']) {content.push(<img key="full_picture" src={this.props.entry['full_picture']} />);};
+		if (this.props.entry['type']) {content.push(<p key="type">{this.props.entry['type']}</p>);};
+		if (this.props.entry['status_type']) {content.push(<p key="status_type">{this.props.entry['status_type']}</p>);};
 		return (
 			<li className="news-entry" >
 				<div className="news-entry-content" >
-					<div className="news-enrty-header">
-						{content}
-					</div>
+					{content}
 				</div>
 			</li>
 		);	

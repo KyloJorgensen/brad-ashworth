@@ -12,9 +12,9 @@ var newsEntriesContainer = React.createClass({
 	componentDidMount: function() {
 		this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT));
 	},
-	componentDidUpdate: function() {
-		this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT));
-	},
+	// componentDidUpdate: function() {
+	// 	this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT));
+	// },
 	render: function() {
 		var admin = [];
 		
@@ -29,7 +29,7 @@ var newsEntriesContainer = React.createClass({
 		    	</div>
 		    	{admin}
 		    	<div className="container">
-					<NewsEntriesList newsEntries={this.props.newsEntries} perPage={appConfig.NEWS_LIST_COUNT} />
+					<NewsEntriesList newsEntries={this.props.newsEntries} />
 				</div>
 			</div>
 		);

@@ -2,9 +2,9 @@
 	class Config {
 		public $ADMIN_SECRET = 'alsjdhfpiuahsapisudfaasdfa';
 		public $ADMIN_NAME = 'bradASHWORTH';
-		public $FACEBOOK_APP_ID = '1551677151527898';
-		public $FACEBOOK_APP_SECRET = '684bf222a765536629f951299834e616';
-		public $FACEBOOK_DEFAULT_GRAPH_VERSION = 'v2.5';
+		public $FACEBOOK_APP_ID = '833864320098718';
+		public $FACEBOOK_APP_SECRET = '04668f9c6c783d2d202c62505c9280b5';
+		public $FACEBOOK_DEFAULT_GRAPH_VERSION = 'v2.8';
     }
 
 	$__SERVERCONFIG__ = new Config();

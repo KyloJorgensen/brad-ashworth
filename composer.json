@@ -1,6 +1,6 @@
 {
   "require" : {
     "facebook/graph-sdk" : "^5.4",
-    "curl/curl" : "^1.6"
+    "curl/curl" : "^1.5"
   }
 }

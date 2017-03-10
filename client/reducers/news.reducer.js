@@ -51,11 +51,11 @@ console.log(newsEntries);
                     newsEntries[0] = action.data[g];
                 } else {
                     if (newsEntries[0].created_time > action.data[g].created_time) {
-                        newsEntries.unshift(action.data[g]);
+                        newsEntries.push(action.data[g]);
                     } else {
                         for (var i = 0; i < newsEntries.length; i++) {
                             if (newsEntries[i].created_time < action.data[g].created_time) {
-                                newsEntries.push(action.data[g]);
+                                newsEntries.unshift(action.data[g]);
                                 break;
                             }
                         }
@@ -68,21 +68,8 @@ console.log(newsEntries);
         console.log(state)
     }
     if (action.type === actions.GET_NEWS_ENTRIES_ERROR) {
-        state.newsEntries = [];
+        // state.newsEntries = [];
         console.log(action.error);
-    }
-    if (action.type === actions.NEXT_PAGE) {
-        if ((state.currentPage) * appConfig.NEWS_LIST_COUNT < state.totalEntries) {
-           state.currentPage++; 
-        }
-    }
-    if (action.type === actions.PREVIOUS_PAGE) {
-        if (state.currentPage != 1) {
-            state.currentPage--;
-        }
-    }
-    if (action.type === actions.SET_ENTRIES_AMOUNT) {
-        state.entriesAmount = action.amount;
     }
     return state;
 };

@@ -3,12 +3,12 @@
 
 	$app_id = $__SERVERCONFIG__->FACEBOOK_APP_ID;
 	$app_secret = $__SERVERCONFIG__->FACEBOOK_APP_SECRET;
-	$default_graph_version = $__SERVERCONFIG__->FACEBOOK_DEFAULT_GRAPH_VERSION;
+	$app_version = $__SERVERCONFIG__->FACEBOOK_DEFAULT_GRAPH_VERSION;
 
 	$fb = new Facebook\Facebook([
 		'app_id' => $app_id,
 		'app_secret' => $app_secret,
-		'default_graph_version' => $default_graph_version,
+		'default_graph_version' => $app_version,
 	]);
 
 	$curl = new Curl\Curl();
@@ -21,10 +21,14 @@
 	if ($curl->error) {
 		echo 'Error Code: <p/>';
 		echo $curl->error_code;
+		echo $curl->error_type;
+		echo $curl->error_message;
 		echo '<p/> bad app_id or app_secret';
 	}
 	else {
 		setcookie("facebook_app_token", $curl->response);
+		setcookie("facebook_app_id", $app_id);
+		setcookie("facebook_app_version", $app_version);
 	}
 	curl_close($curl->curl);
 ?>

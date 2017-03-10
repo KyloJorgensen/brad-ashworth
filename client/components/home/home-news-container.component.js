@@ -3,11 +3,11 @@
 var React = require('react'),
 	connect = require('react-redux').connect,
 	Link = require('react-router').Link,
-	NewsEntriesList = require('./news/news-list-list.component'),
-	newsActions = require('../actions/news.actions'),
-	appConfig = require('../app.cfg');
+	NewsEntriesList = require('../news/news-list-list.component'),
+	newsActions = require('../../actions/news.actions'),
+	appConfig = require('../../app.cfg');
 
-var newsEntriesContainer = React.createClass({
+var homeNewsEntriesContainer = React.createClass({
 	componentDidMount: function() {
 		this.props.dispatch(newsActions.getNewsEntries(appConfig.MAIN_NEWS_COUNT));
 	},
@@ -15,14 +15,21 @@ var newsEntriesContainer = React.createClass({
 		this.props.dispatch(newsActions.getNewsEntries(appConfig.MAIN_NEWS_COUNT));
 	},
 	render: function() {
+		var _newsEntries = [];
+		for (var i = 0; i < appConfig.MAIN_NEWS_COUNT; i++) {
+			_newsEntries.push(this.props.newsEntries[i]);
+		}
+
 		return (
-			<div className="news-entries-container">
+			<div className="home-news-entries-container">
 				<div className="container">
 					<Link to={'/news'} ><h2>NEWS</h2></Link>
 		    	</div>
 		    	<div className="container">
-					<NewsEntriesList newsEntries={this.props.newsEntries} perPage={appConfig.MAIN_NEWS_COUNT} />
+					<NewsEntriesList newsEntries={_newsEntries} />
+					<Link to={'/news'} >Read More</Link>
 				</div>
+
 			</div>
 		);
 	}
@@ -34,6 +41,6 @@ var mapStateToProps = function(state, props) {
 	};
 };
 
-var Container = connect(mapStateToProps)(newsEntriesContainer);
+var Container = connect(mapStateToProps)(homeNewsEntriesContainer);
 
 module.exports = Container;
