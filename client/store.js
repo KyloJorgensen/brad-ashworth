@@ -13,7 +13,7 @@ var initialState = {};
 var initialState = function() {
 	var savedState = cookie.get('savedState');
 	if (savedState != '') {
-		// return JSON.parse(savedState);
+		return JSON.parse(savedState);
 	}
 	return {};
 };

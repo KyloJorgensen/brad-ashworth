@@ -23292,7 +23292,7 @@
 	var initialState = function initialState() {
 		var savedState = cookie.get('savedState');
 		if (savedState != '') {
-			// return JSON.parse(savedState);
+			return JSON.parse(savedState);
 		}
 		return {};
 	};
