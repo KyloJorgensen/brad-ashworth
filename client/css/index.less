@@ -3,6 +3,7 @@
 body {
 	font-family: "Lato", sans-serif;
 }
+
 ul {
 	padding: 0;
 	margin: 0;
@@ -23,15 +24,30 @@ h2, h4 {
 
 .header-wrapper {
 	background-color: @black;
-    padding: 32px;
-    h1 {
+	> ul {	
+		> li {
+			display: inline-block;
+		}
+	}
+
+    > * {
+    	padding: 10px 5px;
+    	margin: 0;
+    }
+
+    p {
     	color: @red;
     	font-family: 'Pacifico', cursive;
+    	margin: 0;
     }
+
     a {
-        padding-left: 100px;
 	    color: #ffffff;	
     }
+}
+
+.float-right {
+	float: right;
 }
 
 input[type="submit"], input[type="reset"], input[type="button"], button, .button {
@@ -103,8 +119,11 @@ input[type="submit"].alt, input[type="reset"].alt, input[type="button"].alt, but
 
 }
 
-.news-entry, .add-news-entry {
-	padding: 15px;
+.news-post-list, .news-posts-header {
+	max-width: 500px;
+}
+
+.news-post, .add-news-post {
 	h4, .admin input {
 		display: inline-block;
 	} 
@@ -127,13 +146,20 @@ input[type="submit"].alt, input[type="reset"].alt, input[type="button"].alt, but
 		width: 100%;
 		height: 200px;
 	}
-	.news-entry-content {
+	.news-post-content {
 		img {
-			width: 100%;
+			max-width: 100%;
 		}
 	}
 }
 
+.infinite {
+	overflow: auto;
+}
+
+.infinite::-webkit-scrollbar { 
+    display: none; 
+}
 
 .admin-login-form {
 	padding: 50px;

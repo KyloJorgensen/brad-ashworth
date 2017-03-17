@@ -4,11 +4,11 @@ var fetch = require('isomorphic-fetch'),
     APP_CONFIG = require('../app.cfg'),
     cookie = require('../utilities/cookie');
 
-var getNewsEntry = function(newsEntryId) {
+var getNewsPost = function(newsPostId) {
     return function(dispatch) {
         var url = "https://graph.facebook.com/"
         + APP_CONFIG.FACEBOOK_APP_VERSION 
-        + "/" + newsEntryId 
+        + "/" + newsPostId 
         + '?fields=created_time,story,message,actions,full_picture,type,status_type,picture'
         + "&format=json&" 
         + cookie.get('facebook_app_token');
@@ -29,33 +29,33 @@ var getNewsEntry = function(newsEntryId) {
         }).then(function(response) {
             return response.json();
         }).then(function(response) {
-            return dispatch(getNewsEntrySuccess(response));
+            return dispatch(getNewsPostSuccess(response));
         }).catch(function(error) {
-            return dispatch(getNewsEntryError(error));
+            return dispatch(getNewsPostError(error));
         });
     };
 };
 
-var GET_NEWS_ENTRY_SUCCESS = 'GET_NEWS_ENTRY_SUCCESS';
-var getNewsEntrySuccess = function(response) {
-    console.log(response);
+var GET_NEWS_POST_SUCCESS = 'GET_NEWS_POST_SUCCESS';
+var getNewsPostSuccess = function(response) {
     return {
-        type: GET_NEWS_ENTRY_SUCCESS,
+        type: GET_NEWS_POST_SUCCESS,
         data: response
     };
 }
 
-var GET_NEWS_ENTRY_ERROR ='GET_NEWS_ENTRY_ERROR';
-var getNewsEntryError = function(error) {
+var GET_NEWS_POST_ERROR ='GET_NEWS_POST_ERROR';
+var getNewsPostError = function(error) {
     console.log(error);
     return {
-        type: GET_NEWS_ENTRY_ERROR,
+        type: GET_NEWS_POST_ERROR,
         error: error
     };
 };
 
-var getNewsEntries = function(limit){
+var getNewsPosts = function(limit){
     return function(dispatch) {
+        dispatch(gettingNewsEnteries());
         var _url = "https://graph.facebook.com/"
         + APP_CONFIG.FACEBOOK_APP_VERSION 
         + "/ArtistBradAshworth" 
@@ -82,29 +82,65 @@ var getNewsEntries = function(limit){
             return response.json();
         })
         .then(function(response) {
-            return dispatch(getNewsEntriesSuccess(response));
+            return dispatch(getNewsPostsSuccess(response));
         })
         .catch(function(error) {
-            return dispatch(getNewsEntriesError(error));
+            return dispatch(getNewsPostsError(error));
+        });
+    };
+};
+
+var getMoreNewsPosts = function(url) {
+    return function(dispatch) {
+        return fetch(url, {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            }   
+        }).then(function(response) {
+            if (response.status < 200 || response.status >= 300) {
+                var error = new Error(response.statusText)
+                error.response = response
+                throw error;
+            }
+            return response;
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(response) {
+            return dispatch(getNewsPostsSuccess(response));
+        })
+        .catch(function(error) {
+            return dispatch(getNewsPostsError(error));
         });
     }
 };
 
-var GET_NEWS_ENTRIES_SUCCESS = 'GET_NEWS_ENTRIES_SUCCESS';
-var getNewsEntriesSuccess = function(response) {
-    console.log(response);
+var GETTING_NEWS_POSTS = 'GETTING_NEWS_POSTS';
+var gettingNewsEnteries = function(request) {
     return {
-        type: GET_NEWS_ENTRIES_SUCCESS,
+        type: GETTING_NEWS_POSTS,
+    };
+}
+
+var GET_NEWS_POSTS_SUCCESS = 'GET_NEWS_POSTS_SUCCESS';
+var getNewsPostsSuccess = function(response) {
+    // console.log(response);
+    return {
+        type: GET_NEWS_POSTS_SUCCESS,
         data: response.data,
         paging: response.paging
     };
 };
 
-var GET_NEWS_ENTRIES_ERROR = 'GET_NEWS_ENTRIES_ERROR';
-var getNewsEntriesError = function(error) {
+var GET_NEWS_POSTS_ERROR = 'GET_NEWS_POSTS_ERROR';
+var getNewsPostsError = function(error) {
     console.log(error);
     return {
-        type: GET_NEWS_ENTRIES_ERROR,
+        type: GET_NEWS_POSTS_ERROR,
         error: error
     };
 };
@@ -123,7 +159,7 @@ var previousPage = function() {
     }
 };
 
-var updateNewsEntry = function(payload) {
+var updateNewsPost = function(payload) {
     return function(dispatch) {
         var url = '/news.php';
         return fetch(url, {
@@ -143,29 +179,29 @@ var updateNewsEntry = function(payload) {
             return response;
         })
         .then(function(response) {
-            return dispatch(updateNewsEntrySuccess());
+            return dispatch(updateNewsPostSuccess());
         })
         .catch(function(error) {
-            return dispatch(updateNewsEntryError(error));
+            return dispatch(updateNewsPostError(error));
         });
     };
 }
 
-var UPDATE_NEWS_ENTRY_SUCCESS = 'UPDATE_NEWS_ENTRY_SUCCESS';
-var updateNewsEntrySuccess = function() {
+var UPDATE_NEWS_POST_SUCCESS = 'UPDATE_NEWS_POST_SUCCESS';
+var updateNewsPostSuccess = function() {
     return {
-        type: UPDATE_NEWS_ENTRY_SUCCESS
+        type: UPDATE_NEWS_POST_SUCCESS
     }
 };
 
-var UPDATE_NEWS_ENTRY_ERROR = 'UPDATE_NEWS_ENTRY_ERROR';
-var updateNewsEntryError = function() {
+var UPDATE_NEWS_POST_ERROR = 'UPDATE_NEWS_POST_ERROR';
+var updateNewsPostError = function() {
     return {
-        type: UPDATE_NEWS_ENTRY_ERROR
+        type: UPDATE_NEWS_POST_ERROR
     }
 };
 
-var removeNewsEntry = function(payload) {
+var removeNewsPost = function(payload) {
     return function(dispatch) {
         var url = '/news.php';
         return fetch(url, {
@@ -185,29 +221,29 @@ var removeNewsEntry = function(payload) {
             return response;
         })
         .then(function(response) {
-            return dispatch(removeNewsEntrySuccess());
+            return dispatch(removeNewsPostSuccess());
         })
         .catch(function(error) {
-            return dispatch(removeNewsEntryError(error));
+            return dispatch(removeNewsPostError(error));
         });
     };
 }
 
-var REMOVE_NEWS_ENTRY_SUCCESS = 'REMOVE_NEWS_ENTRY_SUCCESS';
-var removeNewsEntrySuccess = function() {
+var REMOVE_NEWS_POST_SUCCESS = 'REMOVE_NEWS_POST_SUCCESS';
+var removeNewsPostSuccess = function() {
     return {
-        type: REMOVE_NEWS_ENTRY_SUCCESS
+        type: REMOVE_NEWS_POST_SUCCESS
     }
 };
 
-var REMOVE_NEWS_ENTRY_ERROR = 'REMOVE_NEWS_ENTRY_ERROR';
-var removeNewsEntryError = function() {
+var REMOVE_NEWS_POST_ERROR = 'REMOVE_NEWS_POST_ERROR';
+var removeNewsPostError = function() {
     return {
-        type: REMOVE_NEWS_ENTRY_ERROR
+        type: REMOVE_NEWS_POST_ERROR
     }
 };
 
-var addNewsEntry = function(title, content, amount, currentPage) {
+var addNewsPost = function(title, content, amount, currentPage) {
     var payload = {
         title: title,
         content: content
@@ -231,62 +267,63 @@ var addNewsEntry = function(title, content, amount, currentPage) {
             return response;
         })
         .then(function(response) {
-            dispatch(getNewsEntries(amount, currentPage));
-            return dispatch(addNewsEntrySuccess());
+            dispatch(getNewsPosts(amount, currentPage));
+            return dispatch(addNewsPostSuccess());
         })
         .catch(function(error) {
-            return dispatch(addNewsEntryError(error));
+            return dispatch(addNewsPostError(error));
         });
     };
 }
 
-var ADD_NEWS_ENTRY_SUCCESS = 'ADD_NEWS_ENTRY_SUCCESS';
-var addNewsEntrySuccess = function() {
+var ADD_NEWS_POST_SUCCESS = 'ADD_NEWS_POST_SUCCESS';
+var addNewsPostSuccess = function() {
     return {
-        type: ADD_NEWS_ENTRY_SUCCESS
+        type: ADD_NEWS_POST_SUCCESS
     };
 };
 
-var ADD_NEWS_ENTRY_ERROR = 'ADD_NEWS_ENTRY_ERROR';
-var addNewsEntryError = function() {
+var ADD_NEWS_POST_ERROR = 'ADD_NEWS_POST_ERROR';
+var addNewsPostError = function() {
     return {
-        type: ADD_NEWS_ENTRY_ERROR
+        type: ADD_NEWS_POST_ERROR
     };
 };
 
-var SET_ENTRIES_AMOUNT = 'SET_ENTRIES_AMOUNT';
-var setEntriesAmount = function(amount) {
+var SET_POSTS_AMOUNT = 'SET_POSTS_AMOUNT';
+var setPostsAmount = function(amount) {
     return {
-        type: SET_ENTRIES_AMOUNT,
+        type: SET_POSTS_AMOUNT,
         amount: amount
     };
 };
 
-exports.getNewsEntry = getNewsEntry;
-exports.GET_NEWS_ENTRY_SUCCESS = GET_NEWS_ENTRY_SUCCESS;
-exports.GET_NEWS_ENTRY_ERROR = GET_NEWS_ENTRY_ERROR;
-exports.getNewsEntries = getNewsEntries;
-exports.GET_NEWS_ENTRIES_SUCCESS = GET_NEWS_ENTRIES_SUCCESS;
-exports.getNewsEntriesSuccess = getNewsEntriesSuccess;
-exports.GET_NEWS_ENTRIES_ERROR = GET_NEWS_ENTRIES_ERROR;
-exports.getNewsEntriesError = getNewsEntriesError;
+exports.getNewsPost = getNewsPost;
+exports.GET_NEWS_POST_SUCCESS = GET_NEWS_POST_SUCCESS;
+exports.GET_NEWS_POST_ERROR = GET_NEWS_POST_ERROR;
+exports.getNewsPosts = getNewsPosts;
+exports.getMoreNewsPosts = getMoreNewsPosts;
+exports.GET_NEWS_POSTS_SUCCESS = GET_NEWS_POSTS_SUCCESS;
+exports.getNewsPostsSuccess = getNewsPostsSuccess;
+exports.GET_NEWS_POSTS_ERROR = GET_NEWS_POSTS_ERROR;
+exports.getNewsPostsError = getNewsPostsError;
 exports.NEXT_PAGE = NEXT_PAGE;
 exports.nextPage = nextPage;
 exports.PREVIOUS_PAGE = PREVIOUS_PAGE;
 exports.previousPage = previousPage;
-exports.updateNewsEntry = updateNewsEntry;
-exports.UPDATE_NEWS_ENTRY_SUCCESS = UPDATE_NEWS_ENTRY_SUCCESS;
-exports.updateNewsEntrySuccess = updateNewsEntrySuccess;
-exports.UPDATE_NEWS_ENTRY_ERROR = UPDATE_NEWS_ENTRY_ERROR;
-exports.updateNewsEntryError = updateNewsEntryError;
-exports.removeNewsEntry = removeNewsEntry;
-exports.REMOVE_NEWS_ENTRY_SUCCESS = REMOVE_NEWS_ENTRY_SUCCESS;
-exports.removeNewsEntrySuccess = removeNewsEntrySuccess;
-exports.REMOVE_NEWS_ENTRY_ERROR = REMOVE_NEWS_ENTRY_ERROR;
-exports.addNewsEntry = addNewsEntry;
-exports.ADD_NEWS_ENTRY_SUCCESS = ADD_NEWS_ENTRY_SUCCESS;
-exports.addNewsEntrySuccess = addNewsEntrySuccess;
-exports.ADD_NEWS_ENTRY_ERROR = ADD_NEWS_ENTRY_ERROR;
-exports.addNewsEntryError = addNewsEntryError;
-exports.SET_ENTRIES_AMOUNT = SET_ENTRIES_AMOUNT;
-exports.setEntriesAmount = setEntriesAmount;
+exports.updateNewsPost = updateNewsPost;
+exports.UPDATE_NEWS_POST_SUCCESS = UPDATE_NEWS_POST_SUCCESS;
+exports.updateNewsPostSuccess = updateNewsPostSuccess;
+exports.UPDATE_NEWS_POST_ERROR = UPDATE_NEWS_POST_ERROR;
+exports.updateNewsPostError = updateNewsPostError;
+exports.removeNewsPost = removeNewsPost;
+exports.REMOVE_NEWS_POST_SUCCESS = REMOVE_NEWS_POST_SUCCESS;
+exports.removeNewsPostSuccess = removeNewsPostSuccess;
+exports.REMOVE_NEWS_POST_ERROR = REMOVE_NEWS_POST_ERROR;
+exports.addNewsPost = addNewsPost;
+exports.ADD_NEWS_POST_SUCCESS = ADD_NEWS_POST_SUCCESS;
+exports.addNewsPostSuccess = addNewsPostSuccess;
+exports.ADD_NEWS_POST_ERROR = ADD_NEWS_POST_ERROR;
+exports.addNewsPostError = addNewsPostError;
+exports.SET_POSTS_AMOUNT = SET_POSTS_AMOUNT;
+exports.setPostsAmount = setPostsAmount;

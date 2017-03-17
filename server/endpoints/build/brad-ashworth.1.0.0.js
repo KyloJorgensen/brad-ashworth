@@ -53,12 +53,12 @@
 	    FacebookSDK = __webpack_require__(218),
 	    App = __webpack_require__(219),
 	    HomePage = __webpack_require__(220),
-	    NewsPage = __webpack_require__(288),
-	    NewsListContainer = __webpack_require__(289),
-	    NewsEntryView = __webpack_require__(290),
-	    NewsEntryEdit = __webpack_require__(291),
-	    NewsEntryNew = __webpack_require__(292),
-	    AdminPage = __webpack_require__(293),
+	    NewsPage = __webpack_require__(287),
+	    NewsListContainer = __webpack_require__(288),
+	    NewsPostsView = __webpack_require__(289),
+	    NewsPostsEdit = __webpack_require__(290),
+	    NewsPostsNew = __webpack_require__(291),
+	    AdminPage = __webpack_require__(292),
 	    router = __webpack_require__(222),
 	    Router = router.Router,
 	    Route = router.Route,
@@ -79,10 +79,9 @@
 	                Route,
 	                { path: 'news', component: NewsPage },
 	                React.createElement(IndexRoute, { component: NewsListContainer }),
-	                React.createElement(Route, { path: 'list/:pageNumber', components: NewsListContainer }),
-	                React.createElement(Route, { path: 'view/:idnews', component: NewsEntryView }),
-	                React.createElement(Route, { path: 'edit/:idnews', component: NewsEntryEdit }),
-	                React.createElement(Route, { path: 'new', component: NewsEntryNew })
+	                React.createElement(Route, { path: 'view/:idnews', component: NewsPostsView }),
+	                React.createElement(Route, { path: 'edit/:idnews', component: NewsPostsEdit }),
+	                React.createElement(Route, { path: 'new', component: NewsPostsNew })
 	            ),
 	            React.createElement(Route, { path: 'admin', component: AdminPage })
 	        )
@@ -23293,7 +23292,7 @@
 	var initialState = function initialState() {
 		var savedState = cookie.get('savedState');
 		if (savedState != '') {
-			return JSON.parse(savedState);
+			// return JSON.parse(savedState);
 		}
 		return {};
 	};
@@ -23301,7 +23300,6 @@
 	var reducers = function reducers(state, action) {
 		state = state || initialState();
 		var _state = {};
-		// console.log(state);
 		_state.admin = AdminReducer(state.admin, action);
 		_state.news = newsReducer(state.news, action);
 		cookie.set('savedState', JSON.stringify(_state), 7);
@@ -23392,17 +23390,18 @@
 	
 	var userReducer = function userReducer(state, action) {
 	    state = state || userInitialState;
+	    var _state = state;
 	    if (action.type === actions.LOGIN_ERROR) {
 	        console.log(action.error);
-	        state.key = false;
+	        _state.key = false;
 	    }
 	    if (action.type === actions.LOGOUT_SUCCESS) {
-	        state.key = false;
+	        _state.key = false;
 	    }
 	    if (action.type === actions.LOGOUT_ERROR) {
-	        state.key = false;
+	        _state.key = false;
 	    }
-	    return state;
+	    return _state;
 	};
 	
 	module.exports = userReducer;
@@ -24013,56 +24012,59 @@
 	var d = new Date();
 	
 	var newsInitialState = {
-	    newsEntries: [],
-	    currentPage: 1,
-	    totalEntries: 0,
-	    currentEntry: {
+	    newsPosts: [],
+	    currentPost: {
 	        idnews: 'false',
 	        title: 'News Loading',
 	        created_time: d.toString(),
 	        content: 'News Loading please wait...'
-	    }
+	    },
+	    loading: false,
+	    next: false,
+	    previous: false
 	};
 	
 	var newsReducer = function newsReducer(state, action) {
 	    state = state || newsInitialState;
-	    if (action.type === actions.GET_NEWS_ENTRY_SUCCESS) {
-	        for (var i = 0; i < state.newsEntries.length; i++) {
-	            if (state.newsEntries[i].id == action.data.id) {
-	                state.newsEntries[i] = action.data;
+	    var _state = state;
+	    if (action.type === actions.GET_NEWS_POST_SUCCESS) {
+	        for (var i = 0; i < _state.newsPosts.length; i++) {
+	            if (_state.newsPosts[i].id == action.data.id) {
+	                _state.newsPosts[i] = action.data;
 	                break;
 	            }
 	        }
 	    }
-	    if (action.type === actions.GET_NEWS_ENTRY_ERROR) {
-	        state.currentEntry.idnews = false;
-	        state.currentEntry.title = 'No News';
-	        state.currentEntry.date_enter = d.toLocaleDateString();
-	        state.currentEntry.content = 'No news, please try back later.';
+	    if (action.type === actions.GET_NEWS_POST_ERROR) {
+	        _state.currentPost.idnews = false;
+	        _state.currentPost.title = 'No News';
+	        _state.currentPost.date_enter = d.toLocaleDateString();
+	        _state.currentPost.content = 'No news, please try back later.';
 	    }
-	    if (action.type === actions.GET_NEWS_ENTRIES_SUCCESS) {
-	        console.log(action);
-	        var newsEntries = state.newsEntries || [];
-	        console.log(newsEntries);
+	    if (action.type === actions.GETTING_NEWS_POSTS) {
+	        _state.loading = true;
+	    }
+	    if (action.type === actions.GET_NEWS_POSTS_SUCCESS) {
+	        _state.loading = false;
+	        var newsPosts = _state.newsPosts || [];
 	        for (var g = 0; g < action.data.length; g++) {
 	            var exists = false;
-	            for (var i = 0; i < newsEntries.length; i++) {
-	                if (newsEntries[i].id == action.data[g].id) {
+	            for (var i = 0; i < newsPosts.length; i++) {
+	                if (newsPosts[i].id == action.data[g].id) {
 	                    exists = true;
 	                    break;
 	                }
 	            }
 	            if (!exists) {
-	                console.log('adding');
-	                if (newsEntries.length == 0) {
-	                    newsEntries[0] = action.data[g];
+	                if (newsPosts.length == 0) {
+	                    newsPosts[0] = action.data[g];
 	                } else {
-	                    if (newsEntries[0].created_time > action.data[g].created_time) {
-	                        newsEntries.push(action.data[g]);
+	                    if (newsPosts[0].created_time > action.data[g].created_time) {
+	                        newsPosts.push(action.data[g]);
 	                    } else {
-	                        for (var i = 0; i < newsEntries.length; i++) {
-	                            if (newsEntries[i].created_time < action.data[g].created_time) {
-	                                newsEntries.unshift(action.data[g]);
+	                        for (var i = 0; i < newsPosts.length; i++) {
+	                            if (newsPosts[i].created_time < action.data[g].created_time) {
+	                                newsPosts.unshift(action.data[g]);
 	                                break;
 	                            }
 	                        }
@@ -24070,15 +24072,18 @@
 	                }
 	            }
 	        }
-	        console.log(newsEntries);
-	        state.newsEntries = newsEntries;
-	        console.log(state);
+	        _state.newsPosts = newsPosts;
+	        if (action.paging) {
+	            _state.next = action.paging.next || false;
+	            _state.previous = action.paging.previous || false;
+	        }
 	    }
-	    if (action.type === actions.GET_NEWS_ENTRIES_ERROR) {
-	        // state.newsEntries = [];
+	    if (action.type === actions.GET_NEWS_POSTS_ERROR) {
+	        _state.loading = false;
+	        _state.newsPosts = [];
 	        console.log(action.error);
 	    }
-	    return state;
+	    return _state;
 	};
 	
 	module.exports = newsReducer;
@@ -24093,9 +24098,9 @@
 	    APP_CONFIG = __webpack_require__(217),
 	    cookie = __webpack_require__(210);
 	
-	var getNewsEntry = function getNewsEntry(newsEntryId) {
+	var getNewsPost = function getNewsPost(newsPostId) {
 	    return function (dispatch) {
-	        var url = "https://graph.facebook.com/" + APP_CONFIG.FACEBOOK_APP_VERSION + "/" + newsEntryId + '?fields=created_time,story,message,actions,full_picture,type,status_type,picture' + "&format=json&" + cookie.get('facebook_app_token');
+	        var url = "https://graph.facebook.com/" + APP_CONFIG.FACEBOOK_APP_VERSION + "/" + newsPostId + '?fields=created_time,story,message,actions,full_picture,type,status_type,picture' + "&format=json&" + cookie.get('facebook_app_token');
 	        return fetch(url, {
 	            method: 'GET',
 	            credentials: 'same-origin',
@@ -24113,33 +24118,33 @@
 	        }).then(function (response) {
 	            return response.json();
 	        }).then(function (response) {
-	            return dispatch(getNewsEntrySuccess(response));
+	            return dispatch(getNewsPostSuccess(response));
 	        }).catch(function (error) {
-	            return dispatch(getNewsEntryError(error));
+	            return dispatch(getNewsPostError(error));
 	        });
 	    };
 	};
 	
-	var GET_NEWS_ENTRY_SUCCESS = 'GET_NEWS_ENTRY_SUCCESS';
-	var getNewsEntrySuccess = function getNewsEntrySuccess(response) {
-	    console.log(response);
+	var GET_NEWS_POST_SUCCESS = 'GET_NEWS_POST_SUCCESS';
+	var getNewsPostSuccess = function getNewsPostSuccess(response) {
 	    return {
-	        type: GET_NEWS_ENTRY_SUCCESS,
+	        type: GET_NEWS_POST_SUCCESS,
 	        data: response
 	    };
 	};
 	
-	var GET_NEWS_ENTRY_ERROR = 'GET_NEWS_ENTRY_ERROR';
-	var getNewsEntryError = function getNewsEntryError(error) {
+	var GET_NEWS_POST_ERROR = 'GET_NEWS_POST_ERROR';
+	var getNewsPostError = function getNewsPostError(error) {
 	    console.log(error);
 	    return {
-	        type: GET_NEWS_ENTRY_ERROR,
+	        type: GET_NEWS_POST_ERROR,
 	        error: error
 	    };
 	};
 	
-	var getNewsEntries = function getNewsEntries(limit) {
+	var getNewsPosts = function getNewsPosts(limit) {
 	    return function (dispatch) {
+	        dispatch(gettingNewsEnteries());
 	        var _url = "https://graph.facebook.com/" + APP_CONFIG.FACEBOOK_APP_VERSION + "/ArtistBradAshworth" + "/feed?fields=created_time&limit=" + limit + "&format=json&" + cookie.get('facebook_app_token');
 	        return fetch(_url, {
 	            method: 'GET',
@@ -24158,28 +24163,61 @@
 	        }).then(function (response) {
 	            return response.json();
 	        }).then(function (response) {
-	            return dispatch(getNewsEntriesSuccess(response));
+	            return dispatch(getNewsPostsSuccess(response));
 	        }).catch(function (error) {
-	            return dispatch(getNewsEntriesError(error));
+	            return dispatch(getNewsPostsError(error));
 	        });
 	    };
 	};
 	
-	var GET_NEWS_ENTRIES_SUCCESS = 'GET_NEWS_ENTRIES_SUCCESS';
-	var getNewsEntriesSuccess = function getNewsEntriesSuccess(response) {
-	    console.log(response);
+	var getMoreNewsPosts = function getMoreNewsPosts(url) {
+	    return function (dispatch) {
+	        return fetch(url, {
+	            method: 'GET',
+	            credentials: 'same-origin',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json'
+	            }
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return response.json();
+	        }).then(function (response) {
+	            return dispatch(getNewsPostsSuccess(response));
+	        }).catch(function (error) {
+	            return dispatch(getNewsPostsError(error));
+	        });
+	    };
+	};
+	
+	var GETTING_NEWS_POSTS = 'GETTING_NEWS_POSTS';
+	var gettingNewsEnteries = function gettingNewsEnteries(request) {
 	    return {
-	        type: GET_NEWS_ENTRIES_SUCCESS,
+	        type: GETTING_NEWS_POSTS
+	    };
+	};
+	
+	var GET_NEWS_POSTS_SUCCESS = 'GET_NEWS_POSTS_SUCCESS';
+	var getNewsPostsSuccess = function getNewsPostsSuccess(response) {
+	    // console.log(response);
+	    return {
+	        type: GET_NEWS_POSTS_SUCCESS,
 	        data: response.data,
 	        paging: response.paging
 	    };
 	};
 	
-	var GET_NEWS_ENTRIES_ERROR = 'GET_NEWS_ENTRIES_ERROR';
-	var getNewsEntriesError = function getNewsEntriesError(error) {
+	var GET_NEWS_POSTS_ERROR = 'GET_NEWS_POSTS_ERROR';
+	var getNewsPostsError = function getNewsPostsError(error) {
 	    console.log(error);
 	    return {
-	        type: GET_NEWS_ENTRIES_ERROR,
+	        type: GET_NEWS_POSTS_ERROR,
 	        error: error
 	    };
 	};
@@ -24198,7 +24236,7 @@
 	    };
 	};
 	
-	var updateNewsEntry = function updateNewsEntry(payload) {
+	var updateNewsPost = function updateNewsPost(payload) {
 	    return function (dispatch) {
 	        var url = '/news.php';
 	        return fetch(url, {
@@ -24217,28 +24255,28 @@
 	            }
 	            return response;
 	        }).then(function (response) {
-	            return dispatch(updateNewsEntrySuccess());
+	            return dispatch(updateNewsPostSuccess());
 	        }).catch(function (error) {
-	            return dispatch(updateNewsEntryError(error));
+	            return dispatch(updateNewsPostError(error));
 	        });
 	    };
 	};
 	
-	var UPDATE_NEWS_ENTRY_SUCCESS = 'UPDATE_NEWS_ENTRY_SUCCESS';
-	var updateNewsEntrySuccess = function updateNewsEntrySuccess() {
+	var UPDATE_NEWS_POST_SUCCESS = 'UPDATE_NEWS_POST_SUCCESS';
+	var updateNewsPostSuccess = function updateNewsPostSuccess() {
 	    return {
-	        type: UPDATE_NEWS_ENTRY_SUCCESS
+	        type: UPDATE_NEWS_POST_SUCCESS
 	    };
 	};
 	
-	var UPDATE_NEWS_ENTRY_ERROR = 'UPDATE_NEWS_ENTRY_ERROR';
-	var updateNewsEntryError = function updateNewsEntryError() {
+	var UPDATE_NEWS_POST_ERROR = 'UPDATE_NEWS_POST_ERROR';
+	var updateNewsPostError = function updateNewsPostError() {
 	    return {
-	        type: UPDATE_NEWS_ENTRY_ERROR
+	        type: UPDATE_NEWS_POST_ERROR
 	    };
 	};
 	
-	var removeNewsEntry = function removeNewsEntry(payload) {
+	var removeNewsPost = function removeNewsPost(payload) {
 	    return function (dispatch) {
 	        var url = '/news.php';
 	        return fetch(url, {
@@ -24257,28 +24295,28 @@
 	            }
 	            return response;
 	        }).then(function (response) {
-	            return dispatch(removeNewsEntrySuccess());
+	            return dispatch(removeNewsPostSuccess());
 	        }).catch(function (error) {
-	            return dispatch(removeNewsEntryError(error));
+	            return dispatch(removeNewsPostError(error));
 	        });
 	    };
 	};
 	
-	var REMOVE_NEWS_ENTRY_SUCCESS = 'REMOVE_NEWS_ENTRY_SUCCESS';
-	var removeNewsEntrySuccess = function removeNewsEntrySuccess() {
+	var REMOVE_NEWS_POST_SUCCESS = 'REMOVE_NEWS_POST_SUCCESS';
+	var removeNewsPostSuccess = function removeNewsPostSuccess() {
 	    return {
-	        type: REMOVE_NEWS_ENTRY_SUCCESS
+	        type: REMOVE_NEWS_POST_SUCCESS
 	    };
 	};
 	
-	var REMOVE_NEWS_ENTRY_ERROR = 'REMOVE_NEWS_ENTRY_ERROR';
-	var removeNewsEntryError = function removeNewsEntryError() {
+	var REMOVE_NEWS_POST_ERROR = 'REMOVE_NEWS_POST_ERROR';
+	var removeNewsPostError = function removeNewsPostError() {
 	    return {
-	        type: REMOVE_NEWS_ENTRY_ERROR
+	        type: REMOVE_NEWS_POST_ERROR
 	    };
 	};
 	
-	var addNewsEntry = function addNewsEntry(title, content, amount, currentPage) {
+	var addNewsPost = function addNewsPost(title, content, amount, currentPage) {
 	    var payload = {
 	        title: title,
 	        content: content
@@ -24301,64 +24339,65 @@
 	            }
 	            return response;
 	        }).then(function (response) {
-	            dispatch(getNewsEntries(amount, currentPage));
-	            return dispatch(addNewsEntrySuccess());
+	            dispatch(getNewsPosts(amount, currentPage));
+	            return dispatch(addNewsPostSuccess());
 	        }).catch(function (error) {
-	            return dispatch(addNewsEntryError(error));
+	            return dispatch(addNewsPostError(error));
 	        });
 	    };
 	};
 	
-	var ADD_NEWS_ENTRY_SUCCESS = 'ADD_NEWS_ENTRY_SUCCESS';
-	var addNewsEntrySuccess = function addNewsEntrySuccess() {
+	var ADD_NEWS_POST_SUCCESS = 'ADD_NEWS_POST_SUCCESS';
+	var addNewsPostSuccess = function addNewsPostSuccess() {
 	    return {
-	        type: ADD_NEWS_ENTRY_SUCCESS
+	        type: ADD_NEWS_POST_SUCCESS
 	    };
 	};
 	
-	var ADD_NEWS_ENTRY_ERROR = 'ADD_NEWS_ENTRY_ERROR';
-	var addNewsEntryError = function addNewsEntryError() {
+	var ADD_NEWS_POST_ERROR = 'ADD_NEWS_POST_ERROR';
+	var addNewsPostError = function addNewsPostError() {
 	    return {
-	        type: ADD_NEWS_ENTRY_ERROR
+	        type: ADD_NEWS_POST_ERROR
 	    };
 	};
 	
-	var SET_ENTRIES_AMOUNT = 'SET_ENTRIES_AMOUNT';
-	var setEntriesAmount = function setEntriesAmount(amount) {
+	var SET_POSTS_AMOUNT = 'SET_POSTS_AMOUNT';
+	var setPostsAmount = function setPostsAmount(amount) {
 	    return {
-	        type: SET_ENTRIES_AMOUNT,
+	        type: SET_POSTS_AMOUNT,
 	        amount: amount
 	    };
 	};
 	
-	exports.getNewsEntry = getNewsEntry;
-	exports.GET_NEWS_ENTRY_SUCCESS = GET_NEWS_ENTRY_SUCCESS;
-	exports.GET_NEWS_ENTRY_ERROR = GET_NEWS_ENTRY_ERROR;
-	exports.getNewsEntries = getNewsEntries;
-	exports.GET_NEWS_ENTRIES_SUCCESS = GET_NEWS_ENTRIES_SUCCESS;
-	exports.getNewsEntriesSuccess = getNewsEntriesSuccess;
-	exports.GET_NEWS_ENTRIES_ERROR = GET_NEWS_ENTRIES_ERROR;
-	exports.getNewsEntriesError = getNewsEntriesError;
+	exports.getNewsPost = getNewsPost;
+	exports.GET_NEWS_POST_SUCCESS = GET_NEWS_POST_SUCCESS;
+	exports.GET_NEWS_POST_ERROR = GET_NEWS_POST_ERROR;
+	exports.getNewsPosts = getNewsPosts;
+	exports.getMoreNewsPosts = getMoreNewsPosts;
+	exports.GET_NEWS_POSTS_SUCCESS = GET_NEWS_POSTS_SUCCESS;
+	exports.getNewsPostsSuccess = getNewsPostsSuccess;
+	exports.GET_NEWS_POSTS_ERROR = GET_NEWS_POSTS_ERROR;
+	exports.getNewsPostsError = getNewsPostsError;
 	exports.NEXT_PAGE = NEXT_PAGE;
 	exports.nextPage = nextPage;
 	exports.PREVIOUS_PAGE = PREVIOUS_PAGE;
 	exports.previousPage = previousPage;
-	exports.updateNewsEntry = updateNewsEntry;
-	exports.UPDATE_NEWS_ENTRY_SUCCESS = UPDATE_NEWS_ENTRY_SUCCESS;
-	exports.updateNewsEntrySuccess = updateNewsEntrySuccess;
-	exports.UPDATE_NEWS_ENTRY_ERROR = UPDATE_NEWS_ENTRY_ERROR;
-	exports.updateNewsEntryError = updateNewsEntryError;
-	exports.removeNewsEntry = removeNewsEntry;
-	exports.REMOVE_NEWS_ENTRY_SUCCESS = REMOVE_NEWS_ENTRY_SUCCESS;
-	exports.removeNewsEntrySuccess = removeNewsEntrySuccess;
-	exports.REMOVE_NEWS_ENTRY_ERROR = REMOVE_NEWS_ENTRY_ERROR;
-	exports.addNewsEntry = addNewsEntry;
-	exports.ADD_NEWS_ENTRY_SUCCESS = ADD_NEWS_ENTRY_SUCCESS;
-	exports.addNewsEntrySuccess = addNewsEntrySuccess;
-	exports.ADD_NEWS_ENTRY_ERROR = ADD_NEWS_ENTRY_ERROR;
-	exports.addNewsEntryError = addNewsEntryError;
-	exports.SET_ENTRIES_AMOUNT = SET_ENTRIES_AMOUNT;
-	exports.setEntriesAmount = setEntriesAmount;
+	exports.updateNewsPost = updateNewsPost;
+	exports.UPDATE_NEWS_POST_SUCCESS = UPDATE_NEWS_POST_SUCCESS;
+	exports.updateNewsPostSuccess = updateNewsPostSuccess;
+	exports.UPDATE_NEWS_POST_ERROR = UPDATE_NEWS_POST_ERROR;
+	exports.updateNewsPostError = updateNewsPostError;
+	exports.removeNewsPost = removeNewsPost;
+	exports.REMOVE_NEWS_POST_SUCCESS = REMOVE_NEWS_POST_SUCCESS;
+	exports.removeNewsPostSuccess = removeNewsPostSuccess;
+	exports.REMOVE_NEWS_POST_ERROR = REMOVE_NEWS_POST_ERROR;
+	exports.addNewsPost = addNewsPost;
+	exports.ADD_NEWS_POST_SUCCESS = ADD_NEWS_POST_SUCCESS;
+	exports.addNewsPostSuccess = addNewsPostSuccess;
+	exports.ADD_NEWS_POST_ERROR = ADD_NEWS_POST_ERROR;
+	exports.addNewsPostError = addNewsPostError;
+	exports.SET_POSTS_AMOUNT = SET_POSTS_AMOUNT;
+	exports.setPostsAmount = setPostsAmount;
 
 /***/ },
 /* 217 */
@@ -24416,7 +24455,7 @@
 	    render: function render() {
 	        return React.createElement(
 	            'div',
-	            { className: 'app' },
+	            { className: 'app', ref: 'app' },
 	            React.createElement(
 	                'div',
 	                { className: 'app-body' },
@@ -24490,32 +24529,54 @@
 	
 		render: function render() {
 			return React.createElement(
-				'div',
+				'nav',
 				{ className: 'header-wrapper' },
 				React.createElement(
-					'div',
-					{ className: 'container' },
+					'ul',
+					null,
 					React.createElement(
-						'div',
+						'li',
 						{ className: 'Logo' },
 						React.createElement(
-							'h1',
+							'p',
 							null,
 							'Brad Ashworth'
 						)
 					),
 					React.createElement(
-						'nav',
-						null,
+						'li',
+						{ className: 'dropdown float-right' },
 						React.createElement(
-							Link,
-							{ to: '/' },
-							'HOME'
+							'a',
+							{ className: 'dropdown-toggle', id: 'navmenu', 'data-toggle': 'dropdown' },
+							React.createElement('i', { className: 'fa fa-bars' })
 						),
 						React.createElement(
-							Link,
-							{ to: '/news' },
-							'NEWS'
+							'ul',
+							{ className: 'dropdown-menu dropdown-menu-right', role: 'menu', 'aria-labelledby': 'menu1' },
+							React.createElement(
+								'li',
+								{ role: 'presentation', className: 'dropdown-header' },
+								'MENU'
+							),
+							React.createElement(
+								'li',
+								{ role: 'presentation' },
+								React.createElement(
+									Link,
+									{ role: 'menuitem', tabIndex: '-1', to: '/' },
+									'HOME'
+								)
+							),
+							React.createElement(
+								'li',
+								{ role: 'presentation' },
+								React.createElement(
+									Link,
+									{ role: 'menuitem', tabIndex: '-1', to: '/news' },
+									'NEWS'
+								)
+							)
 						)
 					)
 				)
@@ -30146,25 +30207,23 @@
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(178).connect,
 	    Link = __webpack_require__(222).Link,
-	    NewsEntriesList = __webpack_require__(286),
+	    NewsPost = __webpack_require__(286),
 	    newsActions = __webpack_require__(216),
 	    appConfig = __webpack_require__(217);
 	
-	var homeNewsEntriesContainer = React.createClass({
-		displayName: 'homeNewsEntriesContainer',
+	var homeNewsPostsContainer = React.createClass({
+		displayName: 'homeNewsPostsContainer',
 	
 		componentDidMount: function componentDidMount() {
-			this.props.dispatch(newsActions.getNewsEntries(appConfig.MAIN_NEWS_COUNT));
+			this.props.dispatch(newsActions.getNewsPosts(appConfig.MAIN_NEWS_COUNT));
 		},
-		componentDidUpdate: function componentDidUpdate() {
-			this.props.dispatch(newsActions.getNewsEntries(appConfig.MAIN_NEWS_COUNT));
+		generatePosts: function generatePosts() {
+			return this.props.newsPosts.map(function (post) {
+				return React.createElement(NewsPost, { key: post.id, newsPostNumber: post.id });
+			});
 		},
 		render: function render() {
-			var _newsEntries = [];
-			for (var i = 0; i < appConfig.MAIN_NEWS_COUNT; i++) {
-				_newsEntries.push(this.props.newsEntries[i]);
-			}
-	
+			var newsPosts = this.generatePosts();
 			return React.createElement(
 				'div',
 				{ className: 'home-news-entries-container' },
@@ -30184,7 +30243,11 @@
 				React.createElement(
 					'div',
 					{ className: 'container' },
-					React.createElement(NewsEntriesList, { newsEntries: _newsEntries }),
+					React.createElement(
+						'ul',
+						{ className: 'news-post-list' },
+						newsPosts
+					),
 					React.createElement(
 						Link,
 						{ to: '/news' },
@@ -30196,12 +30259,18 @@
 	});
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
+		var _newsPosts = [];
+		for (var i = 0; i < appConfig.MAIN_NEWS_COUNT; i++) {
+			if (state.news.newsPosts[i]) {
+				_newsPosts.push(state.news.newsPosts[i]);
+			}
+		}
 		return {
-			newsEntries: state.news.newsEntries
+			newsPosts: _newsPosts
 		};
 	};
 	
-	var Container = connect(mapStateToProps)(homeNewsEntriesContainer);
+	var Container = connect(mapStateToProps)(homeNewsPostsContainer);
 	
 	module.exports = Container;
 
@@ -30213,121 +30282,72 @@
 	
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(178).connect,
-	    NewsEntry = __webpack_require__(287),
-	    newsActions = __webpack_require__(216);
-	
-	var newsEntryList = React.createClass({
-		displayName: 'newsEntryList',
-	
-	
-		render: function render() {
-			var newsEntries = [];
-			if (this.props.newsEntries.length > 0) {
-				for (var i = 0; i < this.props.newsEntries.length; i++) {
-					newsEntries.push(React.createElement(NewsEntry, { key: i, newsEntryNumber: i }));
-				}
-			} else {
-				var content = {
-					id: 'noidnews',
-					created_time: 'nodate',
-					story: 'No News',
-					message: 'Please check back Later'
-				};
-				newsEntries.push(React.createElement(NewsEntry, { key: this.props.newsEntries.length, newsEntry: content }));
-			}
-			return React.createElement(
-				'ul',
-				{ className: 'news-entry-list' },
-				newsEntries
-			);
-		}
-	});
-	
-	var mapStateToProps = function mapStateToProps(state, props) {
-		return {};
-	};
-	
-	var Container = connect(mapStateToProps)(newsEntryList);
-	
-	module.exports = Container;
-
-/***/ },
-/* 287 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1),
-	    connect = __webpack_require__(178).connect,
 	    newsActions = __webpack_require__(216),
 	    Link = __webpack_require__(222).Link;
 	
-	var newsEntry = React.createClass({
-		displayName: 'newsEntry',
+	var newsPost = React.createClass({
+		displayName: 'newsPost',
 	
 		componentDidMount: function componentDidMount() {
-			if (this.props.entry['id']) {
-				this.props.dispatch(newsActions.getNewsEntry(this.props.entry['id']));
+			if (this.props.post['id']) {
+				this.props.dispatch(newsActions.getNewsPost(this.props.post['id']));
 			};
 		},
-		// componentDidUpdate: function() {
-		// 	if (this.props.entry['id']) {this.props.dispatch(newsActions.getNewsEntry(this.props.entry['id']));};
-		// },
 		render: function render() {
 			var content = [];
-			console.log(this.props);
-			if (this.props.entry['id']) {
+			// console.log(this.props);
+			if (this.props.post['id']) {
 				content.push(React.createElement(
 					'p',
 					{ key: 'id', style: { display: 'none' } },
-					this.props.entry['id']
+					this.props.post['id']
 				));
 			};
-			if (this.props.entry['story']) {
+			if (this.props.post['story']) {
 				content.push(React.createElement(
 					'p',
 					{ key: 'story' },
-					this.props.entry['story']
+					this.props.post['story']
 				));
 			};
-			if (this.props.entry['created_time']) {
-				var date = new Date((this.props.entry['created_time'] || "").replace(/-/g, "/").replace(/[TZ]/g, " "));
+			if (this.props.post['created_time']) {
+				var date = new Date((this.props.post['created_time'] || "").replace(/-/g, "/").replace(/[TZ]/g, " "));
 				content.push(React.createElement(
 					'p',
 					{ key: 'created_time' },
 					date.toDateString()
 				));
 			};
-			if (this.props.entry['message']) {
+			if (this.props.post['message']) {
 				content.push(React.createElement(
 					'p',
 					{ key: 'message' },
-					this.props.entry['message']
+					this.props.post['message']
 				));
 			};
-			if (this.props.entry['full_picture']) {
-				content.push(React.createElement('img', { key: 'full_picture', src: this.props.entry['full_picture'] }));
+			if (this.props.post['full_picture']) {
+				content.push(React.createElement('img', { key: 'full_picture', src: this.props.post['full_picture'] }));
 			};
-			if (this.props.entry['type']) {
+			if (this.props.post['type']) {
 				content.push(React.createElement(
 					'p',
 					{ key: 'type' },
-					this.props.entry['type']
+					this.props.post['type']
 				));
 			};
-			if (this.props.entry['status_type']) {
+			if (this.props.post['status_type']) {
 				content.push(React.createElement(
 					'p',
 					{ key: 'status_type' },
-					this.props.entry['status_type']
+					this.props.post['status_type']
 				));
 			};
 			return React.createElement(
 				'li',
-				{ className: 'news-entry' },
+				{ className: 'news-post' },
 				React.createElement(
 					'div',
-					{ className: 'news-entry-content' },
+					{ className: 'news-post-content' },
 					content
 				)
 			);
@@ -30336,29 +30356,22 @@
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 		var _props = {};
-	
-		var d = new Date();
-	
-		if (state.news.newsEntries[props.newsEntryNumber] == undefined) {
-			_props.entry = {
-				id: false,
-				story: 'News Loading',
-				created_time: d.toLocaleDateString(),
-				message: 'News Loading please wait'
-			};
-		} else {
-			_props.entry = state.news.newsEntries[props.newsEntryNumber] || false;
+		_props.post = {};
+		for (var i = 0; i < state.news.newsPosts.length; i++) {
+			if (state.news.newsPosts[i].id == props.newsPostNumber) {
+				_props.post = state.news.newsPosts[i];
+				break;
+			}
 		}
-	
 		return _props;
 	};
 	
-	var Container = connect(mapStateToProps)(newsEntry);
+	var Container = connect(mapStateToProps)(newsPost);
 	
 	module.exports = Container;
 
 /***/ },
-/* 288 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30374,7 +30387,7 @@
 		displayName: 'newsPage',
 	
 		componentDidMount: function componentDidMount() {
-			this.props.dispatch(newsActions.setEntriesAmount(appConfig.NEWS_LIST_COUNT));
+			this.props.dispatch(newsActions.setPostsAmount(appConfig.NEWS_LIST_COUNT));
 		},
 		render: function render() {
 			return React.createElement(
@@ -30396,7 +30409,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 289 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30404,33 +30417,52 @@
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(178).connect,
 	    Link = __webpack_require__(222).Link,
-	    NewsEntriesList = __webpack_require__(286),
 	    cookie = __webpack_require__(210),
 	    newsActions = __webpack_require__(216),
+	    NewsPost = __webpack_require__(286),
 	    appConfig = __webpack_require__(217);
 	
-	var newsEntriesContainer = React.createClass({
-		displayName: 'newsEntriesContainer',
+	var newsPostsContainer = React.createClass({
+		displayName: 'newsPostsContainer',
 	
-		componentDidMount: function componentDidMount() {
-			this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT));
+		getInitialState: function getInitialState() {
+			return {
+				infiniteHeight: 'auto'
+			};
 		},
-		// componentDidUpdate: function() {
-		// 	this.props.dispatch(newsActions.getNewsEntries(appConfig.NEWS_LIST_COUNT));
-		// },
+		componentDidMount: function componentDidMount() {
+			this.props.dispatch(newsActions.getNewsPosts(appConfig.NEWS_LIST_COUNT));
+			var _height = this.refs.infinite.offsetParent.parentElement.clientHeight - this.refs['infinite'].offsetTop - 25 + 'px';
+			if (_height != this.state.infiniteHeight) {
+				var _state = this.state;
+				_state.infiniteHeight = _height;
+				this.setState(_state);
+			}
+		},
+		onScrollHandler: function onScrollHandler(e) {
+			var ele = this.refs["infinite"];
+			if (ele.scrollTop + ele.clientHeight + 200 >= ele.scrollHeight && !this.props.loading) {
+				this.props.dispatch(newsActions.getMoreNewsPosts(this.props.nextPostsUrl));
+			}
+		},
+		generatePosts: function generatePosts() {
+			return this.props.newsPosts.map(function (post) {
+				return React.createElement(NewsPost, { key: post.id, newsPostNumber: post.id });
+			});
+		},
 		render: function render() {
 			var admin = [];
 	
 			if (cookie.get('adminkey')) {
-				// admin.push(<Link to={'/news/new'} key="admin" >NEW ENTRY</Link>);
+				// admin.push(<Link to={'/news/new'} key="admin" >NEW POST</Link>);
 			}
-	
+			var newsPosts = this.generatePosts();
 			return React.createElement(
 				'div',
-				{ className: 'news-entries-container' },
+				{ className: 'news-posts-container' },
 				React.createElement(
 					'div',
-					{ className: 'container' },
+					{ className: 'news-posts-header container' },
 					React.createElement(
 						'h2',
 						null,
@@ -30440,8 +30472,12 @@
 				admin,
 				React.createElement(
 					'div',
-					{ className: 'container' },
-					React.createElement(NewsEntriesList, { newsEntries: this.props.newsEntries })
+					{ className: 'infinite', ref: 'infinite', style: { height: this.state.infiniteHeight }, onScroll: this.onScrollHandler, onCompositionStart: this.composition },
+					React.createElement(
+						'ul',
+						{ className: 'container news-post-list' },
+						newsPosts
+					)
 				)
 			);
 		}
@@ -30449,16 +30485,18 @@
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 		return {
-			newsEntries: state.news.newsEntries
+			newsPosts: state.news.newsPosts,
+			nextPostsUrl: state.news.next,
+			loading: state.news.loading
 		};
 	};
 	
-	var Container = connect(mapStateToProps)(newsEntriesContainer);
+	var Container = connect(mapStateToProps)(newsPostsContainer);
 	
 	module.exports = Container;
 
 /***/ },
-/* 290 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30469,14 +30507,14 @@
 	    cookie = __webpack_require__(210),
 	    newsActions = __webpack_require__(216);
 	
-	var newsEntry = React.createClass({
-		displayName: 'newsEntry',
+	var newsPostVeiw = React.createClass({
+		displayName: 'newsPostVeiw',
 	
 		componentDidMount: function componentDidMount() {
-			this.props.dispatch(newsActions.getNewsEntry(this.props.params.idnews));
+			this.props.dispatch(newsActions.getNewsPost(this.props.params.idnews));
 		},
 		createMarkup: function createMarkup() {
-			return { __html: this.props.newsEntry_content };
+			return { __html: this.props.newsPost_content };
 		},
 		render: function render() {
 			var admin = [];
@@ -30491,22 +30529,22 @@
 	
 			return React.createElement(
 				'div',
-				{ className: 'news-entry-view' },
+				{ className: 'news-post-view' },
 				React.createElement(
 					'div',
-					{ className: 'news-entry-content' },
+					{ className: 'news-post-content' },
 					React.createElement(
 						'div',
-						{ className: 'news-entry-header' },
+						{ className: 'news-post-header' },
 						React.createElement(
 							'h4',
 							null,
-							this.props.newsEntry_title
+							this.props.newsPost_title
 						),
 						React.createElement(
 							'h5',
 							null,
-							this.props.newsEntry_date_enter
+							this.props.newsPost_date_enter
 						)
 					),
 					admin,
@@ -30518,19 +30556,19 @@
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 		return {
-			newsEntry_idnews: state.news.currentEntry.idnews,
-			newsEntry_title: state.news.currentEntry.title,
-			newsEntry_date_enter: state.news.currentEntry.date_enter,
-			newsEntry_content: state.news.currentEntry.content
+			newsPost_idnews: state.news.currentPost.idnews,
+			newsPost_title: state.news.currentPost.title,
+			newsPost_date_enter: state.news.currentPost.date_enter,
+			newsPost_content: state.news.currentPost.content
 		};
 	};
 	
-	var Container = connect(mapStateToProps)(newsEntry);
+	var Container = connect(mapStateToProps)(newsPostVeiw);
 	
 	module.exports = Container;
 
 /***/ },
-/* 291 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30539,8 +30577,8 @@
 	    connect = __webpack_require__(178).connect,
 	    newsActions = __webpack_require__(216);
 	
-	var newsEntry = React.createClass({
-		displayName: 'newsEntry',
+	var newsPostEdit = React.createClass({
+		displayName: 'newsPostEdit',
 	
 	
 		editField: function editField(that) {
@@ -30548,33 +30586,33 @@
 			state[that.target.name] = that.target.value;
 			this.setState(state);
 		},
-		saveNewsEntry: function saveNewsEntry() {
+		saveNewsPost: function saveNewsPost() {
 			console.log('save');
-			this.props.dispatch(newsActions.updateNewsEntry(this.state));
+			this.props.dispatch(newsActions.updateNewsPost(this.state));
 		},
-		deleteNewsEntry: function deleteNewsEntry() {
+		deleteNewsPost: function deleteNewsPost() {
 			console.log('delete');
-			this.props.dispatch(newsActions.removeNewsEntry(this.state));
+			this.props.dispatch(newsActions.removeNewsPost(this.state));
 		},
 		componentWillMount: function componentWillMount() {
 			var _state = {
-				idnews: this.props.newsEntry_idnews,
-				title: this.props.newsEntry_title,
-				date_enter: this.props.newsEntry_date_enter,
-				content: this.props.newsEntry_content
+				idnews: this.props.newsPost_idnews,
+				title: this.props.newsPost_title,
+				date_enter: this.props.newsPost_date_enter,
+				content: this.props.newsPost_content
 			};
 	
 			this.setState(_state);
 		},
 		componentDidMount: function componentDidMount() {
-			this.props.dispatch(newsActions.getNewsEntry(this.props.params.idnews));
+			this.props.dispatch(newsActions.getNewsPost(this.props.params.idnews));
 		},
 		componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 			var _state = this.state;
-			_state.idnews = nextProps.newsEntry_idnews;
-			_state.title = nextProps.newsEntry_title;
-			_state.date_enter = nextProps.newsEntry_date_enter;
-			_state.content = nextProps.newsEntry_content;
+			_state.idnews = nextProps.newsPost_idnews;
+			_state.title = nextProps.newsPost_title;
+			_state.date_enter = nextProps.newsPost_date_enter;
+			_state.content = nextProps.newsPost_content;
 			this.setState(_state);
 		},
 		createMarkup: function createMarkup() {
@@ -30583,7 +30621,7 @@
 		render: function render() {
 			return React.createElement(
 				'div',
-				{ className: 'news-entry-edit' },
+				{ className: 'news-post-edit' },
 				React.createElement(
 					'div',
 					null,
@@ -30603,24 +30641,24 @@
 					null,
 					React.createElement(
 						'button',
-						{ onClick: this.saveNewsEntry },
+						{ onClick: this.saveNewsPost },
 						'SAVE'
 					),
 					React.createElement(
 						'button',
-						{ className: 'right', onClick: this.deleteNewsEntry },
+						{ className: 'right', onClick: this.deleteNewsPost },
 						'DELETE'
 					)
 				),
 				React.createElement(
 					'div',
-					{ className: 'news-entry-view' },
+					{ className: 'news-post-view' },
 					React.createElement(
 						'div',
-						{ className: 'news-entry-content' },
+						{ className: 'news-post-content' },
 						React.createElement(
 							'div',
-							{ className: 'news-entry-header' },
+							{ className: 'news-post-header' },
 							React.createElement(
 								'h4',
 								null,
@@ -30641,19 +30679,19 @@
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 		return {
-			newsEntry_idnews: state.news.currentEntry.idnews,
-			newsEntry_title: state.news.currentEntry.title,
-			newsEntry_date_enter: state.news.currentEntry.date_enter,
-			newsEntry_content: state.news.currentEntry.content
+			newsPost_idnews: state.news.currentPost.idnews,
+			newsPost_title: state.news.currentPost.title,
+			newsPost_date_enter: state.news.currentPost.date_enter,
+			newsPost_content: state.news.currentPost.content
 		};
 	};
 	
-	var Container = connect(mapStateToProps)(newsEntry);
+	var Container = connect(mapStateToProps)(newsPostEdit);
 	
 	module.exports = Container;
 
 /***/ },
-/* 292 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30664,13 +30702,13 @@
 	
 	var d = new Date();
 	
-	var newsEntry = React.createClass({
-		displayName: 'newsEntry',
+	var newsPostNew = React.createClass({
+		displayName: 'newsPostNew',
 	
-		addNewsEntry: function addNewsEntry(event) {
+		addNewsPost: function addNewsPost(event) {
 			event.preventDefault();
 			if (this.refs.title.value && this.refs.content.value) {
-				this.props.dispatch(newsActions.addNewsEntry(this.refs.title.value, this.refs.content.value, this.props.entriesAmount, this.props.currentPage));
+				this.props.dispatch(newsActions.addNewsPost(this.refs.title.value, this.refs.content.value, this.props.postsAmount, this.props.currentPage));
 				this.refs.title.value = '';
 				this.refs.content.value = '';
 			}
@@ -30681,10 +30719,10 @@
 		render: function render() {
 			return React.createElement(
 				'div',
-				{ className: 'news-entry-new' },
+				{ className: 'news-post-new' },
 				React.createElement(
 					'form',
-					{ onSubmit: this.addNewsEntry, className: 'add-news-entry' },
+					{ onSubmit: this.addNewsPost, className: 'add-news-post' },
 					React.createElement(
 						'div',
 						{ className: 'admin' },
@@ -30715,16 +30753,16 @@
 	var mapStateToProps = function mapStateToProps(state, props) {
 		return {
 			currentPage: state.news.currentPage,
-			entriesAmount: state.news.entriesAmount
+			postsAmount: state.news.postsAmount
 		};
 	};
 	
-	var Container = connect(mapStateToProps)(newsEntry);
+	var Container = connect(mapStateToProps)(newsPostNew);
 	
 	module.exports = Container;
 
 /***/ },
-/* 293 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30817,4 +30855,4 @@
 
 /***/ }
 /******/ ]);
-//# sourceMappingURL=brad-ashwroth.1.0.0.js.map
+//# sourceMappingURL=brad-ashworth.1.0.0.js.map

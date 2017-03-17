@@ -17,15 +17,24 @@ h4 {
 }
 .header-wrapper {
   background-color: #1c1c1c;
-  padding: 32px;
 }
-.header-wrapper h1 {
+.header-wrapper > ul > li {
+  display: inline-block;
+}
+.header-wrapper > * {
+  padding: 10px 5px;
+  margin: 0;
+}
+.header-wrapper p {
   color: #e5474b;
   font-family: 'Pacifico', cursive;
+  margin: 0;
 }
 .header-wrapper a {
-  padding-left: 100px;
   color: #ffffff;
+}
+.float-right {
+  float: right;
 }
 input[type="submit"],
 input[type="reset"],
@@ -106,41 +115,47 @@ button.alt,
   width: 33.3%;
   display: inline-block;
 }
-.news-entry,
-.add-news-entry {
-  padding: 15px;
+.news-post-list,
+.news-posts-header {
+  max-width: 500px;
 }
-.news-entry h4,
-.add-news-entry h4,
-.news-entry .admin input,
-.add-news-entry .admin input {
+.news-post h4,
+.add-news-post h4,
+.news-post .admin input,
+.add-news-post .admin input {
   display: inline-block;
 }
-.news-entry h5,
-.add-news-entry h5,
-.news-entry .admin p,
-.add-news-entry .admin p,
-.news-entry .admin .right,
-.add-news-entry .admin .right {
+.news-post h5,
+.add-news-post h5,
+.news-post .admin p,
+.add-news-post .admin p,
+.news-post .admin .right,
+.add-news-post .admin .right {
   float: right;
   display: inline-block;
 }
-.news-entry .public .admin-edit,
-.add-news-entry .public .admin-edit {
+.news-post .public .admin-edit,
+.add-news-post .public .admin-edit {
   display: none;
 }
-.news-entry .public p,
-.add-news-entry .public p {
+.news-post .public p,
+.add-news-post .public p {
   padding: 15px;
 }
-.news-entry textarea,
-.add-news-entry textarea {
+.news-post textarea,
+.add-news-post textarea {
   width: 100%;
   height: 200px;
 }
-.news-entry .news-entry-content img,
-.add-news-entry .news-entry-content img {
-  width: 100%;
+.news-post .news-post-content img,
+.add-news-post .news-post-content img {
+  max-width: 100%;
+}
+.infinite {
+  overflow: auto;
+}
+.infinite::-webkit-scrollbar {
+  display: none;
 }
 .admin-login-form {
   padding: 50px;
@@ -155,4 +170,4 @@ button.alt,
 .footer-wrapper a {
   color: #ffffff;
 }
-/*# sourceMappingURL=brad-ashwroth.1.0.0.css.map */
+/*# sourceMappingURL=brad-ashworth.1.0.0.css.map */

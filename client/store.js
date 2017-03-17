@@ -13,7 +13,7 @@ var initialState = {};
 var initialState = function() {
 	var savedState = cookie.get('savedState');
 	if (savedState != '') {
-		return JSON.parse(savedState);
+		// return JSON.parse(savedState);
 	}
 	return {};
 };
@@ -21,7 +21,6 @@ var initialState = function() {
 var reducers = function(state, action) {
     state = state || initialState();
     var _state = {};
-    // console.log(state);
 	_state.admin = AdminReducer(state.admin, action);
 	_state.news = newsReducer(state.news, action);
 	cookie.set('savedState', JSON.stringify(_state), 7);

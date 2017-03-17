@@ -6,12 +6,12 @@ var React = require('react'),
     store = require('./store'),
     FacebookSDK = require('./utilities/facebook.sdk'),
     App = require('./components/app.component'),
-    HomePage = require('./components/home/home-page.component'),
-    NewsPage = require('./components/news/news-page.component'),
-    NewsListContainer = require('./components/news/news-list-container.component.js'),
-    NewsEntryView = require('./components/news/news-entry-view.component'),
-    NewsEntryEdit = require('./components/news/news-entry-edit.component'),
-    NewsEntryNew = require('./components/news/news-new.component'),
+    HomePage = require('./components/home/page.component'),
+    NewsPage = require('./components/news/page.component'),
+    NewsListContainer = require('./components/news/list-container.component.js'),
+    NewsPostsView = require('./components/news/post-view.component'),
+    NewsPostsEdit = require('./components/news/post-edit.component'),
+    NewsPostsNew = require('./components/news/post-new.component'),
     AdminPage = require('./components/admin-page.component'),
     router = require('react-router'),
     Router = router.Router,
@@ -26,10 +26,9 @@ var routes = (
                 <IndexRoute component={HomePage} />
                 <Route path="news" component={NewsPage} >
                     <IndexRoute component={NewsListContainer} />
-                    <Route path="list/:pageNumber" components={NewsListContainer} />
-                    <Route path="view/:idnews" component={NewsEntryView} />
-                    <Route path="edit/:idnews" component={NewsEntryEdit} />
-                    <Route path="new" component={NewsEntryNew} />
+                    <Route path="view/:idnews" component={NewsPostsView} />
+                    <Route path="edit/:idnews" component={NewsPostsEdit} />
+                    <Route path="new" component={NewsPostsNew} />
                 </Route>
                 <Route path="admin" component={AdminPage} />
             </Route>

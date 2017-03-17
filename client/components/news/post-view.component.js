@@ -6,12 +6,12 @@ var React = require('react'),
 	cookie = require('../../utilities/cookie'),
 	newsActions = require('../../actions/news.actions');
 
-var newsEntry = React.createClass({
+var newsPostVeiw = React.createClass({
 	componentDidMount: function() {
-		this.props.dispatch(newsActions.getNewsEntry(this.props.params.idnews));
+		this.props.dispatch(newsActions.getNewsPost(this.props.params.idnews));
 	},	
 	createMarkup: function() {
-		return {__html: this.props.newsEntry_content};
+		return {__html: this.props.newsPost_content};
 	},
 	render: function() {
 		var admin = [];
@@ -21,11 +21,11 @@ var newsEntry = React.createClass({
 		}
 
 		return (
-			<div className="news-entry-view" >
-				<div className="news-entry-content" >
-					<div className="news-entry-header">
-						<h4>{this.props.newsEntry_title}</h4>
-						<h5>{this.props.newsEntry_date_enter}</h5>
+			<div className="news-post-view" >
+				<div className="news-post-content" >
+					<div className="news-post-header">
+						<h4>{this.props.newsPost_title}</h4>
+						<h5>{this.props.newsPost_date_enter}</h5>
 					</div>
 					{admin}
 					<div dangerouslySetInnerHTML={this.createMarkup()} />
@@ -37,13 +37,13 @@ var newsEntry = React.createClass({
 
 var mapStateToProps = function(state, props) {
 	return {
-		newsEntry_idnews: state.news.currentEntry.idnews,
-		newsEntry_title: state.news.currentEntry.title,
-		newsEntry_date_enter: state.news.currentEntry.date_enter,
-		newsEntry_content: state.news.currentEntry.content
+		newsPost_idnews: state.news.currentPost.idnews,
+		newsPost_title: state.news.currentPost.title,
+		newsPost_date_enter: state.news.currentPost.date_enter,
+		newsPost_content: state.news.currentPost.content
 	};
 };
 
-var Container = connect(mapStateToProps)(newsEntry);
+var Container = connect(mapStateToProps)(newsPostVeiw);
 
 module.exports = Container;

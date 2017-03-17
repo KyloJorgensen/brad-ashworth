@@ -9,7 +9,7 @@ var React = require('react'),
 
 var newsPage = React.createClass({
 	componentDidMount: function() {
-		this.props.dispatch(newsActions.setEntriesAmount(appConfig.NEWS_LIST_COUNT));
+		this.props.dispatch(newsActions.setPostsAmount(appConfig.NEWS_LIST_COUNT));
 	},
 	render: function() {
 		return (

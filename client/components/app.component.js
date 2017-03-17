@@ -6,7 +6,7 @@ var React = require('react'),
 var App = React.createClass({
     render: function() {
         return (
-            <div className="app">
+            <div className="app" ref="app">
                 <div className="app-body">
                     {this.props.children}
                 </div>

@@ -21,7 +21,7 @@ var newsEntriesContainer = React.createClass({
 					<Link to={'/news'} ><h2>NEWS</h2></Link>
 		    	</div>
 		    	<div className="container">
-					<NewsEntriesList newsEntries={this.props.newsEntries} perPage={appConfig.MAIN_NEWS_COUNT} />
+					<NewsEntriesList perPage={appConfig.MAIN_NEWS_COUNT} />
 				</div>
 			</div>
 		);

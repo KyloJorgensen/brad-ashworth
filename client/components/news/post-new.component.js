@@ -6,11 +6,11 @@ var React = require('react'),
 
 var d = new Date();
 
-var newsEntry = React.createClass({
-	addNewsEntry: function(event) {
+var newsPostNew = React.createClass({
+	addNewsPost: function(event) {
 		event.preventDefault();
 		if (this.refs.title.value && this.refs.content.value) {
-			this.props.dispatch(newsActions.addNewsEntry(this.refs.title.value, this.refs.content.value, this.props.entriesAmount, this.props.currentPage));
+			this.props.dispatch(newsActions.addNewsPost(this.refs.title.value, this.refs.content.value, this.props.postsAmount, this.props.currentPage));
 			this.refs.title.value = '';
 			this.refs.content.value = '';
 		}
@@ -20,8 +20,8 @@ var newsEntry = React.createClass({
 	},
 	render: function() {
 		return (
-			<div className="news-entry-new">
-				<form onSubmit={this.addNewsEntry} className="add-news-entry">
+			<div className="news-post-new">
+				<form onSubmit={this.addNewsPost} className="add-news-post">
 					<div className="admin">
 						<div>
 							Title:<input type="text" ref="title" />
@@ -41,10 +41,10 @@ var newsEntry = React.createClass({
 var mapStateToProps = function(state, props) {
 	return {
 		currentPage: state.news.currentPage,
-		entriesAmount: state.news.entriesAmount
+		postsAmount: state.news.postsAmount
 	};
 };
 
-var Container = connect(mapStateToProps)(newsEntry);
+var Container = connect(mapStateToProps)(newsPostNew);
 
 module.exports = Container;

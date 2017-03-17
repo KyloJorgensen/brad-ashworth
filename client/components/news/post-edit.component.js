@@ -4,40 +4,40 @@ var React = require('react'),
 	connect = require('react-redux').connect,
 	newsActions = require('../../actions/news.actions');
 
-var newsEntry = React.createClass({
+var newsPostEdit = React.createClass({
 	
 	editField: function(that) {
 		var state = this.state;
 		state[that.target.name] = that.target.value;
 		this.setState(state);
 	},
-	saveNewsEntry: function() {
+	saveNewsPost: function() {
 		console.log('save');
-		this.props.dispatch(newsActions.updateNewsEntry(this.state));
+		this.props.dispatch(newsActions.updateNewsPost(this.state));
 	},
-	deleteNewsEntry: function() {
+	deleteNewsPost: function() {
 		console.log('delete');
-		this.props.dispatch(newsActions.removeNewsEntry(this.state));
+		this.props.dispatch(newsActions.removeNewsPost(this.state));
 	},
 	componentWillMount: function() {
 		var _state = {
-			idnews: this.props.newsEntry_idnews,
-			title: this.props.newsEntry_title,
-			date_enter: this.props.newsEntry_date_enter,
-			content: this.props.newsEntry_content
+			idnews: this.props.newsPost_idnews,
+			title: this.props.newsPost_title,
+			date_enter: this.props.newsPost_date_enter,
+			content: this.props.newsPost_content
 		};
 
 		this.setState(_state);
 	},
 	componentDidMount: function() {
-		this.props.dispatch(newsActions.getNewsEntry(this.props.params.idnews));
+		this.props.dispatch(newsActions.getNewsPost(this.props.params.idnews));
 	},
 	componentWillReceiveProps: function(nextProps) {
 		var _state = this.state;
-		_state.idnews = nextProps.newsEntry_idnews;
-		_state.title = nextProps.newsEntry_title;
-		_state.date_enter = nextProps.newsEntry_date_enter;
-		_state.content = nextProps.newsEntry_content;
+		_state.idnews = nextProps.newsPost_idnews;
+		_state.title = nextProps.newsPost_title;
+		_state.date_enter = nextProps.newsPost_date_enter;
+		_state.content = nextProps.newsPost_content;
 		this.setState(_state);
 	},
 	createMarkup: function() {
@@ -45,7 +45,7 @@ var newsEntry = React.createClass({
 	},
 	render: function() {
 		return (
-			<div className="news-entry-edit">
+			<div className="news-post-edit">
 					<div>
 						Title: 
 						<input type="text" onChange={this.editField} name="title" value={this.state.title} />
@@ -54,13 +54,13 @@ var newsEntry = React.createClass({
 					Content:
 					<textarea onChange={this.editField} name="content" value={this.state.content} />
 					<div>
-						<button onClick={this.saveNewsEntry} >SAVE</button>
-						<button className="right" onClick={this.deleteNewsEntry} >DELETE</button>
+						<button onClick={this.saveNewsPost} >SAVE</button>
+						<button className="right" onClick={this.deleteNewsPost} >DELETE</button>
 					</div>
 
-					<div className="news-entry-view" >
-						<div className="news-entry-content" >
-							<div className="news-entry-header">
+					<div className="news-post-view" >
+						<div className="news-post-content" >
+							<div className="news-post-header">
 								<h4>{this.state.title}</h4>
 								<h5>{this.state.date_enter}</h5>
 							</div>
@@ -74,13 +74,13 @@ var newsEntry = React.createClass({
 
 var mapStateToProps = function(state, props) {
 	return {
-		newsEntry_idnews: state.news.currentEntry.idnews,
-		newsEntry_title: state.news.currentEntry.title,
-		newsEntry_date_enter: state.news.currentEntry.date_enter,
-		newsEntry_content: state.news.currentEntry.content
+		newsPost_idnews: state.news.currentPost.idnews,
+		newsPost_title: state.news.currentPost.title,
+		newsPost_date_enter: state.news.currentPost.date_enter,
+		newsPost_content: state.news.currentPost.content
 	};
 };
 
-var Container = connect(mapStateToProps)(newsEntry);
+var Container = connect(mapStateToProps)(newsPostEdit);
 
 module.exports = Container;
