@@ -24490,12 +24490,41 @@
 	var homePage = React.createClass({
 		displayName: 'homePage',
 	
+		getInitialState: function getInitialState() {
+			return {
+				headerPosition: 'initial',
+				headerMargin: 0
+			};
+		},
+		componentDidMount: function componentDidMount() {
+			window.addEventListener('scroll', this.handleScroll);
+		},
+		componentWillUnmount: function componentWillUnmount() {
+			window.removeEventListener('scroll', this.handleScroll);
+		},
+		handleScroll: function handleScroll(e) {
+			var _state = this.state;
+			var scroll = e.srcElement.scrollingElement.scrollTop;
+			var imgHeight = this.refs["header-imgs"].clientHeight;
+			var navBarHeight = this.refs["header"].clientHeight;
+			_state.headerPosition = scroll >= imgHeight ? 'fixed' : 'initial';
+			_state.headerMargin = scroll >= imgHeight ? navBarHeight : 0;
+			this.setState(_state);
+		},
 		render: function render() {
 			return React.createElement(
 				'div',
-				{ className: 'home-page-wrapper' },
-				React.createElement(HeaderImgs, null),
-				React.createElement(Header, null),
+				{ className: 'home-page-wrapper', onScroll: this.handleScroll },
+				React.createElement(
+					'div',
+					{ ref: 'header-imgs', style: { marginBottom: this.state.headerMargin + 'px' } },
+					React.createElement(HeaderImgs, null)
+				),
+				React.createElement(
+					'div',
+					{ className: 'header-wrapper-pre', ref: 'header', style: { position: this.state.headerPosition } },
+					React.createElement(Header, null)
+				),
 				React.createElement(
 					'div',
 					{ className: 'container' },
