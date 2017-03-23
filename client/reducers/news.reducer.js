@@ -1,7 +1,6 @@
 'use strict';
 
-var actions = require('../actions/news.actions'),
-    appConfig = require('../app.cfg');
+var actions = require('../actions/news.actions');
 
 var d = new Date();
 

@@ -5,8 +5,7 @@ var React = require('react'),
 	Link = require('react-router').Link,
 	cookie = require('../../utilities/cookie'),
 	newsActions = require('../../actions/news.actions'),
-	NewsPost = require('./post.component'),
-	appConfig = require('../../app.cfg');
+	NewsPost = require('./post.component');
 
 var newsPostsContainer = React.createClass({
 	getInitialState: function () {
@@ -15,7 +14,7 @@ var newsPostsContainer = React.createClass({
   		}
     },
 	componentDidMount: function() {
-		this.props.dispatch(newsActions.getNewsPosts(appConfig.NEWS_LIST_COUNT));
+		this.props.dispatch(newsActions.getNewsPosts(this.props.newsListCount));
 		var _height = this.refs.infinite.offsetParent.parentElement.clientHeight-this.refs['infinite'].offsetTop-25 + 'px';
 		if (_height != this.state.infiniteHeight) {
 			var _state = this.state;
@@ -25,6 +24,7 @@ var newsPostsContainer = React.createClass({
 	},
 	onScrollHandler: function(e) {
  		var ele = this.refs["infinite"];
+ 		console.log(this.refs, e, this.state.infiniteHeight)
   		if (ele.scrollTop + ele.clientHeight + 200 >= ele.scrollHeight && !this.props.loading) {
       		this.props.dispatch(newsActions.getMoreNewsPosts(this.props.nextPostsUrl));
     	}
@@ -62,6 +62,7 @@ var mapStateToProps = function(state, props) {
 		newsPosts: state.news.newsPosts,
 		nextPostsUrl: state.news.next,
 		loading: state.news.loading,
+		newsListCount: state.admin.newsListCount,
 	};
 };
 

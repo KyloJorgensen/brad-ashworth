@@ -39,7 +39,6 @@ var login = function(username, password, that) {
 var LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 var loginSuccess = function(data) {
     redirect.replace('/');
-    console.log('here')
     redirect = false;
     return {
         type: LOGIN_SUCCESS

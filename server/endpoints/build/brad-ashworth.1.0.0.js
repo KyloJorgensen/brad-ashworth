@@ -23384,13 +23384,21 @@
 
 	'use strict';
 	
-	var actions = __webpack_require__(212);
+	var actions = __webpack_require__(212),
+	    cookie = __webpack_require__(210);
 	
-	var userInitialState = {};
+	var userInitialState = {
+	    mainNewsCount: 3,
+	    newsListCount: 10,
+	    facebookAppId: cookie.get("facebook_app_id") || "",
+	    facebookAppVersion: cookie.get("facebook_app_version") || ""
+	};
 	
 	var userReducer = function userReducer(state, action) {
 	    state = state || userInitialState;
 	    var _state = state;
+	    _state.facebookAppId = cookie.get("facebook_app_id") || "";
+	    _state.facebookAppVersion = cookie.get("facebook_app_version") || "";
 	    if (action.type === actions.LOGIN_ERROR) {
 	        console.log(action.error);
 	        _state.key = false;
@@ -23449,7 +23457,6 @@
 	var LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 	var loginSuccess = function loginSuccess(data) {
 	    redirect.replace('/');
-	    console.log('here');
 	    redirect = false;
 	    return {
 	        type: LOGIN_SUCCESS
@@ -24006,8 +24013,7 @@
 
 	'use strict';
 	
-	var actions = __webpack_require__(216),
-	    appConfig = __webpack_require__(217);
+	var actions = __webpack_require__(216);
 	
 	var d = new Date();
 	
@@ -24100,7 +24106,7 @@
 	
 	var getNewsPost = function getNewsPost(newsPostId) {
 	    return function (dispatch) {
-	        var url = "https://graph.facebook.com/" + APP_CONFIG.FACEBOOK_APP_VERSION + "/" + newsPostId + '?fields=created_time,story,message,actions,full_picture,type,status_type,picture' + "&format=json&" + cookie.get('facebook_app_token');
+	        var url = "https://graph.facebook.com/" + cookie.get("facebook_app_version") + "/" + newsPostId + '?fields=created_time,story,message,actions,full_picture,type,status_type,picture' + "&format=json&" + cookie.get('facebook_app_token');
 	        return fetch(url, {
 	            method: 'GET',
 	            credentials: 'same-origin',
@@ -24145,7 +24151,7 @@
 	var getNewsPosts = function getNewsPosts(limit) {
 	    return function (dispatch) {
 	        dispatch(gettingNewsEnteries());
-	        var _url = "https://graph.facebook.com/" + APP_CONFIG.FACEBOOK_APP_VERSION + "/ArtistBradAshworth" + "/feed?fields=created_time&limit=" + limit + "&format=json&" + cookie.get('facebook_app_token');
+	        var _url = "https://graph.facebook.com/" + cookie.get("facebook_app_version") + "/ArtistBradAshworth" + "/feed?fields=created_time&limit=" + limit + "&format=json&" + cookie.get('facebook_app_token');
 	        return fetch(_url, {
 	            method: 'GET',
 	            credentials: 'same-origin',
@@ -24409,7 +24415,7 @@
 	var appConfig = {};
 	appConfig.MAIN_NEWS_COUNT = 3;
 	appConfig.NEWS_LIST_COUNT = 10;
-	appConfig.FACEBOOK_APP_ID = "1551677151527898" || cookie.get("facebook_app_id") || "1551677151527898";
+	appConfig.FACEBOOK_APP_ID = cookie.get("facebook_app_id") || "1551677151527898";
 	appConfig.FACEBOOK_APP_VERSION = cookie.get("facebook_app_version") || "v2.8";
 	
 	module.exports = appConfig;
@@ -30172,17 +30178,76 @@
 	var headerImgs = React.createClass({
 		displayName: 'headerImgs',
 	
+		getInitialState: function getInitialState() {
+			return {
+				currentImg: 0
+			};
+		},
+		componentDidMount: function componentDidMount() {
+			this.timer = setInterval(this.next, 10000);
+		},
+		componentWillUnmount: function componentWillUnmount() {
+			clearInterval(this.timer);
+		},
+		next: function next() {
+			clearInterval(this.timer);
+			this.timer = setInterval(this.next, 10000);
+			var _state = this.state;
+			_state.currentImg++;
+			_state.currentImg = _state.currentImg > this.props.imgs.length - 1 ? 0 : _state.currentImg;
+			this.setState(_state);
+		},
+		nextImg: function nextImg() {
+			var _state = this.state;
+			_state.currentImg++;
+			_state.currentImg = _state.currentImg > this.props.imgs.length - 1 ? 0 : _state.currentImg;
+			this.setState(_state);
+		},
+		prevImg: function prevImg() {
+			clearInterval(this.timer);
+			this.timer = setInterval(this.next, 10000);
+			var _state = this.state;
+			_state.currentImg--;
+			_state.currentImg = _state.currentImg < 0 ? this.props.imgs.length - 1 : _state.currentImg;
+			this.setState(_state);
+		},
 		render: function render() {
 			return React.createElement(
 				'div',
 				{ className: 'header-imgs-wrapper' },
-				React.createElement('img', { id: 'header-img', src: 'http://www.rockfordbuzz.com/wp-content/uploads/abstract-art-mother-earth-1030x458.jpg', alt: 'abstract art' })
+				React.createElement(
+					'button',
+					{ onClick: this.prevImg },
+					'PREVIOUS'
+				),
+				React.createElement(
+					'button',
+					{ onClick: this.nextImg },
+					'NEXT'
+				),
+				React.createElement(
+					'a',
+					{ href: this.props.imgs[this.state.currentImg].link },
+					React.createElement('img', { id: 'header-img', src: this.props.imgs[this.state.currentImg].src, alt: 'this.props.imgs[this.state.currentImg].alt' })
+				)
 			);
 		}
 	});
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
-		return {};
+		return {
+			imgs: [{
+				src: 'https://www.w3schools.com/css/lights600x400.jpg',
+				link: 'https://www.w3schools.com/css/css3_images.asp',
+				alt: 'northern Lights',
+				title: 'The Northern Lights'
+			}, {
+				src: 'http://www.rockfordbuzz.com/wp-content/uploads/abstract-art-mother-earth-1030x458.jpg',
+				link: 'https://www.w3schools.com',
+				alt: 'cliff hiking',
+				title: 'amazing Veiw'
+			}]
+		};
 	};
 	
 	var Container = connect(mapStateToProps)(headerImgs);
@@ -30237,14 +30302,13 @@
 	    connect = __webpack_require__(178).connect,
 	    Link = __webpack_require__(222).Link,
 	    NewsPost = __webpack_require__(286),
-	    newsActions = __webpack_require__(216),
-	    appConfig = __webpack_require__(217);
+	    newsActions = __webpack_require__(216);
 	
 	var homeNewsPostsContainer = React.createClass({
 		displayName: 'homeNewsPostsContainer',
 	
 		componentDidMount: function componentDidMount() {
-			this.props.dispatch(newsActions.getNewsPosts(appConfig.MAIN_NEWS_COUNT));
+			this.props.dispatch(newsActions.getNewsPosts(this.props.mainNewsCount));
 		},
 		generatePosts: function generatePosts() {
 			return this.props.newsPosts.map(function (post) {
@@ -30289,13 +30353,14 @@
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 		var _newsPosts = [];
-		for (var i = 0; i < appConfig.MAIN_NEWS_COUNT; i++) {
+		for (var i = 0; i < state.admin.mainNewsCount; i++) {
 			if (state.news.newsPosts[i]) {
 				_newsPosts.push(state.news.newsPosts[i]);
 			}
 		}
 		return {
-			newsPosts: _newsPosts
+			newsPosts: _newsPosts,
+			mainNewsCount: state.admin.mainNewsCount
 		};
 	};
 	
@@ -30448,8 +30513,7 @@
 	    Link = __webpack_require__(222).Link,
 	    cookie = __webpack_require__(210),
 	    newsActions = __webpack_require__(216),
-	    NewsPost = __webpack_require__(286),
-	    appConfig = __webpack_require__(217);
+	    NewsPost = __webpack_require__(286);
 	
 	var newsPostsContainer = React.createClass({
 		displayName: 'newsPostsContainer',
@@ -30460,7 +30524,7 @@
 			};
 		},
 		componentDidMount: function componentDidMount() {
-			this.props.dispatch(newsActions.getNewsPosts(appConfig.NEWS_LIST_COUNT));
+			this.props.dispatch(newsActions.getNewsPosts(this.props.newsListCount));
 			var _height = this.refs.infinite.offsetParent.parentElement.clientHeight - this.refs['infinite'].offsetTop - 25 + 'px';
 			if (_height != this.state.infiniteHeight) {
 				var _state = this.state;
@@ -30470,6 +30534,7 @@
 		},
 		onScrollHandler: function onScrollHandler(e) {
 			var ele = this.refs["infinite"];
+			console.log(this.refs, e, this.state.infiniteHeight);
 			if (ele.scrollTop + ele.clientHeight + 200 >= ele.scrollHeight && !this.props.loading) {
 				this.props.dispatch(newsActions.getMoreNewsPosts(this.props.nextPostsUrl));
 			}
@@ -30516,7 +30581,8 @@
 		return {
 			newsPosts: state.news.newsPosts,
 			nextPostsUrl: state.news.next,
-			loading: state.news.loading
+			loading: state.news.loading,
+			newsListCount: state.admin.newsListCount
 		};
 	};
 	

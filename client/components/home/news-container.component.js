@@ -4,12 +4,11 @@ var React = require('react'),
 	connect = require('react-redux').connect,
 	Link = require('react-router').Link,
 	NewsPost = require('../news/post.component'),
-	newsActions = require('../../actions/news.actions'),
-	appConfig = require('../../app.cfg');
+	newsActions = require('../../actions/news.actions');
 
 var homeNewsPostsContainer = React.createClass({
 	componentDidMount: function() {
-		this.props.dispatch(newsActions.getNewsPosts(appConfig.MAIN_NEWS_COUNT));
+		this.props.dispatch(newsActions.getNewsPosts(this.props.mainNewsCount));
 	},
 	generatePosts: function() {
 		return (this.props.newsPosts.map(function(post) {
@@ -37,13 +36,14 @@ var homeNewsPostsContainer = React.createClass({
 
 var mapStateToProps = function(state, props) {
 	var _newsPosts = [];
-	for (var i = 0; i < appConfig.MAIN_NEWS_COUNT; i++) {
+	for (var i = 0; i < state.admin.mainNewsCount; i++) {
 		if (state.news.newsPosts[i]) {
 			_newsPosts.push(state.news.newsPosts[i]);	
 		}
 	}
 	return {
-		newsPosts: _newsPosts
+		newsPosts: _newsPosts,
+		mainNewsCount: state.admin.mainNewsCount,
 	};
 };
 

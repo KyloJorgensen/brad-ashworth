@@ -7,7 +7,7 @@ var fetch = require('isomorphic-fetch'),
 var getNewsPost = function(newsPostId) {
     return function(dispatch) {
         var url = "https://graph.facebook.com/"
-        + APP_CONFIG.FACEBOOK_APP_VERSION 
+        + cookie.get("facebook_app_version")
         + "/" + newsPostId 
         + '?fields=created_time,story,message,actions,full_picture,type,status_type,picture'
         + "&format=json&" 
@@ -57,7 +57,7 @@ var getNewsPosts = function(limit){
     return function(dispatch) {
         dispatch(gettingNewsEnteries());
         var _url = "https://graph.facebook.com/"
-        + APP_CONFIG.FACEBOOK_APP_VERSION 
+        + cookie.get("facebook_app_version")
         + "/ArtistBradAshworth" 
         + "/feed?fields=created_time&limit=" 
         + limit 
