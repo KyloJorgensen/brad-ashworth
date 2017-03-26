@@ -26,6 +26,9 @@ h2, h4 {
 	.fa-chevron-right {
 		right: 0;
 	}
+	a {
+		display: block;
+	}
 }
 
 #header-img {
@@ -48,23 +51,46 @@ h2, h4 {
 	background-color: @black;
 	> ul {	
 		> li {
+			padding: 0px 10px;
 			display: inline-block;
+			color: @red;
 		}
 	}
 
     > * {
-    	padding: 10px 5px;
+    	padding: 10px 0px;
     	margin: 0;
     }
 
-    p {
+    .logo p {
     	color: @red;
     	font-family: 'Pacifico', cursive;
     	margin: 0;
     }
 
     a {
-	    color: #ffffff;	
+	    color: #ffffff;
+	    display: block;
+    }
+
+    #navmenu-items {
+		position: absolute;
+		top: 31px;
+		right: 0px;
+		background-color: @black;
+		width: 100px;
+		> li {
+			> a, > p {
+				display: block;
+				padding: 5px 10px;
+				margin: 0;
+				border-top: 1px solid black;
+			}
+			a:hover {
+				text-decoration: none;
+				background: #3a3a3a;
+			}
+		}
     }
 }
 

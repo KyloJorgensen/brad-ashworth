@@ -24493,6 +24493,18 @@
 	    NewSection = __webpack_require__(285),
 	    newsActions = __webpack_require__(216);
 	
+	var imgs = [{
+		src: 'https://www.w3schools.com/css/lights600x400.jpg',
+		link: 'https://www.w3schools.com/css/css3_images.asp',
+		alt: 'northern Lights',
+		title: 'The Northern Lights'
+	}, {
+		src: 'http://www.rockfordbuzz.com/wp-content/uploads/abstract-art-mother-earth-1030x458.jpg',
+		link: 'https://www.w3schools.com',
+		alt: 'color img art',
+		title: 'Colorful Image'
+	}];
+	
 	var homePage = React.createClass({
 		displayName: 'homePage',
 	
@@ -24524,7 +24536,7 @@
 				React.createElement(
 					'div',
 					{ ref: 'header-imgs', style: { marginBottom: this.state.headerMargin + 'px' } },
-					React.createElement(HeaderImgs, null)
+					React.createElement(HeaderImgs, { imgs: imgs })
 				),
 				React.createElement(
 					'div',
@@ -24562,6 +24574,21 @@
 	var header = React.createClass({
 		displayName: 'header',
 	
+		getInitialState: function getInitialState() {
+			return {
+				dropdown: 'none'
+			};
+		},
+		onClick: function onClick() {
+			console.log('here');
+			var _state = this.state;
+			if (this.state.dropdown == 'none') {
+				_state.dropdown = 'block';
+			} else {
+				_state.dropdown = 'none';
+			}
+			this.setState(_state);
+		},
 		render: function render() {
 			return React.createElement(
 				'nav',
@@ -24571,7 +24598,7 @@
 					null,
 					React.createElement(
 						'li',
-						{ className: 'Logo' },
+						{ className: 'logo' },
 						React.createElement(
 							'p',
 							null,
@@ -24583,20 +24610,24 @@
 						{ className: 'dropdown float-right' },
 						React.createElement(
 							'a',
-							{ className: 'dropdown-toggle', id: 'navmenu', 'data-toggle': 'dropdown' },
+							{ id: 'navmenu', onClick: this.onClick },
 							React.createElement('i', { className: 'fa fa-bars' })
 						),
 						React.createElement(
 							'ul',
-							{ className: 'dropdown-menu dropdown-menu-right', role: 'menu', 'aria-labelledby': 'menu1' },
+							{ id: 'navmenu-items', style: { display: this.state.dropdown } },
 							React.createElement(
 								'li',
-								{ role: 'presentation', className: 'dropdown-header' },
-								'MENU'
+								null,
+								React.createElement(
+									'p',
+									null,
+									'MENU'
+								)
 							),
 							React.createElement(
 								'li',
-								{ role: 'presentation' },
+								null,
 								React.createElement(
 									Link,
 									{ role: 'menuitem', tabIndex: '-1', to: '/' },
@@ -24605,7 +24636,7 @@
 							),
 							React.createElement(
 								'li',
-								{ role: 'presentation' },
+								null,
 								React.createElement(
 									Link,
 									{ role: 'menuitem', tabIndex: '-1', to: '/news' },
@@ -30182,7 +30213,8 @@
 			return {
 				currentImg: 0,
 				imgHeight: '350px',
-				imgWidth: 'auto'
+				imgWidth: 'auto',
+				imgPadding: '0 0'
 			};
 		},
 		componentDidMount: function componentDidMount() {
@@ -30202,10 +30234,7 @@
 		nextImg: function nextImg() {
 			clearInterval(this.timer);
 			this.timer = setInterval(this.next, 10000);
-			var _state = this.state;
-			_state.currentImg++;
-			_state.currentImg = _state.currentImg > this.props.imgs.length - 1 ? 0 : _state.currentImg;
-			this.setState(_state);
+			this.next();
 		},
 		prevImg: function prevImg() {
 			clearInterval(this.timer);
@@ -30226,44 +30255,42 @@
 			if (naturalWidth > maxWidth) {
 				_state.imgHeight = Math.round(newHeight) + "px";
 				_state.imgWidth = Math.round(maxWidth) + "px";
-				_state.imgPadding = Math.round(padding);
+				_state.imgPadding = Math.round(padding) + 'px 0';
 			}
 			if (newHeight > maxHeight) {
 				_state.imgHeight = Math.round(maxHeight) + "px";
 				_state.imgWidth = "auto";
-				_state.imgPadding = 0;
+				_state.imgPadding = '0 0';
 			}
 			this.setState(_state);
 		},
 		render: function render() {
+			var img;
+			if (this.props.imgs.length != 0) {
+				img = React.createElement(
+					'a',
+					{ href: this.props.imgs[this.state.currentImg].link, style: { padding: this.state.imgPadding } },
+					React.createElement('img', { id: 'header-img', ref: 'header-img', key: 'header-img', onLoad: this.imgLoaded, style: { height: this.state.imgHeight, width: this.state.imgWidth }, src: this.props.imgs[this.state.currentImg].src, alt: this.props.imgs[this.state.currentImg].alt, title: this.props.imgs[this.state.currentImg].title })
+				);
+			} else {
+				img = React.createElement(
+					'a',
+					null,
+					React.createElement('img', { id: 'header-img' })
+				);
+			}
 			return React.createElement(
 				'div',
 				{ className: 'header-imgs-wrapper', ref: 'wrapper' },
 				React.createElement('i', { onClick: this.prevImg, className: 'fa fa-chevron-left', 'aria-hidden': 'true' }),
 				React.createElement('i', { onClick: this.nextImg, className: 'fa fa-chevron-right', 'aria-hidden': 'true' }),
-				React.createElement(
-					'a',
-					{ href: this.props.imgs[this.state.currentImg].link, style: { display: 'block', padding: this.state.imgPadding + 'px 0' } },
-					React.createElement('img', { id: 'header-img', ref: 'header-img', onLoad: this.imgLoaded, style: { height: this.state.imgHeight, width: this.state.imgWidth }, src: this.props.imgs[this.state.currentImg].src, alt: 'this.props.imgs[this.state.currentImg].alt' })
-				)
+				img
 			);
 		}
 	});
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
-		return {
-			imgs: [{
-				src: 'https://www.w3schools.com/css/lights600x400.jpg',
-				link: 'https://www.w3schools.com/css/css3_images.asp',
-				alt: 'northern Lights',
-				title: 'The Northern Lights'
-			}, {
-				src: 'http://www.rockfordbuzz.com/wp-content/uploads/abstract-art-mother-earth-1030x458.jpg',
-				link: 'https://www.w3schools.com',
-				alt: 'cliff hiking',
-				title: 'amazing Veiw'
-			}]
-		};
+		return {};
 	};
 	
 	var Container = connect(mapStateToProps)(headerImgs);

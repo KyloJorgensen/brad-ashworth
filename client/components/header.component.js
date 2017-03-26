@@ -5,19 +5,34 @@ var React = require('react'),
 	Link = require('react-router').Link;
 
 var header = React.createClass({
+	getInitialState: function() {
+		return {
+			dropdown: 'none',
+		};
+	},
+	onClick: function() {
+		console.log('here')
+		var _state = this.state;
+		if (this.state.dropdown == 'none') {
+			_state.dropdown = 'block';
+		} else {
+			_state.dropdown = 'none';
+		}
+		this.setState(_state);
+	},
 	render: function() {  		
 		return (
 		    <nav className="header-wrapper">
 		    	<ul>
-			    	<li className="Logo">
+			    	<li className="logo">
 				    	<p>Brad Ashworth</p>
 					</li>
 					<li className="dropdown float-right" >
-						<a className="dropdown-toggle" id="navmenu" data-toggle="dropdown" ><i className="fa fa-bars" /></a>
-					    <ul className="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="menu1">
-							<li role="presentation" className="dropdown-header">MENU</li>
-					      	<li role="presentation"><Link role="menuitem" tabIndex="-1" to={'/'} >HOME</Link></li>
-					      	<li role="presentation"><Link role="menuitem" tabIndex="-1" to={'/news'} >NEWS</Link></li>
+						<a id="navmenu" onClick={this.onClick} ><i className="fa fa-bars" /></a>
+					    <ul id="navmenu-items" style={{display: this.state.dropdown}} >
+							<li><p>MENU</p></li>
+					      	<li><Link role="menuitem" tabIndex="-1" to={'/'} >HOME</Link></li>
+					      	<li><Link role="menuitem" tabIndex="-1" to={'/news'} >NEWS</Link></li>
 					    </ul>
 					</li>
 				</ul>

@@ -8,6 +8,21 @@ var React = require('react'),
 	NewSection = require('./news-container.component'),
 	newsActions = require('../../actions/news.actions');
 
+var imgs = [
+	{
+		src: 'https://www.w3schools.com/css/lights600x400.jpg',
+		link: 'https://www.w3schools.com/css/css3_images.asp',
+		alt: 'northern Lights',
+		title: 'The Northern Lights',
+	},
+	{
+		src: 'http://www.rockfordbuzz.com/wp-content/uploads/abstract-art-mother-earth-1030x458.jpg',
+		link: 'https://www.w3schools.com',
+		alt: 'color img art',
+		title: 'Colorful Image',
+	},
+];
+
 var homePage = React.createClass({
 	getInitialState: function () {
   		return {
@@ -34,7 +49,7 @@ var homePage = React.createClass({
 		return (
 		    <div className="home-page-wrapper" onScroll={this.handleScroll} >
 		    	<div ref="header-imgs" style={{marginBottom: this.state.headerMargin+'px'}}>
-					<HeaderImgs />
+					<HeaderImgs imgs={imgs} />
 				</div>
 				<div className="header-wrapper-pre" ref="header" style={{position: this.state.headerPosition,}} >
 					<Header />

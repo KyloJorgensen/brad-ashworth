@@ -10,6 +10,7 @@ var headerImgs = React.createClass({
 			currentImg: 0,
 			imgHeight: '350px',
 			imgWidth: 'auto',
+			imgPadding: '0 0',
 		};
 	},
 	componentDidMount: function(){
@@ -29,10 +30,7 @@ var headerImgs = React.createClass({
 	nextImg: function() {
 		clearInterval(this.timer);
 		this.timer = setInterval(this.next, 10000);
-		var _state = this.state;
-		_state.currentImg++;
-		_state.currentImg = _state.currentImg > this.props.imgs.length-1 ? 0 : _state.currentImg;
-		this.setState(_state);
+		this.next();
 	},
 	prevImg: function() {
 		clearInterval(this.timer);
@@ -53,45 +51,38 @@ var headerImgs = React.createClass({
 		if (naturalWidth > maxWidth) {
 			_state.imgHeight = Math.round(newHeight) + "px";
 			_state.imgWidth = Math.round(maxWidth) + "px";
-			_state.imgPadding = Math.round(padding);
+			_state.imgPadding = Math.round(padding) + 'px 0';
 		}
 		if (newHeight > maxHeight) {
 			_state.imgHeight = Math.round(maxHeight) + "px";
 			_state.imgWidth = "auto";
-			_state.imgPadding = 0;
+			_state.imgPadding = '0 0';
 		}
 		this.setState(_state);
 	},
 	render: function() {
+		var img;
+		if (this.props.imgs.length != 0) {
+			img = (
+				<a href={this.props.imgs[this.state.currentImg].link} style={{padding: this.state.imgPadding}} >
+					<img id="header-img" ref="header-img" key="header-img" onLoad={this.imgLoaded} style={{height: this.state.imgHeight, width: this.state.imgWidth}} src={this.props.imgs[this.state.currentImg].src} alt={this.props.imgs[this.state.currentImg].alt} title={this.props.imgs[this.state.currentImg].title} />
+				</a>
+			);
+		} else {
+			img = (<a><img id="header-img" /></a>);
+		}
 		return (
 			<div className="header-imgs-wrapper" ref="wrapper" >
 				<i onClick={this.prevImg} className="fa fa-chevron-left" aria-hidden="true" />
 				<i onClick={this.nextImg} className="fa fa-chevron-right" aria-hidden="true" />
-				<a href={this.props.imgs[this.state.currentImg].link} style={{display: 'block', padding: this.state.imgPadding + 'px 0'}} >
-					<img id="header-img" ref="header-img" onLoad={this.imgLoaded} style={{height: this.state.imgHeight, width: this.state.imgWidth}} src={this.props.imgs[this.state.currentImg].src} alt="this.props.imgs[this.state.currentImg].alt" />
-				</a>
+				{img}
 			</div>
 		);
 	}
 });
 
 var mapStateToProps = function(state, props) {
-	return {
-			imgs: [
-				{
-					src: 'https://www.w3schools.com/css/lights600x400.jpg',
-					link: 'https://www.w3schools.com/css/css3_images.asp',
-					alt: 'northern Lights',
-					title: 'The Northern Lights',
-				},
-				{
-					src: 'http://www.rockfordbuzz.com/wp-content/uploads/abstract-art-mother-earth-1030x458.jpg',
-					link: 'https://www.w3schools.com',
-					alt: 'cliff hiking',
-					title: 'amazing Veiw',
-				}
-			],
-		};
+	return {};
 };
 
 var Container = connect(mapStateToProps)(headerImgs);
