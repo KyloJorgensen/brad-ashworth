@@ -11,9 +11,23 @@ h2,
 h4 {
   color: #e5474b;
 }
+.header-imgs-wrapper {
+  background-color: black;
+}
+.header-imgs-wrapper .fa {
+  position: absolute;
+  font-size: 48px;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 151px 18px;
+  color: white;
+}
+.header-imgs-wrapper .fa-chevron-right {
+  right: 0;
+}
 #header-img {
-  width: 100%;
+  margin: auto;
   height: 350px;
+  display: block;
 }
 .header-wrapper-pre {
   top: 0;
