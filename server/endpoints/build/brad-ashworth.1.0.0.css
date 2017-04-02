@@ -1,0 +1,217 @@
+@import url('https://fonts.googleapis.com/css?family=Lato|Pacifico');
+body {
+  font-family: "Lato", sans-serif;
+  overflow-x: hidden;
+}
+ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+h2,
+h4 {
+  color: #e5474b;
+}
+.header-imgs-wrapper {
+  background-color: black;
+}
+.header-imgs-wrapper .fa {
+  position: absolute;
+  font-size: 48px;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 151px 18px;
+  color: white;
+}
+.header-imgs-wrapper .fa-chevron-right {
+  right: 0;
+}
+.header-imgs-wrapper a {
+  display: block;
+}
+#header-img {
+  margin: auto;
+  height: 350px;
+  display: block;
+}
+.header-wrapper-pre {
+  top: 0;
+  right: 0;
+  left: 0;
+}
+.header-wrapper {
+  background-color: #1c1c1c;
+}
+.header-wrapper > ul > li {
+  padding: 0px 10px;
+  display: inline-block;
+  color: #e5474b;
+}
+.header-wrapper > * {
+  padding: 10px 0px;
+  margin: 0;
+}
+.header-wrapper .logo p {
+  color: #e5474b;
+  font-family: 'Pacifico', cursive;
+  margin: 0;
+}
+.header-wrapper a {
+  color: #ffffff;
+  display: block;
+}
+.header-wrapper #navmenu-items {
+  position: absolute;
+  top: 31px;
+  right: 0px;
+  background-color: #1c1c1c;
+  width: 200px;
+}
+.header-wrapper #navmenu-items > li > a,
+.header-wrapper #navmenu-items > li > p {
+  display: block;
+  padding: 10px;
+  margin: 0;
+  border-top: 1px solid black;
+}
+.header-wrapper #navmenu-items > li a:hover {
+  text-decoration: none;
+  background: #3a3a3a;
+}
+.float-right {
+  float: right;
+}
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+button,
+.button {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -moz-transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  -webkit-transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  -ms-transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  border-radius: 0;
+  border: 0;
+  cursor: pointer;
+  display: inline-block;
+  font-size: .8em;
+  font-weight: 700;
+  height: 3.5em;
+  line-height: 3.65em;
+  padding: 0 2.25em;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+button,
+.button {
+  background-color: #5a5a5a;
+  color: #ffffff !important;
+}
+input[type="submit"].alt,
+input[type="reset"].alt,
+input[type="button"].alt,
+button.alt,
+.button.alt {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 2px #e5474b;
+  color: #e5474b !important;
+}
+#footer input[type="submit"].alt,
+#footer input[type="reset"].alt,
+#footer input[type="button"].alt,
+#footer button.alt,
+#footer .button.alt {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 2px #fff;
+  color: #ffffff !important;
+}
+.main-news-section {
+  width: 50%;
+  float: right;
+  border-style: solid;
+  border-width: medium;
+  border-color: red;
+  margin: 10px;
+  padding: 32px;
+}
+.page-changer {
+  padding: 15px;
+}
+.page-changer .next {
+  float: right;
+  width: 33.3%;
+}
+.page-changer .previous {
+  float: left;
+  width: 33.3%;
+}
+.page-changer p {
+  text-align: center;
+  margin: 10px auto;
+  width: 33.3%;
+  display: inline-block;
+}
+.news-post-list,
+.news-posts-header {
+  max-width: 500px;
+}
+.news-post h4,
+.add-news-post h4,
+.news-post .admin input,
+.add-news-post .admin input {
+  display: inline-block;
+}
+.news-post h5,
+.add-news-post h5,
+.news-post .admin p,
+.add-news-post .admin p,
+.news-post .admin .right,
+.add-news-post .admin .right {
+  float: right;
+  display: inline-block;
+}
+.news-post .public .admin-edit,
+.add-news-post .public .admin-edit {
+  display: none;
+}
+.news-post .public p,
+.add-news-post .public p {
+  padding: 15px;
+}
+.news-post textarea,
+.add-news-post textarea {
+  width: 100%;
+  height: 200px;
+}
+.news-post .news-post-content img,
+.add-news-post .news-post-content img {
+  max-width: 100%;
+}
+.infinite {
+  overflow: auto;
+}
+.infinite::-webkit-scrollbar {
+  display: none;
+}
+.admin-login-form {
+  padding: 50px;
+}
+.admin-login-form > * {
+  margin: 10px 0;
+}
+.footer-wrapper {
+  background-color: #e5474b;
+  padding: 64px;
+}
+.footer-wrapper a {
+  color: #ffffff;
+}
+/*# sourceMappingURL=brad-ashworth.1.0.0.css.map */
