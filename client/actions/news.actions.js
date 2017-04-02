@@ -10,7 +10,7 @@ var getNewsPost = function(newsPostId) {
         + cookie.get("facebook_app_version")
         + "/" + newsPostId 
         + '?fields=created_time,story,message,actions,full_picture,type,status_type,picture'
-        + "&format=json&" 
+        + "&format=json&access_token=" 
         + cookie.get('facebook_app_token');
         return fetch(url, {
             method: 'GET',
@@ -61,7 +61,7 @@ var getNewsPosts = function(limit){
         + "/ArtistBradAshworth" 
         + "/feed?fields=created_time&limit=" 
         + limit 
-        + "&format=json&" 
+        + "&format=json&access_token=" 
         + cookie.get('facebook_app_token');
         return fetch(_url, {
             method: 'GET',

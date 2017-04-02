@@ -25,7 +25,8 @@ var cookie = {
 	            c = c.substring(1);
 	        }
 	        if (c.indexOf(name) == 0) {
-	            return c.substring(name.length, c.length);
+	        	var cookie = c.substring(name.length, c.length);
+	            return cookie;
 	        }
 	    }
 	    return '';

@@ -26,7 +26,8 @@
 		echo '<p/> bad app_id or app_secret';
 	}
 	else {
-		setcookie("facebook_app_token", $curl->response);
+		$response = json_decode($curl->response);
+		setcookie("facebook_app_token", $response->access_token);
 		setcookie("facebook_app_id", $app_id);
 		setcookie("facebook_app_version", $app_version);
 	}

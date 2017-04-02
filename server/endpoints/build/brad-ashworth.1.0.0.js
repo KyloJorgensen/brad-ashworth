@@ -23960,7 +23960,8 @@
 					c = c.substring(1);
 				}
 				if (c.indexOf(name) == 0) {
-					return c.substring(name.length, c.length);
+					var cookie = c.substring(name.length, c.length);
+					return cookie;
 				}
 			}
 			return '';
@@ -24697,7 +24698,7 @@
 	
 	var getNewsPost = function getNewsPost(newsPostId) {
 	    return function (dispatch) {
-	        var url = "https://graph.facebook.com/" + cookie.get("facebook_app_version") + "/" + newsPostId + '?fields=created_time,story,message,actions,full_picture,type,status_type,picture' + "&format=json&" + cookie.get('facebook_app_token');
+	        var url = "https://graph.facebook.com/" + cookie.get("facebook_app_version") + "/" + newsPostId + '?fields=created_time,story,message,actions,full_picture,type,status_type,picture' + "&format=json&access_token=" + cookie.get('facebook_app_token');
 	        return fetch(url, {
 	            method: 'GET',
 	            credentials: 'same-origin',
@@ -24742,7 +24743,7 @@
 	var getNewsPosts = function getNewsPosts(limit) {
 	    return function (dispatch) {
 	        dispatch(gettingNewsEnteries());
-	        var _url = "https://graph.facebook.com/" + cookie.get("facebook_app_version") + "/ArtistBradAshworth" + "/feed?fields=created_time&limit=" + limit + "&format=json&" + cookie.get('facebook_app_token');
+	        var _url = "https://graph.facebook.com/" + cookie.get("facebook_app_version") + "/ArtistBradAshworth" + "/feed?fields=created_time&limit=" + limit + "&format=json&access_token=" + cookie.get('facebook_app_token');
 	        return fetch(_url, {
 	            method: 'GET',
 	            credentials: 'same-origin',
