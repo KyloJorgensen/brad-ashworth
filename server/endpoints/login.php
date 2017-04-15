@@ -1,10 +1,8 @@
 <?php
-
 	DEFINE ('METHOD', $_SERVER['REQUEST_METHOD']);
 	DEFINE ('URI', $_SERVER['REQUEST_URI']);
 	DEFINE('__SERVER__', dirname(dirname(__FILE__)));
 	$controller = require(__SERVER__ . '/controllers/login.controller.php');
-
 	try {
 		// pull params off
 		$endpoint = strchr(URI, "?", true);

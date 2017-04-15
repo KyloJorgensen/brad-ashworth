@@ -10,11 +10,11 @@
 
 				$query = json_decode(file_get_contents('php://input'), true);
 
-				if(empty($query['username'])){
+				if(empty($query['adminName'])){
 					// Adds name to array
-					$data_missing[] = 'username';
+					$data_missing[] = 'adminName';
 				} else {
-					$username = $query['username'];
+					$adminName = $query['adminName'];
 				}
 
 				if(empty($query['password'])){
@@ -29,7 +29,7 @@
 					require(__SERVER__ . '/mysqli_connect.php');
 				// Create a query for the database
 					$tableName = "admin";
-					$query = "SELECT username, password FROM ".$tableName;
+					$query = "SELECT adminName, password FROM ".$tableName;
 
 				// Get a response from the database by sending the connection
 				// and the query
@@ -43,11 +43,10 @@
 						} else {
 							// sql to create table
 							$sql = "CREATE TABLE ".$tableName." (
-							adminid INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
-							username VARCHAR(45) NOT NULL,
+							adminid INT(11) AUTO_INCREMENT, 
+							adminName VARCHAR(45) NOT NULL,
 							password VARCHAR(45) NOT NULL,
-							adminKey VARCHAR(45),
-							reg_date TIMESTAMP
+							adminKey VARCHAR(45)
 							)";
 
 							if (@mysqli_query($dbc, $sql) === TRUE) {
@@ -62,21 +61,21 @@
 						}
 					}
 					$key = NULL;
-					$_username;
+					$_adminName;
 					while($row = mysqli_fetch_array($response)){
-						if ($row['username'] == $username) {
+						if ($row['adminName'] == $adminName) {
 							if ($row['password'] == $password) {
-								$_username = $username;
-								$keyuncypted = rand(1000000000, 9999999999) . $__SERVERCONFIG__->ADMIN_SECRET.$_username;
+								$_adminName = $adminName;
+								$keyuncypted = rand(1000000000, 9999999999) . $__SERVERCONFIG__->ADMIN_SECRET.$_adminName;
 								$key = crypt($keyuncypted, 32);
 								setcookie("adminkey", $key, time()+14400);
 							}
 						}
 					}($response);
 
-					if (!$_username) {
-						if ($username == 'root' && $password == "startup") {
-							$keyuncypted = rand(1000000000, 9999999999) . $__SERVERCONFIG__->ADMIN_SECRET.$_username;
+					if (!$_adminName) {
+						if ($adminName == 'root' && $password == "startup") {
+							$keyuncypted = rand(1000000000, 9999999999) . $__SERVERCONFIG__->ADMIN_SECRET.$_adminName;
 							$key = crypt($keyuncypted, 32);
 							setcookie("adminkey", $key, time()+14400);
 						}
@@ -91,7 +90,7 @@
 						throw $error;
 					}
 
-					$updatekey = $auth->updatekey($key, $_username, $tableName);
+					$updatekey = $auth->updatekey($key, $_adminName, $tableName);
 
 					if ($updatekey) {
 						throw $updatekey;

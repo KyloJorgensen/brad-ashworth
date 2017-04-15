@@ -21,7 +21,7 @@
 		public $totalEntries;
 	};
 
-	class NewsController {
+	class AdminController {
 		public function getNewsById($_id) {
 			try {
 				if(empty($_id)){
@@ -134,24 +134,24 @@
 			}
 		}
 
-		public function addNews() {
+		public function addAdmin() {
 			try {
 				$data_missing = array();
 
 				$query = json_decode(file_get_contents('php://input'), true);
 
-				if(empty($query['title'])){
+				if(empty($query['adminName'])){
 					// Adds name to array
-					$data_missing[] = 'title';
+					$data_missing[] = 'adminName';
 				} else {
-					$title = $query['title'];
+					$adminName = $query['adminName'];
 				}
 
-				if(empty($query['content'])){
+				if(empty($query['password'])){
 					// Adds name to array
-					$data_missing[] = 'content';
+					$data_missing[] = 'password';
 				} else {
-					$content = $query['content'];
+					$password = $query['password'];
 				}
 
 				if(empty($data_missing)) {
@@ -159,18 +159,24 @@
 				// Get a connection for the database
 					require(__SERVER__ . '/mysqli_connect.php');
 
-					$query = "INSERT INTO news (idnews, title, date_enter, content) VALUES (NULL, ?, NOW(), ?)";
+					$query = "INSERT INTO admin (adminid, adminName, password, adminKey) VALUES (NULL, ?, ?, NULL)";
 
 					$stmt = mysqli_prepare($dbc, $query);
-					
-					mysqli_stmt_bind_param($stmt, "ss", convert_uuencode($title), convert_uuencode($content));
+					if (!$stmt) {
+						die('mysqli error: '.mysqli_error($dbc);
+					}
+
+					mysqli_stmt_bind_param($stmt, "ss", convert_uuencode($adminName), convert_uuencode($password));
+					if (!mysqli_execute($stmt)) {
+						die( 'stmt error: '.mysqli_stmt_error($stmt) );
+					}
 
 					mysqli_stmt_execute($stmt);
-					
+
 					$affected_rows = mysqli_stmt_affected_rows($stmt);
 					
 					if($affected_rows == 1) {
-						echo 'NEWS Entered';
+						echo 'Admin Entered';
 						mysqli_stmt_close($stmt);
 						mysqli_close($dbc);
 					
@@ -332,5 +338,5 @@
 		}
 	}
 
-	return new NewsController();
+	return new AdminController();
 ?>

@@ -11,7 +11,6 @@ var header = React.createClass({
 		};
 	},
 	onClick: function() {
-		console.log('here')
 		var _state = this.state;
 		if (this.state.dropdown == 'none') {
 			_state.dropdown = 'block';

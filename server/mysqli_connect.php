@@ -29,4 +29,21 @@
 
 	$dbc = @mysqli_connect($SERVER, $USERNAME, $PASSWORD, $DB)
 	OR die('Could not connect to MySQL: ' . mysqli_connect_error());
+
+
+	$query = "SELECT ID FROM ADMINS";
+	$result = mysqli_query($dbConnection, $query);
+
+	if(empty($result)) {
+	$query = "CREATE TABLE ADMINS (
+		ID int(11) AUTO_INCREMENT,
+		EMAIL varchar(255) NOT NULL,
+		PASSWORD varchar(255) NOT NULL,
+		PERMISSION_LEVEL int,
+		APPLICATION_COMPLETED int,
+		APPLICATION_IN_PROGRESS int,
+		PRIMARY KEY  (ID)
+	)";
+	$result = mysqli_query($dbConnection, $query);
+	}
 ?>

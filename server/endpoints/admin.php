@@ -1,8 +1,10 @@
 <?php
+
 	DEFINE ('METHOD', $_SERVER['REQUEST_METHOD']);
 	DEFINE ('URI', $_SERVER['REQUEST_URI']);
 	DEFINE('__SERVER__', dirname(dirname(__FILE__)));
-	$controller = require(__SERVER__ . '/controllers/logout.controller.php');
+	$controller = require(__SERVER__ . '/controllers/admin.controller.php');
+
 	try {
 		// pull params off
 		$endpoint = strchr(URI, "?", true);
@@ -11,9 +13,9 @@
 		}
 		// pull first endpoint only
 		$endpoint = strtok($endpoint, "/");
-		if ($endpoint == 'logout.php') {
-			if (METHOD == 'GET') {
-				$controller->logout();
+		if ($endpoint == 'admin.php') {
+			if (METHOD == 'POST') {
+				$controller->addAdmin();
 				return;
 			}
 		}

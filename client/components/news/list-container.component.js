@@ -24,7 +24,6 @@ var newsPostsContainer = React.createClass({
 	},
 	onScrollHandler: function(e) {
  		var ele = this.refs["infinite"];
- 		console.log(this.refs, e, this.state.infiniteHeight)
   		if (ele.scrollTop + ele.clientHeight + 200 >= ele.scrollHeight && !this.props.loading) {
       		this.props.dispatch(newsActions.getMoreNewsPosts(this.props.nextPostsUrl));
     	}

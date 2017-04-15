@@ -48,6 +48,10 @@
 			include('logout.php');
 			return;
 		}
+		if ($endpoint == 'admin.php') {
+			include('admin.php');
+			return;
+		}		
 
 	    $error = new Exception('MISSING ENDPOINT');
 	    $error->type = 404;

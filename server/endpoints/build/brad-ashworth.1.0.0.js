@@ -23983,7 +23983,9 @@
 	    mainNewsCount: 3,
 	    newsListCount: 10,
 	    facebookAppId: cookie.get("facebook_app_id") || "",
-	    facebookAppVersion: cookie.get("facebook_app_version") || ""
+	    facebookAppVersion: cookie.get("facebook_app_version") || "",
+	    facebook_page_id: cookie.get("facebook_page_id") || "",
+	    scope: 'pages_show_list,public_profile'
 	};
 	
 	var userReducer = function userReducer(state, action) {
@@ -24001,6 +24003,12 @@
 	    if (action.type === actions.LOGOUT_ERROR) {
 	        _state.key = false;
 	    }
+	    if (action.type === actions.ADD_ADMIN_SUCCESS) {
+	        console.log(action);
+	    }
+	    if (action.type === actions.ADD_ADMIN_ERROR) {
+	        console.log(action);
+	    }
 	    return _state;
 	};
 	
@@ -24015,9 +24023,9 @@
 	var fetch = __webpack_require__(228);
 	var redirect = false;
 	
-	var login = function login(username, password, that) {
+	var login = function login(adminName, password, that) {
 	    var payload = {
-	        username: username,
+	        adminName: adminName,
 	        password: password
 	    };
 	    return function (dispatch) {
@@ -24039,7 +24047,7 @@
 	            }
 	            return response;
 	        }).then(function (data) {
-	            return dispatch(loginSuccess());
+	            return dispatch(loginSuccess(data));
 	        }).catch(function (error) {
 	            return dispatch(loginError(error));
 	        });
@@ -24047,8 +24055,8 @@
 	};
 	
 	var LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-	var loginSuccess = function loginSuccess(data) {
-	    redirect.replace('/');
+	var loginSuccess = function loginSuccess() {
+	    redirect.replace('/admin');
 	    redirect = false;
 	    return {
 	        type: LOGIN_SUCCESS
@@ -24093,7 +24101,6 @@
 	var LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 	var logoutSuccess = function logoutSuccess(data) {
 	    redirect.replace('/');
-	    console.log('here');
 	    redirect = false;
 	    return {
 	        type: LOGOUT_SUCCESS
@@ -24109,6 +24116,53 @@
 	    };
 	};
 	
+	var ADD_ADMIN = 'ADD_ADMIN';
+	var addAdmin = function addAdmin(adminName, password) {
+	    var payload = {
+	        adminName: adminName,
+	        password: password
+	    };
+	    return function (dispatch) {
+	        var url = '/admin.php';
+	        return fetch(url, {
+	            method: 'POST',
+	            credentials: 'same-origin',
+	            headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json'
+	            },
+	            body: JSON.stringify(payload)
+	        }).then(function (response) {
+	            if (response.status < 200 || response.status >= 300) {
+	                var error = new Error(response.statusText);
+	                error.response = response;
+	                throw error;
+	            }
+	            return response;
+	        }).then(function (response) {
+	            return dispatch(addAdminSuccess(response));
+	        }).catch(function (error) {
+	            return dispatch(addAdminError(error));
+	        });
+	    };
+	};
+	
+	var ADD_ADMIN_SUCCESS = "ADD_ADMIN_SUCCESS";
+	var addAdminSuccess = function addAdminSuccess(data) {
+	    return {
+	        type: ADD_ADMIN_SUCCESS,
+	        data: data
+	    };
+	};
+	
+	var ADD_ADMIN_ERROR = 'ADD_ADMIN_ERROR';
+	var addAdminError = function addAdminError(error) {
+	    return {
+	        type: ADD_ADMIN_ERROR,
+	        error: error
+	    };
+	};
+	
 	exports.login = login;
 	exports.LOGIN_SUCCESS = LOGIN_SUCCESS;
 	exports.loginSuccess = loginSuccess;
@@ -24119,6 +24173,11 @@
 	exports.logoutSuccess = logoutSuccess;
 	exports.LOGOUT_ERROR = LOGOUT_ERROR;
 	exports.logoutError = logoutError;
+	exports.addAdmin = addAdmin;
+	exports.ADD_ADMIN_SUCCESS = ADD_ADMIN_SUCCESS;
+	exports.addAdminSuccess = addAdminSuccess;
+	exports.ADD_ADMIN_ERROR = ADD_ADMIN_ERROR;
+	exports.addAdminError = addAdminError;
 
 /***/ },
 /* 228 */
@@ -25021,21 +25080,32 @@
 	var APP_CONFIG = __webpack_require__(232);
 	
 	window.fbAsyncInit = function () {
-		FB.init({
-			appId: APP_CONFIG.FACEBOOK_APP_ID,
-			xfbml: true,
-			version: 'v2.8'
-		});
-		FB.AppEvents.logPageView();
+	  FB.init({
+	    appId: APP_CONFIG.FACEBOOK_APP_ID,
+	    xfbml: true,
+	    version: 'v2.8'
+	  });
+	  FB.AppEvents.logPageView();
 	};
 	
+	// (function(d, s, id) {
+	// 	var js, fjs = d.getElementsByTagName(s)[0];
+	// 	if (d.getElementById(id)) return;
+	// 	js = d.createElement(s); js.id = id;
+	// 	js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version="+APP_CONFIG.FACEBOOK_APP_VERSION+"&appId="+APP_CONFIG.FACEBOOK_APP_ID;
+	// 		fjs.parentNode.insertBefore(js, fjs);
+	// }(document, 'script', 'facebook-jssdk'));
+	
+	
 	(function (d, s, id) {
-		var js,
-		    fjs = d.getElementsByTagName(s)[0];
-		if (d.getElementById(id)) return;
-		js = d.createElement(s);js.id = id;
-		js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=" + APP_CONFIG.FACEBOOK_APP_VERSION + "&appId=" + APP_CONFIG.FACEBOOK_APP_ID;
-		fjs.parentNode.insertBefore(js, fjs);
+	  var js,
+	      fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) {
+	    return;
+	  }
+	  js = d.createElement(s);js.id = id;
+	  js.src = "//connect.facebook.net/en_US/sdk.js";
+	  fjs.parentNode.insertBefore(js, fjs);
 	})(document, 'script', 'facebook-jssdk');
 
 /***/ },
@@ -25172,7 +25242,6 @@
 			};
 		},
 		onClick: function onClick() {
-			console.log('here');
 			var _state = this.state;
 			if (this.state.dropdown == 'none') {
 				_state.dropdown = 'block';
@@ -31016,10 +31085,31 @@
 	var footer = React.createClass({
 		displayName: 'footer',
 	
+		getInitialState: function getInitialState() {
+			return {
+				bottom: 0
+			};
+		},
+		componentDidMount: function componentDidMount() {
+			this.min();
+		},
+		toggle: function toggle() {
+			this.state.bottom == 0 ? this.max() : this.min();
+		},
+		min: function min() {
+			var _state = this.state;
+			_state.bottom = 30 - this.refs.footer.clientHeight;
+			this.setState(_state);
+		},
+		max: function max() {
+			var _state = this.state;
+			_state.bottom = 0;
+			this.setState(_state);
+		},
 		render: function render() {
 			return React.createElement(
 				'div',
-				{ className: 'footer-wrapper', id: 'footer' },
+				{ className: 'footer-wrapper', ref: 'footer', id: 'footer', onMouseEnter: this.max, onMouseLeave: this.min, onClick: this.toggle, style: { position: 'fixed', bottom: this.state.bottom + "px", width: '100%' } },
 				React.createElement(
 					'div',
 					{ className: 'container' },
@@ -31283,7 +31373,6 @@
 		},
 		onScrollHandler: function onScrollHandler(e) {
 			var ele = this.refs["infinite"];
-			console.log(this.refs, e, this.state.infiniteHeight);
 			if (ele.scrollTop + ele.clientHeight + 200 >= ele.scrollHeight && !this.props.loading) {
 				this.props.dispatch(newsActions.getMoreNewsPosts(this.props.nextPostsUrl));
 			}
@@ -31611,29 +31700,62 @@
 
 	'use strict';
 	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(183).connect,
 	    Header = __webpack_require__(236),
 	    Footer = __webpack_require__(301),
 	    cookie = __webpack_require__(225),
-	    AdminActions = __webpack_require__(227);
+	    adminActions = __webpack_require__(227);
 	
 	var adminPage = React.createClass({
 		displayName: 'adminPage',
 	
 		login: function login(event) {
+			FB.login(this.checkForAdmin, {
+				scope: this.props.scope,
+				return_scopes: true,
+				enable_profile_selector: true,
+				profile_selector_ids: cookie.get('facebook_page_id')
+			});;
+			// event.preventDefault();
+			// if (this.refs.adminName.value && this.refs.password.value) {
+			// 	this.props.dispatch(adminActions.login(this.refs.adminName.value, this.refs.password.value, this.props.history));
+			// 	this.refs.adminName.value = '';
+			// 	this.refs.password.value = '';
+			// } else {
+			// 	alert('Admin Name and Password Required');
+			// }
+		},
+		handleLoginStatus: function handleLoginStatus(response) {
+			console.log('handle', response);
+			if (response.status === 'connected') {
+				console.log('Logged in.');
+				this.checkForAdmin(response);
+			} else {
+				console.log(_typeof(cookie.get('facebook_page_id')), cookie.get('facebook_page_id'));
+			}
+		},
+		checkForAdmin: function checkForAdmin(response) {
+			console.log('check', response);
+			if (response.authResponse.grantedScopes == this.props.scope) FB.api('/me/accounts', 'get', {}, function (response) {
+				console.log(response);
+			});
+		},
+		logout: function logout(event) {
 			event.preventDefault();
-			if (this.refs.username.value && this.refs.password.value) {
-				this.props.dispatch(AdminActions.login(this.refs.username.value, this.refs.password.value, this.props.history));
-				this.refs.username.value = '';
+			this.props.dispatch(adminActions.logout(this.props.history));
+		},
+		addAdmin: function addAdmin(event) {
+			event.preventDefault();
+			if (this.refs.adminName.value && this.refs.password.value) {
+				this.props.dispatch(adminActions.addAdmin(this.refs.adminName.value, this.refs.password.value));
+				this.refs.adminName.value = '';
 				this.refs.password.value = '';
 			} else {
 				alert('Admin Name and Password Required');
 			}
-		},
-		logout: function logout(event) {
-			event.preventDefault();
-			this.props.dispatch(AdminActions.logout(this.props.history));
 		},
 		render: function render() {
 	
@@ -31649,6 +31771,27 @@
 							'form',
 							{ onSubmit: this.logout },
 							React.createElement('input', { type: 'submit', value: 'LOGOUT OF ADMIN' })
+						),
+						React.createElement(
+							'form',
+							{ className: 'admin-login-form', onSubmit: this.addAdmin },
+							React.createElement(
+								'label',
+								null,
+								'Admin Name'
+							),
+							React.createElement('br', null),
+							React.createElement('input', { type: 'text', ref: 'adminName', name: 'adminName' }),
+							React.createElement('br', null),
+							React.createElement(
+								'label',
+								null,
+								'Password'
+							),
+							React.createElement('br', null),
+							React.createElement('input', { type: 'password', ref: 'password', name: 'password' }),
+							React.createElement('br', null),
+							React.createElement('input', { type: 'submit', value: 'ADD' })
 						)
 					),
 					React.createElement(Footer, null)
@@ -31670,7 +31813,7 @@
 								'Admin Name'
 							),
 							React.createElement('br', null),
-							React.createElement('input', { type: 'text', ref: 'username', name: 'username' }),
+							React.createElement('input', { type: 'text', ref: 'adminName', name: 'adminName' }),
 							React.createElement('br', null),
 							React.createElement(
 								'label',
@@ -31690,7 +31833,10 @@
 	});
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
-		return {};
+		return {
+			facebookAppId: state.admin.facebookAppId,
+			scope: state.admin.scope
+		};
 	};
 	
 	var Container = connect(mapStateToProps)(adminPage);

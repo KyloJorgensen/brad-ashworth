@@ -3,9 +3,9 @@
 var fetch = require('isomorphic-fetch');
 var redirect = false;
 
-var login = function(username, password, that) {
+var login = function(adminName, password, that) {
     var payload = {
-        username: username,
+        adminName: adminName,
         password: password
     };
     return function(dispatch) {
@@ -28,7 +28,7 @@ var login = function(username, password, that) {
             return response;
         })
         .then(function(data) {
-            return dispatch(loginSuccess());
+            return dispatch(loginSuccess(data));
         })
         .catch(function(error) {
             return dispatch(loginError(error));
@@ -37,11 +37,11 @@ var login = function(username, password, that) {
 };
 
 var LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-var loginSuccess = function(data) {
-    redirect.replace('/');
+var loginSuccess = function() {
+    redirect.replace('/admin');
     redirect = false;
     return {
-        type: LOGIN_SUCCESS
+        type: LOGIN_SUCCESS,
     };
 };
 
@@ -85,7 +85,6 @@ var logout = function(that) {
 var LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 var logoutSuccess = function(data) {
     redirect.replace('/');
-    console.log('here')
     redirect = false;
     return {
         type: LOGOUT_SUCCESS
@@ -101,6 +100,55 @@ var logoutError = function(error) {
     };
 };
 
+var ADD_ADMIN = 'ADD_ADMIN';
+var addAdmin = function(adminName, password) {
+    var payload = {
+        adminName: adminName,
+        password: password,
+    };
+    return function(dispatch) {
+        var url = '/admin.php';
+        return fetch(url, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(payload), 
+        }).then(function(response) {
+            if (response.status < 200 || response.status >= 300) {
+                var error = new Error(response.statusText)
+                error.response = response
+                throw error;
+            }
+            return response;
+        })
+        .then(function(response) {
+            return dispatch(addAdminSuccess(response));
+        })
+        .catch(function(error) {
+            return dispatch(addAdminError(error));
+        });
+    };
+};
+
+var ADD_ADMIN_SUCCESS = "ADD_ADMIN_SUCCESS";
+var addAdminSuccess = function(data) {
+    return {
+        type: ADD_ADMIN_SUCCESS,
+        data: data,
+    };
+};
+
+var ADD_ADMIN_ERROR = 'ADD_ADMIN_ERROR';
+var addAdminError = function(error) {
+    return {
+        type: ADD_ADMIN_ERROR,
+        error: error,
+    };
+};
+
 exports.login = login;
 exports.LOGIN_SUCCESS = LOGIN_SUCCESS;
 exports.loginSuccess = loginSuccess;
@@ -111,3 +159,8 @@ exports.LOGOUT_SUCCESS = LOGOUT_SUCCESS;
 exports.logoutSuccess = logoutSuccess;
 exports.LOGOUT_ERROR = LOGOUT_ERROR;
 exports.logoutError = logoutError;
+exports.addAdmin = addAdmin;
+exports.ADD_ADMIN_SUCCESS = ADD_ADMIN_SUCCESS;
+exports.addAdminSuccess = addAdminSuccess;
+exports.ADD_ADMIN_ERROR = ADD_ADMIN_ERROR;
+exports.addAdminError = addAdminError;
