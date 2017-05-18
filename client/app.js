@@ -12,7 +12,7 @@ var React = require('react'),
     NewsPostsView = require('./components/news/post-view.component'),
     NewsPostsEdit = require('./components/news/post-edit.component'),
     NewsPostsNew = require('./components/news/post-new.component'),
-    AdminPage = require('./components/admin-page.component'),
+    AdminPageContainer = require('./containers/admin-page.container'),
     router = require('react-router'),
     Router = router.Router,
     Route = router.Route,
@@ -30,7 +30,7 @@ var routes = (
                     <Route path="edit/:idnews" component={NewsPostsEdit} />
                     <Route path="new" component={NewsPostsNew} />
                 </Route>
-                <Route path="admin" component={AdminPage} />
+                <Route path="admin" component={AdminPageContainer} />
             </Route>
         </Router>
     </Provider>

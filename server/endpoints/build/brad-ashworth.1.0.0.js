@@ -58,7 +58,7 @@
 	    NewsPostsView = __webpack_require__(306),
 	    NewsPostsEdit = __webpack_require__(307),
 	    NewsPostsNew = __webpack_require__(308),
-	    AdminPage = __webpack_require__(309),
+	    AdminPageContainer = __webpack_require__(309),
 	    router = __webpack_require__(237),
 	    Router = router.Router,
 	    Route = router.Route,
@@ -83,7 +83,7 @@
 	                React.createElement(Route, { path: 'edit/:idnews', component: NewsPostsEdit }),
 	                React.createElement(Route, { path: 'new', component: NewsPostsNew })
 	            ),
-	            React.createElement(Route, { path: 'admin', component: AdminPage })
+	            React.createElement(Route, { path: 'admin', component: AdminPageContainer })
 	        )
 	    )
 	);
@@ -23883,7 +23883,7 @@
 	var initialState = function initialState() {
 		var savedState = cookie.get('savedState');
 		if (savedState != '') {
-			return JSON.parse(savedState);
+			// return JSON.parse(savedState);
 		}
 		return {};
 	};
@@ -23985,7 +23985,7 @@
 	    facebookAppId: cookie.get("facebook_app_id") || "",
 	    facebookAppVersion: cookie.get("facebook_app_version") || "",
 	    facebook_page_id: cookie.get("facebook_page_id") || "",
-	    scope: 'pages_show_list,public_profile'
+	    scope: ['pages_show_list', 'public_profile']
 	};
 	
 	var userReducer = function userReducer(state, action) {
@@ -31700,21 +31700,48 @@
 
 	'use strict';
 	
+	var connect = __webpack_require__(183).connect,
+	    AdminPage = __webpack_require__(310);
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {
+			facebookAppId: state.admin.facebookAppId,
+			scope: state.admin.scope
+		};
+	};
+	
+	var Container = connect(mapStateToProps)(AdminPage);
+	
+	module.exports = Container;
+
+/***/ },
+/* 310 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
 	var React = __webpack_require__(1),
-	    connect = __webpack_require__(183).connect,
 	    Header = __webpack_require__(236),
 	    Footer = __webpack_require__(301),
 	    cookie = __webpack_require__(225),
 	    adminActions = __webpack_require__(227);
 	
-	var adminPage = React.createClass({
-		displayName: 'adminPage',
+	var AdminPage = React.createClass({
+		displayName: 'AdminPage',
 	
 		login: function login(event) {
+			var scope = '';
+			for (var i = 0; i < this.props.scope.length; i++) {
+				scope = scope + this.props.scope[i];
+				if (i != this.props.scope.length - 1) {
+					scope = scope + ',';
+				}
+			}
+			console.log(scope);
 			FB.login(this.checkForAdmin, {
-				scope: this.props.scope,
+				scope: scope,
 				return_scopes: true,
 				enable_profile_selector: true,
 				profile_selector_ids: cookie.get('facebook_page_id')
@@ -31738,10 +31765,14 @@
 			}
 		},
 		checkForAdmin: function checkForAdmin(response) {
-			console.log('check', response);
-			if (response.authResponse.grantedScopes == this.props.scope) FB.api('/me/accounts', 'get', {}, function (response) {
-				console.log(response);
-			});
+			console.log('check response:', response.authResponse.grantedScopes, 'scope', this.props.scope);
+	
+			if (response.authResponse.grantedScopes == this.props.scope) {
+				console.log('pass');
+				FB.api('/me/accounts', 'get', {}, function (response) {
+					console.log(response);
+				});
+			}
 		},
 		logout: function logout(event) {
 			event.preventDefault();
@@ -31832,16 +31863,7 @@
 		}
 	});
 	
-	var mapStateToProps = function mapStateToProps(state, props) {
-		return {
-			facebookAppId: state.admin.facebookAppId,
-			scope: state.admin.scope
-		};
-	};
-	
-	var Container = connect(mapStateToProps)(adminPage);
-	
-	module.exports = Container;
+	module.exports = AdminPage;
 
 /***/ }
 /******/ ]);

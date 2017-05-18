@@ -9,7 +9,7 @@ var userInitialState = {
     facebookAppId: cookie.get("facebook_app_id") || "",
     facebookAppVersion: cookie.get("facebook_app_version") || "",
     facebook_page_id: cookie.get("facebook_page_id") || "",
-    scope: 'pages_show_list,public_profile',
+    scope: ['pages_show_list','public_profile'],
 };
 
 var userReducer = function(state, action) {

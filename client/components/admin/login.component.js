@@ -1,10 +1,6 @@
 'use strict';
 
 var React = require('react'),
-	connect = require('react-redux').connect,
-	Header = require('./header.component'),
-	Footer = require('./footer.component'),
-	cookie = require('../utilities/cookie'),
 	AdminActions = require('../actions/admin.actions');
 
 var Login = React.createClass({
@@ -35,10 +31,4 @@ var Login = React.createClass({
 	}
 });
 
-var mapStateToProps = function(state, props) {
-	return {};
-};
-
-var Container = connect(mapStateToProps)(Login);
-
-module.exports = Container;
+module.exports = Login;

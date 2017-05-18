@@ -1,16 +1,23 @@
 'use strict';
 
 var React = require('react'),
-	connect = require('react-redux').connect,
 	Header = require('./header.component'),
 	Footer = require('./footer.component'),
 	cookie = require('../utilities/cookie'),
 	adminActions = require('../actions/admin.actions');
 
-var adminPage = React.createClass({
+var AdminPage = React.createClass({
 	login: function(event) {
+		var scope = '';
+		for (var i = 0; i < this.props.scope.length; i++) {
+			scope = scope + this.props.scope[i]
+			if (i != this.props.scope.length - 1) {
+				scope = scope + ',';
+			}			
+		}
+		console.log(scope);
 		FB.login(this.checkForAdmin, {
-			scope: this.props.scope, 
+			scope: scope, 
 			return_scopes: true,
 			enable_profile_selector: true,
 			profile_selector_ids: cookie.get('facebook_page_id')
@@ -36,11 +43,14 @@ var adminPage = React.createClass({
 	  	}
 	},
 	checkForAdmin: function(response) {
-		console.log('check', response);
-		if (response.authResponse.grantedScopes == this.props.scope)
-		FB.api('/me/accounts', 'get', {}, function(response) {
-			console.log(response);
-		});
+		console.log('check response:', response.authResponse.grantedScopes,'scope', this.props.scope);
+
+		if (response.authResponse.grantedScopes == this.props.scope) {
+			console.log('pass');
+			FB.api('/me/accounts', 'get', {}, function(response) {
+				console.log(response);
+			});
+		}
 	},
 	logout: function(event) {
 		event.preventDefault();
@@ -106,13 +116,4 @@ var adminPage = React.createClass({
 	}
 });
 
-var mapStateToProps = function(state, props) {
-	return {
-		facebookAppId: state.admin.facebookAppId,
-		scope: state.admin.scope
-	};
-};
-
-var Container = connect(mapStateToProps)(adminPage);
-
-module.exports = Container;
+module.exports = AdminPage;
