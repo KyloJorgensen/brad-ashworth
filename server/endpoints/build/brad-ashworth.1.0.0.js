@@ -31765,9 +31765,18 @@
 			}
 		},
 		checkForAdmin: function checkForAdmin(response) {
-			console.log('check response:', response.authResponse.grantedScopes, 'scope', this.props.scope);
-	
-			if (response.authResponse.grantedScopes == this.props.scope) {
+			var grantedScopes = response.authResponse.grantedScopes.split(',');
+			var _scope = this.props.scope;
+			for (var g = 0; g < grantedScopes.length; g++) {
+				for (var i = 0; i < _scope.length; i++) {
+					if (grantedScopes[g] == _scope[i]) {
+						console.log('match!!');
+						_scope.splice(i, 1);
+						break;
+					}
+				}
+			}
+			if (this.props.scope.length == 0) {
 				console.log('pass');
 				FB.api('/me/accounts', 'get', {}, function (response) {
 					console.log(response);
