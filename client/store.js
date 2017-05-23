@@ -6,7 +6,8 @@ var redux = require('redux'),
 	thunk = require('redux-thunk').default,
 	cookie = require('./utilities/cookie'),
 	AdminReducer = require('./reducers/admin.reducer'),
-	newsReducer = require('./reducers/news.reducer');
+	FacebookReducer = require('./reducers/facebook.reducer'),
+	NewsReducer = require('./reducers/news.reducer');
 
 var initialState = {};
 
@@ -22,7 +23,8 @@ var reducers = function(state, action) {
     state = state || initialState();
     var _state = {};
 	_state.admin = AdminReducer(state.admin, action);
-	_state.news = newsReducer(state.news, action);
+	_state.facebook = FacebookReducer(state.facebook, action);
+	_state.news = NewsReducer(state.news, action);
 	cookie.set('savedState', JSON.stringify(_state), 7);
     return _state;
 };

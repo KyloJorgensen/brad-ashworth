@@ -3,7 +3,7 @@
 var actions = require('../actions/admin.actions'),
     cookie = require('../utilities/cookie');
 
-var userInitialState = {
+var adminInitialState = {
     mainNewsCount: 3,
     newsListCount: 10,
     facebookAppId: cookie.get("facebook_app_id") || "",
@@ -12,8 +12,8 @@ var userInitialState = {
     scope: ['pages_show_list','public_profile'],
 };
 
-var userReducer = function(state, action) {
-    state = state || userInitialState;
+var adminReducer = function(state, action) {
+    state = state || adminInitialState;
     var _state = state;
     _state.facebookAppId = cookie.get("facebook_app_id") || "";
     _state.facebookAppVersion = cookie.get("facebook_app_version") || "";
@@ -36,4 +36,4 @@ var userReducer = function(state, action) {
     return _state;
 };
 
-module.exports = userReducer;
+module.exports = adminReducer;

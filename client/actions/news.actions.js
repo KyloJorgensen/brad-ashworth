@@ -58,7 +58,8 @@ var getNewsPosts = function(limit){
         dispatch(gettingNewsEnteries());
         var _url = "https://graph.facebook.com/"
         + cookie.get("facebook_app_version")
-        + "/ArtistBradAshworth" 
+        + "/" 
+        + cookie.get("facebook_page_id")
         + "/feed?fields=created_time&limit=" 
         + limit 
         + "&format=json&access_token=" 
