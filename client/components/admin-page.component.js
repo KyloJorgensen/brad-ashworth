@@ -53,7 +53,7 @@ var AdminPage = React.createClass({
 			return_scopes: true,
 			enable_profile_selector: true,
 			profile_selector_ids: cookie.get('facebook_page_id')
-		});;
+		});
 	},
 	validateScopes: function(response) {
 		var grantedScopes = response.authResponse.grantedScopes.split(',');
@@ -84,35 +84,6 @@ var AdminPage = React.createClass({
 		event.preventDefault();
 		FB.logout();
 	},
-	// fbadmincheck: function() {
-	// 	if ('fbAsyncInit' in window) {
-	// 		console.log('facebook should be loaded', typeof window.fbAsyncInit);
-			
-	// 	}
-	// 	if (typeof FB === "function") {
-	// 		FB.getLoginStatus(function(response) {
-	// 			console.log(response);
-	// 		});
-	// 		clearInterval(this.FBADMINCHECK);
-	// 	} else {
-	// 		console.log('no FB function yet');
-	// 	}
-	// },
-	// componentDidMount: function() {
-	// 	this.FBADMINCHECK = setInterval(this.fbadmincheck, 1000);
-	// 	// window.onload(this.fbadmincheck);
-
-	// 	if (window.addEventListener) {
-	// 		window.addEventListener('load', this.fbadmincheck);
-	// 	} else if (window.attachEvent) {
-	// 		window.attachEvent('onload', this.fbadmincheck);
-	// 	} else { 
-	// 		window.onload = this.fbadmincheck;
-	// 	}
-	// },
-	// componentWillUnmount: function() {
-	// 	clearInterval(this.FBADMINCHECK);
-	// },
 	render: function() {
 		if (cookie.get('adminkey')) {
 			return (

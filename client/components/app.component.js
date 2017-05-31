@@ -6,8 +6,9 @@ var React = require('react'),
 
 var App = React.createClass({
     componentWillMount: function() {
-        facebookActions.fbAsyncInit(this.props.facebookAppId, this.props.facebookVersion, this.props.dispatch);
+        facebookActions.fbAsyncInit(this.props.facebookAppId, this.props.facebookVersion, this.props.dispatch, this.props.facebookScope);
     },
+
     render: function() {
         return (
             <div className="app" ref="app">
@@ -23,6 +24,7 @@ var mapStateToProps = function(state, props) {
     return {
         facebookAppId: state.facebook.facebookAppId,
         facebookVersion: state.facebook.facebookAppVersion,
+        facebookScope: state.facebook.scope,
     };
 };
 
