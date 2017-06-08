@@ -2,9 +2,9 @@
 
 var React = require('react'),
 	connect = require('react-redux').connect,
-	Header = require('../header.component'),
+	Header = require('../../containers/header.container'),
 	HeaderImgs = require('./header-imgs.component'),
-	Footer = require('../footer.component'),
+	Footer = require('../../containers/footer.container'),
 	NewSection = require('./news-container.component'),
 	newsActions = require('../../actions/news.actions');
 

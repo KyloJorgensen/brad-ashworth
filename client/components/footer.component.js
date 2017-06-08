@@ -2,7 +2,8 @@
 
 var React = require('react'),
 	connect = require('react-redux').connect,
-	Link = require('react-router').Link;
+	Link = require('react-router').Link,
+	facebookActions = require('../actions/facebook.actions');
 
 var footer = React.createClass({
 	getInitialState: function () {
@@ -26,11 +27,14 @@ var footer = React.createClass({
 		_state.bottom = 0;
 		this.setState(_state);
 	},
+	login: function(event) {
+		this.props.dispatch(facebookActions.fbloginstatus({facebookPageId: this.props.facebookPageId, adminScope: this.props.adminScope}));
+	},
 	render: function() {
 		return (
 		    <div className="footer-wrapper" ref="footer" id="footer" onMouseEnter={this.max} onMouseLeave={this.min}  onClick={this.toggle} style={{position: 'fixed', bottom: this.state.bottom+"px", width: '100%'}} >
 		    	<div className="container">
-		    		<Link to={'/admin'} className="button alt" >ADMIN</Link>
+		    		<a className="button alt" onClick={this.login} >ADMIN</a>
 		    	</div>
 		    </div>
 		);

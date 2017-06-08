@@ -2,8 +2,8 @@
 
 var React = require('react'),
 	connect = require('react-redux').connect,
-	Header = require('../header.component'),
-	Footer = require('../footer.component'),
+	Header = require('../../containers/header.container'),
+	Footer = require('../../containers/footer.container'),
 	newsActions = require('../../actions/news.actions'),
 	appConfig = require('../../app.cfg');
 

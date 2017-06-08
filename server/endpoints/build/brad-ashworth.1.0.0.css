@@ -57,7 +57,18 @@ h4 {
 }
 .header-wrapper a {
   color: #ffffff;
-  display: block;
+  display: inline-block;
+  padding: 0 10px;
+}
+.header-wrapper .profile-image {
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 10px;
+  position: relative;
+  top: -2px;
 }
 .header-wrapper #navmenu-items {
   position: absolute;
