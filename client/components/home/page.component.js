@@ -16,10 +16,10 @@ var imgs = [
 		title: 'The Northern Lights',
 	},
 	{
-		src: 'http://www.rockfordbuzz.com/wp-content/uploads/abstract-art-mother-earth-1030x458.jpg',
+		src: 'https://www.w3schools.com/w3css/img_nature.jpg',
 		link: 'https://www.w3schools.com',
-		alt: 'color img art',
-		title: 'Colorful Image',
+		alt: 'nature img art',
+		title: 'nature Image',
 	},
 ];
 
