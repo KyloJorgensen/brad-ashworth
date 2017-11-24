@@ -54,9 +54,9 @@
 	    HomePage = __webpack_require__(255),
 	    NewsPage = __webpack_require__(326),
 	    NewsListContainer = __webpack_require__(327),
-	    NewsPostsView = __webpack_require__(328),
-	    NewsPostsEdit = __webpack_require__(329),
-	    NewsPostsNew = __webpack_require__(330),
+	    NewsPostsView = __webpack_require__(329),
+	    NewsPostsEdit = __webpack_require__(330),
+	    NewsPostsNew = __webpack_require__(331),
 	    router = __webpack_require__(258),
 	    Router = router.Router,
 	    Route = router.Route,
@@ -33827,15 +33827,36 @@
 
 	'use strict';
 	
+	var connect = __webpack_require__(193).connect,
+	    NewsList = __webpack_require__(328);
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {
+			newsPosts: state.news.newsPosts,
+			nextPostsUrl: state.news.next,
+			loading: state.news.loading,
+			newsListCount: state.admin.newsListCount
+		};
+	};
+	
+	var Container = connect(mapStateToProps)(NewsList);
+	
+	module.exports = Container;
+
+/***/ }),
+/* 328 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	var React = __webpack_require__(1),
-	    connect = __webpack_require__(193).connect,
 	    Link = __webpack_require__(258).Link,
 	    cookie = __webpack_require__(244),
 	    newsActions = __webpack_require__(252),
 	    NewsPost = __webpack_require__(325);
 	
-	var newsPostsContainer = React.createClass({
-		displayName: 'newsPostsContainer',
+	var NewsList = React.createClass({
+		displayName: 'NewsList',
 	
 		getInitialState: function getInitialState() {
 			return {
@@ -33895,21 +33916,10 @@
 		}
 	});
 	
-	var mapStateToProps = function mapStateToProps(state, props) {
-		return {
-			newsPosts: state.news.newsPosts,
-			nextPostsUrl: state.news.next,
-			loading: state.news.loading,
-			newsListCount: state.admin.newsListCount
-		};
-	};
-	
-	var Container = connect(mapStateToProps)(newsPostsContainer);
-	
-	module.exports = Container;
+	module.exports = NewsList;
 
 /***/ }),
-/* 328 */
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33981,7 +33991,7 @@
 	module.exports = Container;
 
 /***/ }),
-/* 329 */
+/* 330 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34104,7 +34114,7 @@
 	module.exports = Container;
 
 /***/ }),
-/* 330 */
+/* 331 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
