@@ -1,17 +1,15 @@
 'use strict';
 
 var React = require('react'),
-	connect = require('react-redux').connect,
 	newsActions = require('../../actions/news.actions'),
 	Link = require('react-router').Link;
 
-var newsPost = React.createClass({
+var NewsPost = React.createClass({
 	componentDidMount: function() {
 		if (this.props.post['id']) {this.props.dispatch(newsActions.getNewsPost(this.props.post['id']));};
 	},
 	render: function() {
 		var content = [];
-		// console.log(this.props);
 		if (this.props.post['id']) {content.push(<p key="id" style={{display: 'none'}}>{this.props.post['id']}</p>);};
 		if (this.props.post['story']) {content.push(<p key="story">{this.props.post['story']}</p>);};
 		if (this.props.post['created_time']) {
@@ -32,18 +30,4 @@ var newsPost = React.createClass({
 	}
 });
 
-var mapStateToProps = function(state, props) {
-	var _props = {};
-	_props.post = {};
-	for (var i = 0; i < state.news.newsPosts.length; i++) {
-		if (state.news.newsPosts[i].id == props.newsPostNumber) {
-			_props.post = state.news.newsPosts[i];
-			break;
-		}
-	}
-	return _props;
-};
-
-var Container = connect(mapStateToProps)(newsPost);
-
-module.exports = Container;
+module.exports = NewsPost;

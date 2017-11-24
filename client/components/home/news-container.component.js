@@ -3,7 +3,7 @@
 var React = require('react'),
 	connect = require('react-redux').connect,
 	Link = require('react-router').Link,
-	NewsPost = require('../news/post.component'),
+	NewsPost = require('../../containers/news/post.container'),
 	newsActions = require('../../actions/news.actions');
 
 var homeNewsPostsContainer = React.createClass({

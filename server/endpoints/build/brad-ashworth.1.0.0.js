@@ -52,11 +52,11 @@
 	    store = __webpack_require__(242),
 	    App = __webpack_require__(254),
 	    HomePage = __webpack_require__(255),
-	    NewsPage = __webpack_require__(326),
-	    NewsListContainer = __webpack_require__(328),
-	    NewsPostsView = __webpack_require__(330),
-	    NewsPostsEdit = __webpack_require__(331),
-	    NewsPostsNew = __webpack_require__(332),
+	    NewsPage = __webpack_require__(327),
+	    NewsListContainer = __webpack_require__(329),
+	    NewsPostsView = __webpack_require__(331),
+	    NewsPostsEdit = __webpack_require__(332),
+	    NewsPostsNew = __webpack_require__(333),
 	    router = __webpack_require__(258),
 	    Router = router.Router,
 	    Route = router.Route,
@@ -33693,13 +33693,37 @@
 
 	'use strict';
 	
+	var connect = __webpack_require__(193).connect,
+	    NewsPost = __webpack_require__(326);
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		var _props = {};
+		_props.post = {};
+		for (var i = 0; i < state.news.newsPosts.length; i++) {
+			if (state.news.newsPosts[i].id == props.newsPostNumber) {
+				_props.post = state.news.newsPosts[i];
+				break;
+			}
+		}
+		return _props;
+	};
+	
+	var Container = connect(mapStateToProps)(NewsPost);
+	
+	module.exports = Container;
+
+/***/ }),
+/* 326 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	var React = __webpack_require__(1),
-	    connect = __webpack_require__(193).connect,
 	    newsActions = __webpack_require__(252),
 	    Link = __webpack_require__(258).Link;
 	
-	var newsPost = React.createClass({
-		displayName: 'newsPost',
+	var NewsPost = React.createClass({
+		displayName: 'NewsPost',
 	
 		componentDidMount: function componentDidMount() {
 			if (this.props.post['id']) {
@@ -33708,7 +33732,6 @@
 		},
 		render: function render() {
 			var content = [];
-			// console.log(this.props);
 			if (this.props.post['id']) {
 				content.push(React.createElement(
 					'p',
@@ -33767,30 +33790,16 @@
 		}
 	});
 	
-	var mapStateToProps = function mapStateToProps(state, props) {
-		var _props = {};
-		_props.post = {};
-		for (var i = 0; i < state.news.newsPosts.length; i++) {
-			if (state.news.newsPosts[i].id == props.newsPostNumber) {
-				_props.post = state.news.newsPosts[i];
-				break;
-			}
-		}
-		return _props;
-	};
-	
-	var Container = connect(mapStateToProps)(newsPost);
-	
-	module.exports = Container;
+	module.exports = NewsPost;
 
 /***/ }),
-/* 326 */
+/* 327 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var connect = __webpack_require__(193).connect,
-	    NewsPage = __webpack_require__(327);
+	    NewsPage = __webpack_require__(328);
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 	  return {};
@@ -33801,7 +33810,7 @@
 	module.exports = Container;
 
 /***/ }),
-/* 327 */
+/* 328 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33832,13 +33841,13 @@
 	module.exports = NewsPage;
 
 /***/ }),
-/* 328 */
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var connect = __webpack_require__(193).connect,
-	    NewsList = __webpack_require__(329);
+	    NewsList = __webpack_require__(330);
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 		return {
@@ -33854,7 +33863,7 @@
 	module.exports = Container;
 
 /***/ }),
-/* 329 */
+/* 330 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33929,7 +33938,7 @@
 	module.exports = NewsList;
 
 /***/ }),
-/* 330 */
+/* 331 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34001,7 +34010,7 @@
 	module.exports = Container;
 
 /***/ }),
-/* 331 */
+/* 332 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34124,7 +34133,7 @@
 	module.exports = Container;
 
 /***/ }),
-/* 332 */
+/* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
