@@ -1,10 +1,9 @@
 'use strict';
 
 var React = require('react'),
-	connect = require('react-redux').connect,
 	Link = require('react-router').Link;
 
-var headerImgs = React.createClass({
+var HeaderImgs = React.createClass({
 	getInitialState: function() {
 		return {
 			currentImg: 0,
@@ -81,10 +80,4 @@ var headerImgs = React.createClass({
 	}
 });
 
-var mapStateToProps = function(state, props) {
-	return {};
-};
-
-var Container = connect(mapStateToProps)(headerImgs);
-
-module.exports = Container;
+module.exports = HeaderImgs;

@@ -3,7 +3,7 @@
 var React = require('react'),
 	connect = require('react-redux').connect,
 	Header = require('../../containers/header.container'),
-	HeaderImgs = require('./header-imgs.component'),
+	HeaderImgs = require('../../containers/home/header-imgs.container'),
 	Footer = require('../../containers/footer.container'),
 	NewSection = require('./news-container.component'),
 	newsActions = require('../../actions/news.actions');

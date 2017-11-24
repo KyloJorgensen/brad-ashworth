@@ -52,11 +52,11 @@
 	    store = __webpack_require__(242),
 	    App = __webpack_require__(254),
 	    HomePage = __webpack_require__(255),
-	    NewsPage = __webpack_require__(327),
-	    NewsList = __webpack_require__(329),
-	    NewsPostsView = __webpack_require__(331),
-	    NewsPostsEdit = __webpack_require__(332),
-	    NewsPostsNew = __webpack_require__(333),
+	    NewsPage = __webpack_require__(328),
+	    NewsList = __webpack_require__(330),
+	    NewsPostsView = __webpack_require__(332),
+	    NewsPostsEdit = __webpack_require__(333),
+	    NewsPostsNew = __webpack_require__(334),
 	    router = __webpack_require__(258),
 	    Router = router.Router,
 	    Route = router.Route,
@@ -27559,8 +27559,8 @@
 	    connect = __webpack_require__(193).connect,
 	    Header = __webpack_require__(256),
 	    HeaderImgs = __webpack_require__(321),
-	    Footer = __webpack_require__(322),
-	    NewSection = __webpack_require__(324),
+	    Footer = __webpack_require__(323),
+	    NewSection = __webpack_require__(325),
 	    newsActions = __webpack_require__(252);
 	
 	var imgs = [{
@@ -33433,12 +33433,28 @@
 
 	'use strict';
 	
+	var connect = __webpack_require__(193).connect,
+	    HeaderImgs = __webpack_require__(322);
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+		return {};
+	};
+	
+	var Container = connect(mapStateToProps)(HeaderImgs);
+	
+	module.exports = Container;
+
+/***/ }),
+/* 322 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	var React = __webpack_require__(1),
-	    connect = __webpack_require__(193).connect,
 	    Link = __webpack_require__(258).Link;
 	
-	var headerImgs = React.createClass({
-		displayName: 'headerImgs',
+	var HeaderImgs = React.createClass({
+		displayName: 'HeaderImgs',
 	
 		getInitialState: function getInitialState() {
 			return {
@@ -33520,21 +33536,15 @@
 		}
 	});
 	
-	var mapStateToProps = function mapStateToProps(state, props) {
-		return {};
-	};
-	
-	var Container = connect(mapStateToProps)(headerImgs);
-	
-	module.exports = Container;
+	module.exports = HeaderImgs;
 
 /***/ }),
-/* 322 */
+/* 323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Footer = __webpack_require__(323),
+	var Footer = __webpack_require__(324),
 	    connect = __webpack_require__(193).connect;
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
@@ -33549,7 +33559,7 @@
 	module.exports = Container;
 
 /***/ }),
-/* 323 */
+/* 324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33605,7 +33615,7 @@
 	module.exports = Footer;
 
 /***/ }),
-/* 324 */
+/* 325 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33613,7 +33623,7 @@
 	var React = __webpack_require__(1),
 	    connect = __webpack_require__(193).connect,
 	    Link = __webpack_require__(258).Link,
-	    NewsPost = __webpack_require__(325),
+	    NewsPost = __webpack_require__(326),
 	    newsActions = __webpack_require__(252);
 	
 	var homeNewsPostsContainer = React.createClass({
@@ -33681,13 +33691,13 @@
 	module.exports = Container;
 
 /***/ }),
-/* 325 */
+/* 326 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var connect = __webpack_require__(193).connect,
-	    NewsPost = __webpack_require__(326);
+	    NewsPost = __webpack_require__(327);
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 		var _props = {};
@@ -33706,7 +33716,7 @@
 	module.exports = Container;
 
 /***/ }),
-/* 326 */
+/* 327 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33786,13 +33796,13 @@
 	module.exports = NewsPost;
 
 /***/ }),
-/* 327 */
+/* 328 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var connect = __webpack_require__(193).connect,
-	    NewsPage = __webpack_require__(328);
+	    NewsPage = __webpack_require__(329);
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 	  return {};
@@ -33803,14 +33813,14 @@
 	module.exports = Container;
 
 /***/ }),
-/* 328 */
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1),
 	    Header = __webpack_require__(256),
-	    Footer = __webpack_require__(322),
+	    Footer = __webpack_require__(323),
 	    newsActions = __webpack_require__(252),
 	    appConfig = __webpack_require__(253);
 	
@@ -33834,13 +33844,13 @@
 	module.exports = NewsPage;
 
 /***/ }),
-/* 329 */
+/* 330 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var connect = __webpack_require__(193).connect,
-	    NewsList = __webpack_require__(330);
+	    NewsList = __webpack_require__(331);
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 		return {
@@ -33856,7 +33866,7 @@
 	module.exports = Container;
 
 /***/ }),
-/* 330 */
+/* 331 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33865,7 +33875,7 @@
 	    Link = __webpack_require__(258).Link,
 	    cookie = __webpack_require__(244),
 	    newsActions = __webpack_require__(252),
-	    NewsPost = __webpack_require__(325);
+	    NewsPost = __webpack_require__(326);
 	
 	var NewsList = React.createClass({
 		displayName: 'NewsList',
@@ -33931,7 +33941,7 @@
 	module.exports = NewsList;
 
 /***/ }),
-/* 331 */
+/* 332 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34003,7 +34013,7 @@
 	module.exports = Container;
 
 /***/ }),
-/* 332 */
+/* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34126,7 +34136,7 @@
 	module.exports = Container;
 
 /***/ }),
-/* 333 */
+/* 334 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
