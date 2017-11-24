@@ -53,7 +53,7 @@
 	    App = __webpack_require__(254),
 	    HomePage = __webpack_require__(255),
 	    NewsPage = __webpack_require__(327),
-	    NewsListContainer = __webpack_require__(329),
+	    NewsList = __webpack_require__(329),
 	    NewsPostsView = __webpack_require__(331),
 	    NewsPostsEdit = __webpack_require__(332),
 	    NewsPostsNew = __webpack_require__(333),
@@ -76,7 +76,7 @@
 	            React.createElement(
 	                Route,
 	                { path: 'news', component: NewsPage },
-	                React.createElement(IndexRoute, { component: NewsListContainer }),
+	                React.createElement(IndexRoute, { component: NewsList }),
 	                React.createElement(Route, { path: 'view/:idnews', component: NewsPostsView }),
 	                React.createElement(Route, { path: 'edit/:idnews', component: NewsPostsEdit }),
 	                React.createElement(Route, { path: 'new', component: NewsPostsNew })
@@ -33893,7 +33893,7 @@
 		},
 		onScrollHandler: function onScrollHandler(e) {
 			var ele = this.refs["infinite"];
-			if (ele.scrollTop + ele.clientHeight + 200 >= ele.scrollHeight && !this.props.loading) {
+			if (ele.scrollTop + ele.clientHeight + 200 >= ele.scrollHeight && !this.props.loading && this.props.nextPostsUrl) {
 				this.props.dispatch(newsActions.getMoreNewsPosts(this.props.nextPostsUrl));
 			}
 		},

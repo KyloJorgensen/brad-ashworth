@@ -7,7 +7,7 @@ var React = require('react'),
     App = require('./components/app.component'),
     HomePage = require('./components/home/page.component'),
     NewsPage = require('./containers/news/page.container'),
-    NewsListContainer = require('./containers/news/list.container'),
+    NewsList = require('./containers/news/list.container'),
     NewsPostsView = require('./components/news/post-view.component'),
     NewsPostsEdit = require('./components/news/post-edit.component'),
     NewsPostsNew = require('./components/news/post-new.component'),
@@ -23,7 +23,7 @@ var routes = (
             <Route path="/" component={App}>
                 <IndexRoute component={HomePage} />
                 <Route path="news" component={NewsPage} >
-                    <IndexRoute component={NewsListContainer} />
+                    <IndexRoute component={NewsList} />
                     <Route path="view/:idnews" component={NewsPostsView} />
                     <Route path="edit/:idnews" component={NewsPostsEdit} />
                     <Route path="new" component={NewsPostsNew} />
