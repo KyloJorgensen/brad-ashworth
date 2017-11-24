@@ -33555,12 +33555,11 @@
 	'use strict';
 	
 	var React = __webpack_require__(1),
-	    connect = __webpack_require__(193).connect,
 	    Link = __webpack_require__(258).Link,
 	    facebookActions = __webpack_require__(250);
 	
-	var footer = React.createClass({
-		displayName: 'footer',
+	var Footer = React.createClass({
+		displayName: 'Footer',
 	
 		getInitialState: function getInitialState() {
 			return {
@@ -33603,13 +33602,7 @@
 		}
 	});
 	
-	var mapStateToProps = function mapStateToProps(state, props) {
-		return {};
-	};
-	
-	var Container = connect(mapStateToProps)(footer);
-	
-	module.exports = Container;
+	module.exports = Footer;
 
 /***/ }),
 /* 324 */

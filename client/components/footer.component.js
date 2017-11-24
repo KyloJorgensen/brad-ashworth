@@ -1,11 +1,10 @@
 'use strict';
 
 var React = require('react'),
-	connect = require('react-redux').connect,
 	Link = require('react-router').Link,
 	facebookActions = require('../actions/facebook.actions');
 
-var footer = React.createClass({
+var Footer = React.createClass({
 	getInitialState: function () {
   		return {
   			bottom: 0,
@@ -41,10 +40,4 @@ var footer = React.createClass({
 	}
 });
 
-var mapStateToProps = function(state, props) {
-    return {};
-};
-
-var Container = connect(mapStateToProps)(footer);
-
-module.exports = Container;
+module.exports = Footer;
